@@ -1,0 +1,86 @@
+<?xml version="1.0" ?>
+<robot  name="two_blocks_robot">
+  <link name="world"/>
+  <link name="base_block">
+    <visual>
+      <geometry>
+          <mesh filename="/home/lao/Documents/Masterarbeit/Simulation/ros2_ws/src/srrs_sim/meshes/Voxel.stl" scale="0.001 0.001 0.001"/>
+      </geometry>
+      <origin xyz="0 0 0"/>
+    </visual>
+    <inertial>
+      <mass value="100"/>
+      <inertia ixx="1.0" ixy="0.0" ixz="0.0" iyy="1.0" iyz="0.0" izz="1.0"/>
+    </inertial>
+  </link>
+
+  <link name="top_block">
+    <visual>
+      <geometry>
+        <mesh filename="/home/lao/Documents/Masterarbeit/Simulation/ros2_ws/src/srrs_sim/meshes/Voxel.stl" scale="0.001 0.001 0.001"/>
+      </geometry>
+      <origin xyz="0 0 0.134"/>
+    </visual>
+    <inertial>
+      <mass value="100"/>
+      <inertia ixx="1.0" ixy="0.0" ixz="0.0" iyy="1.0" iyz="0.0" izz="1.0"/>
+    </inertial>
+  </link>
+
+
+  <joint name="world_to_base" type="fixed">
+    <origin xyz="0 0 0"/>
+    <parent link="world"/>
+    <child link="base_block"/>
+  </joint>
+
+
+  <joint name="base_to_top" type="revolute">
+    <axis xyz="0 0 1"/> 
+    <origin xyz="0 0 0"/>
+    <parent link="base_block"/>
+    <child link="top_block"/>
+    <limit effort="50.0" lower="-6.29" upper="6.29" velocity="1"/>
+    <dynamics damping="0.1" friction="0.1"/>
+  </joint>
+
+
+  <ros2_control name="GazeboSimSystem" type="system">
+    <hardware>
+      <plugin>gz_ros2_control/GazeboSimSystem</plugin>
+    </hardware>
+    <joint name="base_to_top">
+      <command_interface name="position"/>
+      <state_interface name="position"/>
+    </joint>
+  </ros2_control>
+
+
+  <gazebo reference="base_block">
+    <visual>
+      <material>
+        <ambient>0 0.8 0 1</ambient>
+        <diffuse>0 0.8 0 1</diffuse>
+      </material>
+    </visual>
+  </gazebo>
+
+
+  <gazebo reference="top_block">
+    <visual>
+      <material>
+        <ambient>0.8 0 0 1</ambient>
+        <diffuse>0.8 0 0 1</diffuse>
+      </material>
+    </visual>
+  </gazebo>
+
+
+  <gazebo>
+    <plugin filename="gz_ros2_control-system" name="gz_ros2_control::GazeboSimROS2ControlPlugin">
+      <parameters>$(find srrs_sim)/config/two_blocks_controller.yaml</parameters>
+    </plugin>
+  </gazebo>
+
+
+</robot>

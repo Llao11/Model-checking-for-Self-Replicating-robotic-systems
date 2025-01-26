@@ -1,0 +1,108 @@
+<?xml version="1.0" ?>
+<robot name="rel_robot" xmlns:xacro="http://www.ros.org/wiki/xacro">
+  <xacro:property name="green" value="0 0.8 0 1" />
+  <xacro:property name="red" value="0.8 0 0 1" />
+  <xacro:property name="blue" value="0 0 0.8 1" />
+  <xacro:property name="cell_step" value="0.134"/>
+
+  <xacro:macro name="voxel" params="name origin color" >
+    <link name="${name}">
+      <visual>
+        <geometry>
+            <mesh filename="/home/lao/Documents/Masterarbeit/Simulation/ros2_ws/src/srrs_sim/meshes/Voxel.stl" scale="0.001 0.001 0.001"/>
+        </geometry>
+        <origin xyz="${origin}"/>
+      </visual>
+      <inertial>
+        <mass value="0.1"/>
+        <inertia ixx="1.0" ixy="0.0" ixz="0.0" iyy="1.0" iyz="0.0" izz="1.0"/>
+      </inertial>
+    </link>
+    <gazebo reference="${name}">
+      <visual>
+        <material>
+          <ambient>${color}</ambient>
+          <diffuse>${color}</diffuse>
+        </material>
+      </visual>
+    </gazebo>
+  </xacro:macro>
+
+  <xacro:macro name="joint_fix" params="name parent child" >
+    <joint name="${name}" type="fixed">
+      <origin xyz="0 0 0"/>
+      <parent link="${parent}"/>
+      <child link="${child}"/>
+    </joint>
+  </xacro:macro>
+
+  <xacro:macro name="joint_revolution" params="name parent child origin axis rpy" >
+    <joint name="${name}" type="revolute">
+      <axis xyz="${axis}"/> 
+      <origin xyz="${origin}"/>
+      <parent link="${parent}"/>
+      <child link="${child}"/>
+      <limit effort="50.0" lower="-6.29" upper="6.29" velocity="1"/>
+      <dynamics damping="0.1" friction="0.1"/>
+    </joint>
+    <link name="${name}visual">
+      <visual>
+        <geometry>
+            <cylinder radius="0.01" length="0.1"/>
+        </geometry>
+        <origin rpy="${rpy}" xyz="${origin}"/>
+      </visual>
+    </link>
+    <xacro:joint_fix name="${name}visualfixed" parent="${parent}" child="${name}visual"/>
+  </xacro:macro>
+
+  <link name="world"/>
+  <xacro:voxel name="block0_fix" origin="0 0 0" color="${red}"/>
+  <xacro:voxel name="block1_rev" origin="0 0 0" color="${green}"/>
+  <xacro:joint_fix name="world_to_base" parent="world" child="block0_fix"/>
+  <xacro:joint_revolution name="rev0_1" parent="block0_fix" child="block1_rev" axis="0 0 1" origin="0 0 ${cell_step}" rpy="0 0 0"/>
+
+  <xacro:voxel name="block2" origin="0 0 ${1*cell_step}" color="${blue}"/>
+  <xacro:joint_fix name="fixed1-2" parent="block1_rev" child="block2"/>
+
+  <xacro:voxel name="block3" origin="0 0 ${2*cell_step}" color="${blue}"/>
+  <xacro:joint_fix name="fixed2-3" parent="block2" child="block3"/>
+
+  <xacro:voxel name="block4_rev" origin="0 0 ${3*cell_step}" color="${green}"/>
+  <xacro:joint_fix name="fixed3-4" parent="block3" child="block4_rev"/>
+
+  <xacro:voxel name="block5" origin="0 ${1*cell_step} ${-0.5*cell_step}" color="${blue}"/>
+  <xacro:joint_revolution name="rev4_5" parent="block4_rev" child="block5" axis="0 1 0" origin="0 0 ${3.5*cell_step}" rpy="1.57 0 0"/>
+
+  <xacro:voxel name="block6" origin="0 ${1*cell_step} ${0.5*cell_step}" color="${blue}"/>
+  <xacro:joint_fix name="fixed5-6" parent="block5" child="block6"/>
+
+  <xacro:voxel name="block7" origin="0 ${1*cell_step} ${1.5*cell_step}" color="${blue}"/>
+  <xacro:joint_fix name="fixed6-7" parent="block6" child="block7"/>
+
+  <xacro:voxel name="block8" origin="0 ${1*cell_step} ${2.5*cell_step}" color="${blue}"/>
+  <xacro:joint_fix name="fixed7-8" parent="block7" child="block8"/>
+
+
+
+  <ros2_control name="GazeboSimSystem" type="system">
+    <hardware>
+      <plugin>gz_ros2_control/GazeboSimSystem</plugin>
+    </hardware>
+    <joint name="rev0_1">
+      <command_interface name="position"/>
+      <state_interface name="position"/>
+    </joint>
+    <joint name="rev4_5">
+      <command_interface name="position"/>
+      <state_interface name="position"/>
+    </joint>
+  </ros2_control>
+
+  <gazebo>
+    <plugin filename="gz_ros2_control-system" name="gz_ros2_control::GazeboSimROS2ControlPlugin">
+      <parameters>$(find srrs_sim)/config/two_blocks_controller.yaml</parameters>
+    </plugin>
+  </gazebo>
+
+</robot>

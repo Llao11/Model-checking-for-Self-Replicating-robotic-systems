@@ -1,0 +1,35 @@
+TODO:
+
+Начать писать спецификацию сверху-вниз (от абстрактной модели к НюСМВ модели)
+
+    Узнать есть ли автоматические трансляторы РОС в НюСМВ
+
+    Выделить часть кода которая моделирует систему управления робота и ее смоделировать в НюСМВ
+
+Продолжить разрабатывать симуляцию
+
+    добавить блок с захватом (фиксацией по плоскости вокселя) и контактным сенсором
+
+Спецификации:
+    Достижимость всех блоков для сборки
+    No collision
+
+
+SIMULATION:
+ros2 launch srrs_sim robot.launch.py
+ros2 run  srrs_sim robot_controller
+
+console control:
+    ros2 topic pub -1 /position_controller2/commands std_msgs/msg/Float64MultiArray "{data: [1.5]}"
+
+
+
+Разобраться в примерах:
+ros2 launch srrs_sim test.launch.py
+ros2 run srrs_sim example_velocity 
+
+
+
+Error:Failed to load system plugin [libign_ros2_control-system.so] : Could not find shared library.
+sudo apt install ros-jazzy-gz-ros2-control
+export GZ_SIM_SYSTEM_PLUGIN_PATH=/opt/ros/jazzy/lib/
