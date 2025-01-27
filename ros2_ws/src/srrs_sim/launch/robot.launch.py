@@ -87,6 +87,33 @@ def generate_launch_description():
             robot_controllers,
             ],
     )
+    position_controller_spawner3 = Node(
+        package='controller_manager',
+        executable='spawner',
+        arguments=[
+            'position_controller3',
+            '--param-file',
+            robot_controllers,
+            ],
+    )
+    position_controller_spawner4 = Node(
+        package='controller_manager',
+        executable='spawner',
+        arguments=[
+            'position_controller4',
+            '--param-file',
+            robot_controllers,
+            ],
+    )
+    position_controller_spawner5 = Node(
+        package='controller_manager',
+        executable='spawner',
+        arguments=[
+            'position_controller5',
+            '--param-file',
+            robot_controllers,
+            ],
+    )
 
     # Bridge
     bridge = Node(
@@ -113,6 +140,9 @@ def generate_launch_description():
         ),
         position_controller_spawner1,
         position_controller_spawner2,
+        position_controller_spawner3,
+        position_controller_spawner4,
+        position_controller_spawner5,
         bridge,
         node_robot_state_publisher,
         gz_spawn_entity,

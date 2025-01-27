@@ -16,5 +16,26 @@ position_controller2:
   ros__parameters:
     type: position_controllers/JointGroupPositionController
     joints: 
-      - rev4_5
+      - rev2_3
+    command_interface: position
+  
+position_controller3:
+  ros__parameters:
+    type: position_controllers/JointGroupPositionController
+    joints: 
+      - rev5_6
+    command_interface: position
+
+position_controller4:
+  ros__parameters:
+    type: position_controllers/JointGroupPositionController
+    joints: 
+      - rev8_9
+    command_interface: position
+
+position_controller5:
+  ros__parameters:
+    type: position_controllers/JointGroupPositionController
+    joints: 
+      - rev9_10
     command_interface: position
