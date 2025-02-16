@@ -16,7 +16,7 @@ setup(
         (os.path.join('share', package_name, 'config'), glob('config/*.yaml')),
         (os.path.join('share', package_name, 'urdf'), glob('urdf/*.xacro.urdf')),
         (os.path.join('share', package_name, 'urdf'), glob('urdf/*.xacro')),
-        (os.path.join('share', package_name, 'sdf'), glob('sdf/*.xacro.sdf')),
+        (os.path.join('share', package_name, 'sdf'), glob('sdf/*.sdf')),
         (os.path.join('share', package_name, 'meshes'), glob('meshes/*.stl')),
     ],
     install_requires=['setuptools'],

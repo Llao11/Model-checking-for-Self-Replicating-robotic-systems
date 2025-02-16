@@ -15,6 +15,12 @@ TODO:
     No collision
 
 
+Try to get feedback from the failed verification, where?, why? 
+translate the result from NuSMV to the simulation. 
+Represent and interpret counterexamples
+
+
+
 SIMULATION:
 ros2 launch srrs_sim robot.launch.py
 ros2 run  srrs_sim robot_controller

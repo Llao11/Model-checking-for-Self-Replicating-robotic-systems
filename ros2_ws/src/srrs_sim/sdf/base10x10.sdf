@@ -9,7 +9,7 @@
         <geometry>
           <mesh>
             <!-- <uri>file:///media/lao/ssdLIBRARY/BauhausUni/Masterarbeit/Simulation/ros2_ws/src/srrs_sim/stl/base10x10.stl</uri> -->
-            <uri>file:///home/lao/Documents/Masterarbeit/Simulation/ros2_ws/src/srrs_sim/stl/base10x10.stl</uri>
+            <uri>file:///home/lao/Documents/Masterarbeit/git/SRRS_gazebo_sim/ros2_ws/src/srrs_sim/meshes/base10x10.stl</uri>
             <scale> 0.001 0.001 0.001 </scale>
           </mesh>
         </geometry>
@@ -21,7 +21,7 @@
       <collision name="body_collision">
         <geometry>
           <mesh>
-            <uri>file:///home/lao/Documents/Masterarbeit/Simulation/ros2_ws/src/srrs_sim/stl/base10x10.stl</uri>
+            <uri>file:///home/lao/Documents/Masterarbeit/git/SRRS_gazebo_sim/ros2_ws/src/srrs_sim/meshes/base10x10.stl</uri>
             <scale> 0.001 0.001 0.001 </scale>
           </mesh>
         </geometry>

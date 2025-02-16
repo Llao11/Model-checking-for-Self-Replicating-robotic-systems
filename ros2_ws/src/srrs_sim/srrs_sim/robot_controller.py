@@ -2,20 +2,15 @@ import rclpy
 from rclpy.node import Node
 from std_msgs.msg import Float64MultiArray
 import math
-from gazebo_msgs.srv import SetLinkState
-from gazebo_msgs.msg import LinkState
+from gazebo_msgs.srv import SetJointProperties
+from gazebo_msgs.msg import ODEJointProperties
 
 class RobotController(Node):
     def __init__(self):
         super().__init__('robot_controller')
 
-        # Leg switcher 
-        # TODO: CHECK THIS!
-        
-        self.client = self.create_client(SetLinkState, '/gazebo/set_link_state')
-        while not self.client.wait_for_service(timeout_sec=1.0):
-            self.get_logger().info('Waiting for /gazebo/set_link_state service...')
-        self.get_logger().info('Connected to /gazebo/set_link_state service')
+        self.srv = self.create_service(SetJointProperties, 'change_joint', self.change_joint_callback)
+        self.get_logger().info('Joint Modifier Service Ready')
 
         # Separate publishers for each joint controller
         self.command_publisher1 = self.create_publisher(Float64MultiArray,'/position_controller1/commands',10)
@@ -35,8 +30,8 @@ class RobotController(Node):
         # Separate command sequences for each joint
         self.command_sequences_deg = [
             [0.0,   90,    45,    0,   -45,    -90,    0.0],  # Joint 1
-            [0.0,   90,    45,    0,   -45,    -90,    0.0],  # Joint 2
-            [0.0,   90,    45,    0,   -45,     -90,    0.0],  # Joint 3
+            [0.0,   45,    45,    0,   -45,    -90,    0.0],  # Joint 2
+            [0.0,   45,    45,    0,   -45,     -90,    0.0],  # Joint 3
             [0.0,   90,    45,    0,   -45,    -90,    0.0],  # Joint 4
             [0.0,   90,    45,    0,   -45,     -90,    0.0],  # Joint 5
         ]
@@ -47,6 +42,40 @@ class RobotController(Node):
 
         self.get_logger().info("RobotController node has been started.")
 
+
+
+
+
+    def change_joint_callback(self, request, response):
+        # Modify joint properties here
+        joint_properties = ODEJointProperties()
+        # Since we're changing to a fixed joint, these properties are examples
+        joint_properties.fudge_factor = [0.0]
+        request.ode_joint_config = joint_properties
+        
+        response.success = True
+        response.status_message = "Joint type changed to fixed"
+        return response
+
+    def send_request(self, joint_name):
+        client = self.create_client(SetJointProperties, '/gazebo/set_joint_properties')
+        while not client.wait_for_service(timeout_sec=1.0):
+            self.get_logger().info('Service not available, waiting again...')
+
+        request = SetJointProperties.Request()
+        request.joint_name = joint_name
+        
+        future = client.call_async(request)
+        rclpy.spin_until_future_complete(self, future)
+        
+        if future.result() is not None:
+            self.get_logger().info(f'Joint {joint_name} modified successfully')
+        else:
+            self.get_logger().info('Service call failed')
+
+
+
+        
     def timer_callback(self):
         # Publish commands for each joint separately
         for joint_index in range(len(self.command_sequences)):
@@ -63,39 +92,8 @@ class RobotController(Node):
             if self.command_indices[joint_index] >= len(self.command_sequences[joint_index]):
                 self.command_indices[joint_index] = 0  # Loop back to the beginning
                 self.get_logger().info(f"Repeat sequence")
-                self.fix_leg_to_world("block0_fix", fixed=False)
+                self.send_request("world_to_base")
 
-
-    def fix_leg_to_world(self, leg_name, fixed):
-        request = SetLinkState.Request()
-        link_state = LinkState()
-        link_state.link_name = leg_name
-
-        if fixed:
-            # Fix the leg by attaching it to the world with zero velocity
-            link_state.pose.position.x = 0.0
-            link_state.pose.position.y = 0.0
-            link_state.pose.position.z = 0.0
-            link_state.twist.linear.x = 0.0
-            link_state.twist.linear.y = 0.0
-            link_state.twist.linear.z = 0.0
-        else:
-            # Release the leg by enabling free movement
-            link_state.pose.position.x = 0.0
-            link_state.pose.position.y = 0.0
-            link_state.pose.position.z = 1.0  # Example release position
-            link_state.twist.linear.x = 0.1
-            link_state.twist.linear.y = 0.1
-            link_state.twist.linear.z = 0.1
-
-        request.link_state = link_state
-
-        future = self.client.call_async(request)
-        rclpy.spin_until_future_complete(self, future)
-        if future.result():
-            self.get_logger().info(f'Successfully updated state for {leg_name}')
-        else:
-            self.get_logger().error(f'Failed to update state for {leg_name}')
 
 
 def main(args=None):

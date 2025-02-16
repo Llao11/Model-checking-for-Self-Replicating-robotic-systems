@@ -119,16 +119,9 @@
 
   <gazebo>
     <plugin filename="gz_ros2_control-system" name="gz_ros2_control::GazeboSimROS2ControlPlugin">
-      <parameters>$(find srrs_sim)/config/two_blocks_controller.yaml</parameters>
+      <!-- <parameters>$(find srrs_sim)/config/two_blocks_controller.yaml</parameters> -->
+      <parameters>$(find srrs_sim)/config/robot_controller.yaml</parameters>
     </plugin>
-
-    <!--  CHECK THIS
-    <plugin name="gazebo_ros_state" filename="libgazebo_ros_state.so">
-      <ros>
-        <namespace>/gazebo</namespace>
-      </ros>
-    </plugin> 
-    -->
   </gazebo>
 
 </robot>

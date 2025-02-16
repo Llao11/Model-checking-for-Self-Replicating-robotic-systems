@@ -56,12 +56,25 @@ def generate_launch_description():
         parameters=[robot_description]
     )
 
+    # gz_spawn_entity = Node(
+    #     package='ros_gz_sim',
+    #     executable='create',
+    #     output='screen',
+    #     arguments=['-topic', 'robot_description',
+    #                '-name', 'robot', '-allow_renaming', 'true'],
+    # )
+
     gz_spawn_entity = Node(
         package='ros_gz_sim',
         executable='create',
         output='screen',
-        arguments=['-topic', 'robot_description',
-                   '-name', 'robot', '-allow_renaming', 'true'],
+        arguments=[
+            '-topic', 'robot_description',
+            '-name', 'robot',
+            '-x', '0.0', '-y', '0.0', '-z', '0.134',  # Set X, Y, Z coordinates
+            '-X', '0.0','-Y', '0.0','-Z', '0.0',  # Set Yaw (rotation in radians)
+            '-allow_renaming', 'true'
+        ],
     )
 
     joint_state_broadcaster_spawner = Node(
@@ -122,7 +135,7 @@ def generate_launch_description():
         arguments=['/clock@rosgraph_msgs/msg/Clock[gz.msgs.Clock'],
         output='screen'
     )
-    
+    world_path = PathJoinSubstitution([FindPackageShare("srrs_sim"), "sdf", "world1.sdf"])
 
     return LaunchDescription([
         # Launch gazebo environment
@@ -131,7 +144,13 @@ def generate_launch_description():
                 [PathJoinSubstitution([FindPackageShare('ros_gz_sim'),
                                        'launch',
                                        'gz_sim.launch.py'])]),
-            launch_arguments=[('gz_args', [' -r -v 3 empty.sdf'])]),
+            launch_arguments=[('gz_args',['-r -v 3 /home/lao/Documents/Masterarbeit/git/SRRS_gazebo_sim/ros2_ws/install/srrs_sim/share/srrs_sim/sdf/world.sdf'])]
+            
+            # launch_arguments=[(
+            # 'gz_args',[ f'-r -v 3 {world_path}']
+            # )]
+        ),
+            
         RegisterEventHandler(
             event_handler=OnProcessExit(
                 target_action=gz_spawn_entity,
@@ -151,5 +170,5 @@ def generate_launch_description():
             'use_sim_time',
             default_value=use_sim_time,
             description='If true, use simulated clock'),
-        # LogInfo(msg=robot_description_content),
+        LogInfo(msg="some info"),
     ])
