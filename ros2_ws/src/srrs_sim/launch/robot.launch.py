@@ -49,6 +49,25 @@ def generate_launch_description():
         ]
     )
 
+    bridge_config_path = PathJoinSubstitution(
+        [
+            FindPackageShare('srrs_sim'),
+            'config',
+            'bridge_config.yaml',   
+        ]
+    )
+
+
+    # # Bridge
+    # bridge = Node(
+    #     package='ros_gz_bridge',
+    #     executable='parameter_bridge',
+    #     parameters=[{
+    #         'config_file': bridge_config_path
+    #     }],
+    #     output='screen'
+    # )
+
     node_robot_state_publisher = Node(
         package='robot_state_publisher',
         executable='robot_state_publisher',
@@ -69,6 +88,23 @@ def generate_launch_description():
         ],
     )
 
+    gz_spawn_parts = Node(
+        package='ros_gz_sim',
+        executable='create',
+        output='screen',
+        arguments=[
+            '-name', 'voxel',
+            # small base:
+            # '-file', '/home/lao/Documents/Masterarbeit/git/SRRS_gazebo_sim/ros2_ws/install/srrs_sim/share/srrs_sim/sdf/base1x1.sdf',
+            # 
+            # big base:
+            '-file', '/home/lao/Documents/Masterarbeit/git/SRRS_gazebo_sim/ros2_ws/install/srrs_sim/share/srrs_sim/sdf/voxel.sdf',
+            '-x', '0.234', '-y', '0.234', '-z', '0.234',  # Set X, Y, Z coordinates
+            '-X', '0.0','-Y', '0.0','-Z', '0.0',  # Set Yaw (rotation in radians)
+            '-allow_renaming', 'true'
+        ]
+    )
+
     gz_spawn_base = Node(
         package='ros_gz_sim',
         executable='create',
@@ -76,7 +112,7 @@ def generate_launch_description():
         arguments=[
             '-name', 'base',
             # small base:
-            # '-file', '/home/lao/Documents/Masterarbeit/git/SRRS_gazebo_sim/ros2_ws/install/srrs_sim/share/srrs_sim/sdf/base1x1.sdf',
+            # '-file', '/home/lao/Documents/Masterarbeit/git/SRRS_gazebo_sim/ros2_ws/install/srrs_sim/share/srrs_sim/sdf/voxel.sdf',
             # 
             # big base:
             '-file', '/home/lao/Documents/Masterarbeit/git/SRRS_gazebo_sim/ros2_ws/install/srrs_sim/share/srrs_sim/sdf/base10x10.sdf',
@@ -138,7 +174,7 @@ def generate_launch_description():
     )
 
     # Bridge
-    bridge = Node(
+    bridge_clock = Node(
         package='ros_gz_bridge',
         executable='parameter_bridge',
         arguments=['/clock@rosgraph_msgs/msg/Clock[gz.msgs.Clock'],
@@ -160,6 +196,7 @@ def generate_launch_description():
             # )]
         ),
             
+        # create the event so that joint_state_broadcaster_spawner started after the end of gz_spawn_robot process
         RegisterEventHandler(
             event_handler=OnProcessExit(
                 target_action=gz_spawn_robot,
@@ -171,10 +208,12 @@ def generate_launch_description():
         position_controller_spawner3,
         position_controller_spawner4,
         position_controller_spawner5,
-        bridge,
+        bridge_clock,
         node_robot_state_publisher,
-        gz_spawn_base,
+        # gz_spawn_base,
+        gz_spawn_parts,
         gz_spawn_robot,
+        
         # Launch Arguments
         DeclareLaunchArgument(
             'use_sim_time',

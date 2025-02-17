@@ -39,3 +39,6 @@ ros2 run srrs_sim example_velocity
 Error:Failed to load system plugin [libign_ros2_control-system.so] : Could not find shared library.
 sudo apt install ros-jazzy-gz-ros2-control
 export GZ_SIM_SYSTEM_PLUGIN_PATH=/opt/ros/jazzy/lib/
+
+For gripping simulation:
+sudo apt install ros-jazzy-moveit
