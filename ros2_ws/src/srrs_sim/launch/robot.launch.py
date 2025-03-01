@@ -58,15 +58,31 @@ def generate_launch_description():
     )
 
 
-    # # Bridge
-    # bridge = Node(
-    #     package='ros_gz_bridge',
-    #     executable='parameter_bridge',
-    #     parameters=[{
-    #         'config_file': bridge_config_path
-    #     }],
-    #     output='screen'
-    # )
+    # ROS-Ign bridge for service communication
+    Node(
+        package='ros_ign_bridge',
+        executable='parameter_bridge',
+        name='ignition_bridge',
+        output='screen',
+        parameters=[{
+            'config': """
+            [
+                {
+                    'ros_service_name': '/world/create_entity',
+                    'ign_service_name': '/world/default/create',
+                    'ros_service_type': 'ros_ign_interfaces/srv/SpawnEntity',
+                    'ign_service_type': 'ignition.msgs.EntityFactory'
+                },
+                {
+                    'ros_service_name': '/world/remove_entity',
+                    'ign_service_name': '/world/default/remove',
+                    'ros_service_type': 'ros_ign_interfaces/srv/DeleteEntity',
+                    'ign_service_type': 'ignition.msgs.Entity'
+                }
+            ]
+            """
+        }]
+    ),
 
     node_robot_state_publisher = Node(
         package='robot_state_publisher',
@@ -111,10 +127,10 @@ def generate_launch_description():
         output='screen',
         arguments=[
             '-name', 'base',
-            # small base:
+            # small base plate:
             # '-file', '/home/lao/Documents/Masterarbeit/git/SRRS_gazebo_sim/ros2_ws/install/srrs_sim/share/srrs_sim/sdf/voxel.sdf',
             # 
-            # big base:
+            # big base plate:
             '-file', '/home/lao/Documents/Masterarbeit/git/SRRS_gazebo_sim/ros2_ws/install/srrs_sim/share/srrs_sim/sdf/base10x10.sdf',
             '-x', '0.0', '-y', '0.0', '-z', '0.0',  # Set X, Y, Z coordinates
             '-X', '0.0','-Y', '0.0','-Z', '0.0',  # Set Yaw (rotation in radians)
@@ -180,6 +196,7 @@ def generate_launch_description():
         arguments=['/clock@rosgraph_msgs/msg/Clock[gz.msgs.Clock'],
         output='screen'
     )
+
     world_path = PathJoinSubstitution([FindPackageShare("srrs_sim"), "sdf", "world1.sdf"])
 
     return LaunchDescription([
@@ -190,10 +207,6 @@ def generate_launch_description():
                                        'launch',
                                        'gz_sim.launch.py'])]),
             launch_arguments=[('gz_args',['-r -v 3 /home/lao/Documents/Masterarbeit/git/SRRS_gazebo_sim/ros2_ws/install/srrs_sim/share/srrs_sim/sdf/world.sdf'])]
-            
-            # launch_arguments=[(
-            # 'gz_args',[ f'-r -v 3 {world_path}']
-            # )]
         ),
             
         # create the event so that joint_state_broadcaster_spawner started after the end of gz_spawn_robot process

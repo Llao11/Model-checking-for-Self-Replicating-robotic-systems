@@ -2,26 +2,28 @@ import rclpy
 from rclpy.node import Node
 from std_msgs.msg import Float64MultiArray
 import math
+from ros_ign_interfaces.srv import SpawnEntity, DeleteEntity
+from std_srvs.srv import Trigger
 
-from tf2_ros import Buffer, TransformListener
-
-from moveit_msgs.msg import CollisionObject, AttachedCollisionObject,PlanningScene
-from geometry_msgs.msg import Pose, Point, Quaternion
-from shape_msgs.msg import SolidPrimitive
-from tf2_ros import Buffer, TransformListener
-from moveit_msgs.srv import GetPlanningScene
-from std_msgs.msg import Header
-import numpy as np
-
-
-import sys
 
 class RobotController(Node):
     def __init__(self):
         super().__init__('robot_controller')
 
-        self.init_movit()
-
+        # Service clients for Ignition Gazebo
+        self.create_entity_client = self.create_client(
+            SpawnEntity, '/world/create_entity')
+        self.delete_entity_client = self.create_client(
+            DeleteEntity, '/world/remove_entity')
+        
+        # ROS2 service servers
+        self.attach_service = self.create_service(
+            Trigger, 'attach', self.attach_callback)
+        self.detach_service = self.create_service(
+            Trigger, 'detach', self.detach_callback)
+        
+        
+        self.get_logger().info("Attach/Detach Controller Ready")
 
         # Separate publishers for each joint controller
         self.command_publisher1 = self.create_publisher(Float64MultiArray,'/position_controller1/commands',10)
@@ -32,14 +34,11 @@ class RobotController(Node):
         self.command_publishers = [self.command_publisher1,self.command_publisher2,self.command_publisher3,
                                    self.command_publisher4,self.command_publisher5]
                                    
-        
 
         # Timer to periodically send commands
         self.timer_period = 3  # seconds
         self.timer = self.create_timer(self.timer_period, self.timer_callback)
 
-        self.attach_box()
-        self.attached = True
 
         # Separate command sequences for each joint
         self.command_sequences_deg = [
@@ -79,130 +78,47 @@ class RobotController(Node):
 
     
 
-    def init_movit(self):
 
-        # Create publisher for planning scene updates
-        self.planning_scene_pub = self.create_publisher(
-            PlanningScene,
-            '/planning_scene',
-            10
-        )
-
-        self.attached = False
+    def attach_callback(self, request, response):
+        joint_config = """<sdf version='1.7'>
+            <joint name='gripper_box_joint' type='fixed'>
+                <parent>robot::gripper_link</parent>
+                <child>box::link</child>
+            </joint>
+        </sdf>"""
         
-        # Wait a bit before setting up the scene
-        self.create_timer(2.0, self.setup_scene)
-        self.get_logger().info('Box manipulator node initialized')
-
-
-    def setup_scene(self):
-        try:
-            # Create planning scene message
-            planning_scene = PlanningScene()
-            planning_scene.is_diff = True
-
-            # Create collision object for the target box
-            voxel = CollisionObject()
-            voxel.header.frame_id = "world"
-            voxel.header.stamp = self.get_clock().now().to_msg()
-            voxel.id = "voxel"
-            
-            # Define box dimensions
-            box = SolidPrimitive()
-            box.type = SolidPrimitive.BOX
-            box.dimensions = [0.1, 0.1, 0.1]  # Size matches URDF
-            
-            # Set box pose
-            pose = Pose()
-            pose.position = Point(x=0.2, y=0.0, z=0.025)  # Position matches URDF
-            pose.orientation = Quaternion(x=0.0, y=0.0, z=0.0, w=1.0)
-            
-            voxel.primitives = [box]
-            voxel.primitive_poses = [pose]
-            voxel.operation = CollisionObject.ADD
-
-            # Add collision object to planning scene
-            planning_scene.world.collision_objects = [voxel]
-
-            # Publish planning scene update
-            self.planning_scene_pub.publish(planning_scene)
-            self.get_logger().info('Added target box to planning scene')
-
-        except Exception as e:
-            self.get_logger().error(f'Error setting up scene: {str(e)}')
-            
-
-    def attach_box(self):
-        """Attach the target box to the end-effector"""
-
-        try:
-
-             # Create planning scene message
-            planning_scene = PlanningScene()
-            planning_scene.is_diff = True
-
-            # Create attached collision object
-            attached_object = AttachedCollisionObject()
-            attached_object.object.header.frame_id = "world"
-            attached_object.object.header.stamp = self.get_clock().now().to_msg()
-            attached_object.object.id = "voxel"
-            attached_object.link_name = "block14_fix"  # Replace with your end-effector link name
-            attached_object.touch_links = ["block14_fix"]  # List of links that can touch the object
-            
-            # Define the box geometry
-            box = SolidPrimitive()
-            box.type = SolidPrimitive.BOX
-            box.dimensions = [0.1, 0.1, 0.1]
-
-            # Set box pose
-            pose = Pose()
-            pose.position = Point(x=0.2, y=0.0, z=0.025)
-            pose.orientation = Quaternion(x=0.0, y=0.0, z=0.0, w=1.0)
-            
-            attached_object.object.primitives = [box]
-            attached_object.object.primitive_poses = [pose]
-            attached_object.object.operation = CollisionObject.ADD
-
-            # Add attached object to planning scene
-            planning_scene.robot_state.attached_collision_objects = [attached_object]
-            
-            # Publish planning scene update
-            self.planning_scene_pub.publish(planning_scene)
-            self.get_logger().info('Attached target box to end-effector')
-            
-        except Exception as e:
-            self.get_logger().error(f'Error attaching box: {str(e)}')
-
-
-
-    def detach_box(self):
-        """Detach the target box"""
+        req = SpawnEntity.Request()
+        req.sdf = joint_config
         
-        try:
-
-            # Create planning scene message
-            planning_scene = PlanningScene()
-            planning_scene.is_diff = True
-
-            # Create detach message
-            detach_object = AttachedCollisionObject()
+        future = self.create_entity_client.call_async(req)
+        rclpy.spin_until_future_complete(self, future)
         
-            detach_object.object.id = "voxel"
-            detach_object.object.operation = CollisionObject.REMOVE
+        if future.result().success:
+            response.success = True
+            response.message = "Attachment successful"
+            self.get_logger().info("Attached box to gripper")
+        else:
+            response.success = False
+            response.message = "Attachment failed"
+            self.get_logger().error("Failed to attach box")
+        return response
 
-            # Add to planning scene
-            planning_scene.robot_state.attached_collision_objects = [detach_object]
-            
-            # Publish planning scene update
-            self.planning_scene_pub.publish(planning_scene)
-            self.get_logger().info('Detached target box')
-            
-            # Re-add the object to the scene
-            self.setup_scene()
-            
-        except Exception as e:
-            self.get_logger().error(f'Error detaching box: {str(e)}')
+    def detach_callback(self, request, response):
+        req = DeleteEntity.Request()
+        req.entity = 'gripper_box_joint'  # Name of the joint to remove
         
+        future = self.delete_entity_client.call_async(req)
+        rclpy.spin_until_future_complete(self, future)
+        
+        if future.result().success:
+            response.success = True
+            response.message = "Detachment successful"
+            self.get_logger().info("Detached box from gripper")
+        else:
+            response.success = False
+            response.message = "Detachment failed"
+            self.get_logger().error("Failed to detach box")
+        return response
 
 def main(args=None):
     rclpy.init(args=args)

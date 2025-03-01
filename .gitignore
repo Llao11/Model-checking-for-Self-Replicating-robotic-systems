@@ -2,6 +2,9 @@ install/
 log/
 build/
 
+# ignore venv
+**/venv/
+
 # Ignore generated docs
 *.dox
 *.wikidoc
