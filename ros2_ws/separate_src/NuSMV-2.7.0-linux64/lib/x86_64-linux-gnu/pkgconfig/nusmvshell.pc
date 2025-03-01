@@ -1,0 +1,18 @@
+prefix=/
+includedir=${prefix}/include
+libdir=${prefix}/lib/x86_64-linux-gnu
+
+with_bignumbers=true
+with_compass=true
+with_libxml2=true
+with_ltl2smv=true
+with_profiler=false
+with_shell=true
+with_watchdog=false
+
+Name: nusmvshell
+Description: NuSMV shell library
+Version: 2.7.0
+Requires: cudd, libedit
+Libs: -L${libdir} -lnusmvshell
+Cflags: -I${includedir}

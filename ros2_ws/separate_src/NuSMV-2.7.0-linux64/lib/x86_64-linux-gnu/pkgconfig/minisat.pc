@@ -1,0 +1,14 @@
+prefix=/
+includedir=${prefix}/include
+libdir=${prefix}/lib/x86_64-linux-gnu
+
+has_preferred=true
+has_dec_budget=false
+has_proof=false
+
+Name: minisat
+Description: A minimalistic and high-performance SAT solver
+URL: http://minisat.se
+Version: 2.2.0.g37dc6c6
+Libs: -L${libdir} -lminisat
+Cflags: -I${includedir}
