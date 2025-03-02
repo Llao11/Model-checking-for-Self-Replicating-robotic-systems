@@ -1,0 +1,11 @@
+- ros_topic_name: "/attach_link"
+  gz_topic_name: "/attach_link"
+  ros_type_name: "std_msgs/msg/Empty"
+  gz_type_name: "gz.msgs.Empty"
+  direction: BIDIRECTIONAL
+
+- ros_topic_name: "/detach_link"
+  gz_topic_name: "/detach_link"
+  ros_type_name: "std_msgs/msg/Empty"
+  gz_type_name: "gz.msgs.Empty"
+  direction: BIDIRECTIONAL

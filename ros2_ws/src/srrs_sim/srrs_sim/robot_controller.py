@@ -1,29 +1,19 @@
 import rclpy
 from rclpy.node import Node
-from std_msgs.msg import Float64MultiArray
+from std_msgs.msg import Float64MultiArray,Empty
 import math
-from ros_ign_interfaces.srv import SpawnEntity, DeleteEntity
+# from ros_ign_interfaces.srv import SpawnEntity, DeleteEntity
 from std_srvs.srv import Trigger
+# from gz_msgs.srv import CreateJoint, RemoveJoint
 
 
 class RobotController(Node):
     def __init__(self):
         super().__init__('robot_controller')
 
-        # Service clients for Ignition Gazebo
-        self.create_entity_client = self.create_client(
-            SpawnEntity, '/world/create_entity')
-        self.delete_entity_client = self.create_client(
-            DeleteEntity, '/world/remove_entity')
-        
-        # ROS2 service servers
-        self.attach_service = self.create_service(
-            Trigger, 'attach', self.attach_callback)
-        self.detach_service = self.create_service(
-            Trigger, 'detach', self.detach_callback)
-        
-        
-        self.get_logger().info("Attach/Detach Controller Ready")
+        # Publishers for attach and detach topics
+        self.attach_publisher = self.create_publisher(Empty, 'attach_link', 10)
+        self.detach_publisher = self.create_publisher(Empty, 'detach_link', 10)
 
         # Separate publishers for each joint controller
         self.command_publisher1 = self.create_publisher(Float64MultiArray,'/position_controller1/commands',10)
@@ -53,6 +43,7 @@ class RobotController(Node):
         self.command_sequences
         self.command_indices = [0] * len(self.command_sequences)
 
+        self.detach()
         self.get_logger().info("RobotController node has been started.")
 
 
@@ -74,51 +65,18 @@ class RobotController(Node):
             if self.command_indices[joint_index] >= len(self.command_sequences[joint_index]):
                 self.command_indices[joint_index] = 0  # Loop back to the beginning
                 self.get_logger().info(f"Repeat sequence")
-                self.send_request("world_to_base")
+                self.attach()
 
-    
+    def attach(self):
+        msg = Empty()
+        self.attach_publisher.publish(msg)
+        self.get_logger().info("Published attach message.")
 
+    def detach(self):
+        msg = Empty()
+        self.detach_publisher.publish(msg)
+        self.get_logger().info("Published detach message.")
 
-    def attach_callback(self, request, response):
-        joint_config = """<sdf version='1.7'>
-            <joint name='gripper_box_joint' type='fixed'>
-                <parent>robot::gripper_link</parent>
-                <child>box::link</child>
-            </joint>
-        </sdf>"""
-        
-        req = SpawnEntity.Request()
-        req.sdf = joint_config
-        
-        future = self.create_entity_client.call_async(req)
-        rclpy.spin_until_future_complete(self, future)
-        
-        if future.result().success:
-            response.success = True
-            response.message = "Attachment successful"
-            self.get_logger().info("Attached box to gripper")
-        else:
-            response.success = False
-            response.message = "Attachment failed"
-            self.get_logger().error("Failed to attach box")
-        return response
-
-    def detach_callback(self, request, response):
-        req = DeleteEntity.Request()
-        req.entity = 'gripper_box_joint'  # Name of the joint to remove
-        
-        future = self.delete_entity_client.call_async(req)
-        rclpy.spin_until_future_complete(self, future)
-        
-        if future.result().success:
-            response.success = True
-            response.message = "Detachment successful"
-            self.get_logger().info("Detached box from gripper")
-        else:
-            response.success = False
-            response.message = "Detachment failed"
-            self.get_logger().error("Failed to detach box")
-        return response
 
 def main(args=None):
     rclpy.init(args=args)

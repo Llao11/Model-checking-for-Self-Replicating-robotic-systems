@@ -1,17 +1,3 @@
-# Copyright 2021 Open Source Robotics Foundation, Inc.
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#     http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-
 from launch import LaunchDescription
 from launch.actions import DeclareLaunchArgument, IncludeLaunchDescription
 from launch.actions import RegisterEventHandler
@@ -58,31 +44,31 @@ def generate_launch_description():
     )
 
 
-    # ROS-Ign bridge for service communication
-    Node(
-        package='ros_ign_bridge',
-        executable='parameter_bridge',
-        name='ignition_bridge',
-        output='screen',
-        parameters=[{
-            'config': """
-            [
-                {
-                    'ros_service_name': '/world/create_entity',
-                    'ign_service_name': '/world/default/create',
-                    'ros_service_type': 'ros_ign_interfaces/srv/SpawnEntity',
-                    'ign_service_type': 'ignition.msgs.EntityFactory'
-                },
-                {
-                    'ros_service_name': '/world/remove_entity',
-                    'ign_service_name': '/world/default/remove',
-                    'ros_service_type': 'ros_ign_interfaces/srv/DeleteEntity',
-                    'ign_service_type': 'ignition.msgs.Entity'
-                }
-            ]
-            """
-        }]
-    ),
+    # # ROS-Ign bridge for service communication
+    # Node(
+    #     package='ros_ign_bridge',
+    #     executable='parameter_bridge',
+    #     name='ignition_bridge',
+    #     output='screen',
+    #     parameters=[{
+    #         'config': """
+    #         [
+    #             {
+    #                 'ros_service_name': '/world/create_entity',
+    #                 'ign_service_name': '/world/default/create',
+    #                 'ros_service_type': 'ros_ign_interfaces/srv/SpawnEntity',
+    #                 'ign_service_type': 'ignition.msgs.EntityFactory'
+    #             },
+    #             {
+    #                 'ros_service_name': '/world/remove_entity',
+    #                 'ign_service_name': '/world/default/remove',
+    #                 'ros_service_type': 'ros_ign_interfaces/srv/DeleteEntity',
+    #                 'ign_service_type': 'ignition.msgs.Entity'
+    #             }
+    #         ]
+    #         """
+    #     }]
+    # ),
 
     node_robot_state_publisher = Node(
         package='robot_state_publisher',
@@ -233,4 +219,7 @@ def generate_launch_description():
             default_value=use_sim_time,
             description='If true, use simulated clock'),
         LogInfo(msg="some info"),
+
+        # print robot sdf in Log output
+        # LogInfo(msg=robot_description_content),
     ])

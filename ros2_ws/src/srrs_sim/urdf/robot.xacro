@@ -122,6 +122,17 @@
       <!-- <parameters>$(find srrs_sim)/config/two_blocks_controller.yaml</parameters> -->
       <parameters>$(find srrs_sim)/config/robot_controller.yaml</parameters>
     </plugin>
+    <plugin
+      filename="libgz-sim8-detachable-joint-system.so"
+      name="gz::sim::systems::DetachableJoint">
+      <parent_link>block10</parent_link>
+      <child_model>voxel</child_model>
+      <child_link>voxel_link</child_link>
+      <attach_topic>attach_link</attach_topic>
+      <detach_topic>detach_link</detach_topic>
+      <output_topic>detachable_link_state</output_topic>
+    </plugin>
   </gazebo>
 
+  <!-- ros2 run ros_gz_bridge parameter_bridge   /attach_link@std_msgs/msg/Empty@gz.msgs.Empty   /detach_link@std_msgs/msg/Empty@gz.msgs.Empty -->
 </robot>
