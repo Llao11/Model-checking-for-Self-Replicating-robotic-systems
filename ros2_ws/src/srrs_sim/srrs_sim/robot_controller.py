@@ -12,8 +12,12 @@ class RobotController(Node):
         super().__init__('robot_controller')
 
         # Publishers for attach and detach topics
-        self.attach_publisher = self.create_publisher(Empty, 'attach_link', 10)
-        self.detach_publisher = self.create_publisher(Empty, 'detach_link', 10)
+        self.attach_publisher_voxel = self.create_publisher(Empty, '/attach_link_voxel', 10)
+        self.detach_publisher_voxel = self.create_publisher(Empty, '/detach_link_voxel', 10)
+        self.attach_publisher1 = self.create_publisher(Empty, '/attach_link1', 10)
+        self.detach_publisher1 = self.create_publisher(Empty, '/detach_link1', 10)
+        self.attach_publisher2 = self.create_publisher(Empty, '/attach_link2', 10)
+        self.detach_publisher2 = self.create_publisher(Empty, '/detach_link2', 10)
 
         # Separate publishers for each joint controller
         self.command_publisher1 = self.create_publisher(Float64MultiArray,'/position_controller1/commands',10)
@@ -26,34 +30,64 @@ class RobotController(Node):
                                    
 
         # Timer to periodically send commands
-        self.timer_period = 3  # seconds
+        self.timer_period = 4  # seconds
         self.timer = self.create_timer(self.timer_period, self.timer_callback)
+        
 
+        # self.command_sequences_detachable = [
+        #     ["a",   "",    "d",     "",     "a",     "",     ""],  # block_0
+        #     ["d",   "",    "a",     "",     "d",     "",     ""],  # block_10
+        # ]
 
+        self.command_sequences_detachable = [   
+            # block_0, # block_10
+            ["a",   "d"], 
+            ["d",   "a"],
+            ["",   ""],
+            ["",   ""],
+
+            ["a",   "d"],
+            ["",   ""],
+            ["",   ""],
+        ]
         # Separate command sequences for each joint
         self.command_sequences_deg = [
-            [0.0,   90,    45,    0,   -45,    -90,    0.0],  # Joint 1
-            [0.0,   45,    45,    0,   -45,    -90,    0.0],  # Joint 2
-            [0.0,   45,    45,    0,   -45,     -90,    0.0],  # Joint 3
-            [0.0,   90,    45,    0,   -45,    -90,    0.0],  # Joint 4
-            [0.0,   90,    45,    0,   -45,     -90,    0.0],  # Joint 5
-        ]
+            # [0.0,  0.0,    0.0,    0.0,    0.0], 
+            [0,     30,     120,    30,     0],
+            [0,     60,     120,    0,     0], 
+            [180,   60,     120,    0,     180], 
+            [180,   30,     120,    30,    180],
+            
+            [180,   0,     120,    60,      180], 
+            [0,     0,     120,    60,     0],
+            [0,     30,     120,    30,     0], 
+            # [180,   0,     120,    30,     180], 
+            # [0.0,  0.0,    0.0,    0.0,    0.0]
+            ]
         self.command_sequences = [[element * math.pi/180.0 for element in sublist] for sublist in self.command_sequences_deg]
-        
-        self.command_sequences
-        self.command_indices = [0] * len(self.command_sequences)
+        self.step = 0
 
-        self.detach()
+        # self.detach()
         self.get_logger().info("RobotController node has been started.")
 
 
-
-        
     def timer_callback(self):
+        print(f"Step: {self.step}")
+        if self.command_sequences_detachable[self.step][0] == "a":
+            self.attach1()
+        elif self.command_sequences_detachable[self.step][0] == "d":
+            self.detach1()
+        
+        if self.command_sequences_detachable[self.step][1] == "a":
+            self.attach2()
+        elif self.command_sequences_detachable[self.step][1] == "d":
+            self.detach2()
+
         # Publish commands for each joint separately
-        for joint_index in range(len(self.command_sequences)):
+        for joint_index in range(len(self.command_sequences[0])):
             command = Float64MultiArray()
-            command.data = [self.command_sequences[joint_index][self.command_indices[joint_index]]]
+            command.data = [self.command_sequences[self.step][joint_index]]
+            # command.data = [self.command_sequences[joint_index][self.step[joint_index]]]
             
             # Publish to respective joint controller
             self.command_publishers[joint_index].publish(command)
@@ -61,21 +95,41 @@ class RobotController(Node):
             self.get_logger().info(f"Published command for joint {joint_index+1}: {command.data}")
 
             # Update index for the next command
-            self.command_indices[joint_index] += 1
-            if self.command_indices[joint_index] >= len(self.command_sequences[joint_index]):
-                self.command_indices[joint_index] = 0  # Loop back to the beginning
-                self.get_logger().info(f"Repeat sequence")
-                self.attach()
+        self.step += 1
+        if self.step >= len(self.command_sequences):
+            self.step = 0  # Loop back to the beginning
+            self.get_logger().info(f"Repeat sequence")
+
 
     def attach(self):
         msg = Empty()
-        self.attach_publisher.publish(msg)
+        self.attach_publisher_voxel.publish(msg)
         self.get_logger().info("Published attach message.")
 
     def detach(self):
         msg = Empty()
-        self.detach_publisher.publish(msg)
+        self.detach_publisher_voxel.publish(msg)
         self.get_logger().info("Published detach message.")
+
+    def attach1(self):
+        msg = Empty()
+        self.attach_publisher1.publish(msg)
+        self.get_logger().info("Published attach1 message.")
+
+    def detach1(self):
+        msg = Empty()
+        self.detach_publisher1.publish(msg)
+        self.get_logger().info("Published detach1 message.")
+
+    def attach2(self):
+        msg = Empty()
+        self.attach_publisher2.publish(msg)
+        self.get_logger().info("Published attach2 message.")
+
+    def detach2(self):
+        msg = Empty()
+        self.detach_publisher2.publish(msg)
+        self.get_logger().info("Published detach2 message.")
 
 
 def main(args=None):

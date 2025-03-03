@@ -36,5 +36,5 @@ position_controller5:
   ros__parameters:
     type: position_controllers/JointGroupPositionController
     joints: 
-      - rev9_10
+      - rev13_14
     command_interface: position

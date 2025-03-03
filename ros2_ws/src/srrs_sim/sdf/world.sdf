@@ -41,6 +41,7 @@
 
     <model name="ground_plane">
       <static>true</static>
+      <!-- <link name="world"/> -->
       <link name="link">
         <collision name="collision">
           <geometry>
@@ -64,11 +65,14 @@
           </material>
         </visual>
       </link>
+
+
     </model>
+
+
     <!-- <include>
         <name>floor</name>
-        <uri>file:///media/lao/ssdLIBRARY/BauhausUni/Masterarbeit/Simulation/ros2_ws/src/srrs_sim/urdf/base10x10.sdf</uri>
-        <uri>file:///home/lao/Documents/Masterarbeit/git/SRRS_gazebo_sim/ros2_ws/src/srrs_sim/sdf/base10x10.sdf</uri>
+        <uri>file:///home/lao/Documents/Masterarbeit/git/SRRS_gazebo_sim/ros2_ws/src/srrs_sim/sdf/box_base.sdf</uri>
         <pose>0 0 0 0 0 0</pose> 
     </include> -->
 

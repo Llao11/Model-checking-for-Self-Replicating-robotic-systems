@@ -56,9 +56,9 @@
     <xacro:joint_fix name="${name}visualfixed" parent="${parent}" child="${name}visual"/>
   </xacro:macro>
 
-  <link name="world"/>
+  <!-- <link name="world"/> -->
   <xacro:voxel name="block0_fix" origin="0 0 0" color="${red}"/>
-  <xacro:joint_fix name="world_to_base" parent="world" child="block0_fix"/>
+  <!-- <xacro:joint_fix name="world_to_base" parent="world" child="block0_fix"/> -->
 
   <xacro:voxel name="block1_rev" origin="0 0 0" color="${green}"/>
   <xacro:joint_revolution name="rev0_1" parent="block0_fix" child="block1_rev" axis="0 0 1" origin="0 0 ${cell_step}" rpy="0 0 0"/>
@@ -85,11 +85,13 @@
   <xacro:voxel name="block9_rev" origin="0 ${0*cell_step} ${-0.5*cell_step}" color="${green}"/>
   <xacro:joint_revolution name="rev8_9" parent="block8" child="block9_rev" axis="0 1 0" origin="0 ${0*cell_step} ${2*cell_step}" rpy="1.57 0 0"/>
 
-  <xacro:voxel name="block10" origin="0 0 ${-0.5*cell_step}" color="${green}"/>
-  <xacro:joint_revolution name="rev9_10" parent="block9_rev" child="block10" axis="0 0 1" origin="0 0 ${1*cell_step}" rpy="0 0 0"/>
+  <xacro:voxel name="block10" origin="0 0 ${0.5*cell_step}" color="${green}"/>
+  <xacro:joint_fix name="fixed9_10" parent="block9_rev" child="block10"/> 
 
-  <xacro:voxel name="block14_fix" origin="0 0 ${0.5*cell_step}" color="${red}"/>
-  <xacro:joint_fix name="fixed13_14" parent="block10" child="block14_fix"/> 
+  <xacro:voxel name="block14fix" origin="0 0 0" color="${red}"/>
+  <xacro:joint_revolution name="rev13_14" parent="block10" child="block14fix" axis="0 0 1" origin="0 0 ${1.5*cell_step}" rpy="0 0 0"/>
+
+
 
   <ros2_control name="GazeboSimSystem" type="system">
     <hardware>
@@ -111,7 +113,7 @@
       <command_interface name="position"/>
       <state_interface name="position"/>
     </joint>
-    <joint name="rev9_10">
+    <joint name="rev13_14">
       <command_interface name="position"/>
       <state_interface name="position"/>
     </joint>
@@ -122,15 +124,35 @@
       <!-- <parameters>$(find srrs_sim)/config/two_blocks_controller.yaml</parameters> -->
       <parameters>$(find srrs_sim)/config/robot_controller.yaml</parameters>
     </plugin>
-    <plugin
+    <!-- <plugin
       filename="libgz-sim8-detachable-joint-system.so"
       name="gz::sim::systems::DetachableJoint">
       <parent_link>block10</parent_link>
       <child_model>voxel</child_model>
       <child_link>voxel_link</child_link>
-      <attach_topic>attach_link</attach_topic>
-      <detach_topic>detach_link</detach_topic>
-      <output_topic>detachable_link_state</output_topic>
+      <attach_topic>attach_link_voxel</attach_topic>
+      <detach_topic>detach_link_voxel</detach_topic>
+      <output_topic>detachable_link_voxel_state</output_topic>
+    </plugin> -->
+    <plugin
+      filename="libgz-sim8-detachable-joint-system.so"
+      name="gz::sim::systems::DetachableJoint">
+      <parent_link>block0_fix</parent_link>
+      <child_model>box_base</child_model>
+      <child_link>base_link</child_link>
+      <attach_topic>attach_link1</attach_topic>
+      <detach_topic>detach_link1</detach_topic>
+      <output_topic>detachable_link_state1</output_topic>
+    </plugin>
+    <plugin
+      filename="libgz-sim8-detachable-joint-system.so"
+      name="gz::sim::systems::DetachableJoint">
+      <parent_link>block14fix</parent_link>
+      <child_model>box_base</child_model>
+      <child_link>base_link</child_link>
+      <attach_topic>attach_link2</attach_topic>
+      <detach_topic>detach_link2</detach_topic>
+      <output_topic>detachable_link_state2</output_topic>
     </plugin>
   </gazebo>
 

@@ -92,12 +92,12 @@ def generate_launch_description():
         executable='create',
         output='screen',
         arguments=[
-            '-name', 'base',
-            # small base plate:
-            # '-file', '/home/lao/Documents/Masterarbeit/git/SRRS_gazebo_sim/ros2_ws/install/srrs_sim/share/srrs_sim/sdf/voxel.sdf',
+            '-name', 'box_base',
+            # simple base plate:
+            '-file', '/home/lao/Documents/Masterarbeit/git/SRRS_gazebo_sim/ros2_ws/install/srrs_sim/share/srrs_sim/sdf/box_base.sdf',
             # 
             # big base plate:
-            '-file', '/home/lao/Documents/Masterarbeit/git/SRRS_gazebo_sim/ros2_ws/install/srrs_sim/share/srrs_sim/sdf/base10x10.sdf',
+            # '-file', '/home/lao/Documents/Masterarbeit/git/SRRS_gazebo_sim/ros2_ws/install/srrs_sim/share/srrs_sim/sdf/base10x10.sdf',
             '-x', '0.0', '-y', '0.0', '-z', '0.0',  # Set X, Y, Z coordinates
             '-X', '0.0','-Y', '0.0','-Z', '0.0',  # Set Yaw (rotation in radians)
             '-allow_renaming', 'true'
@@ -189,7 +189,7 @@ def generate_launch_description():
         position_controller_spawner5,
         bridge_clock,
         node_robot_state_publisher,
-        # gz_spawn_base,
+        gz_spawn_base,
         gz_spawn_parts,
         gz_spawn_robot,
         bridge_node, # for attaching and detaching joints

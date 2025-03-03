@@ -27,6 +27,8 @@ ros2 run  srrs_sim robot_controller
 
 console control:
     ros2 topic pub -1 /position_controller2/commands std_msgs/msg/Float64MultiArray "{data: [1.5]}"
+    ros2 topic pub /detach_link1 std_msgs/msg/Empty "{}"
+
 
 
 
