@@ -1,4 +1,5 @@
 import subprocess
+import json
 
 # Define the NuSMV model as a string
 with open("SRRS_model_template.smv", "r") as file:

@@ -1,0 +1,37 @@
+MODULE main
+
+DEFINE
+  -- TODO: describe environment
+  MAX_POS := 10; -- max coordinate of field
+  BLOCKS_NUM:=8; -- number of blocks to assemble a robot
+
+  -- TODO: describe robot
+  JOINTS_NUM := 5;        -- number of joints of the robot
+  JOINT_ANGLE_STEP := 45; -- descret step for revolution joint
+  JOINT_POS := (360/JOINT_ANGLE_STEP);
+
+
+VAR
+  field : array 0..MAX_POS of array 0..MAX_POS of boolean;
+  blocks_pos : array 0..BLOCKS_NUM of array 0..1 of 0..MAX_POS;
+
+  joints : array 0..JOINTS_NUM of 0..JOINT_POS;
+
+  robot_assembled : boolean;
+  collision : boolean;
+
+
+
+INIT
+  robot_assembled = TRUE;
+INIT
+  collision = FALSE;
+
+-- TODO define feasibility of assembly 
+LTLSPEC
+  F (robot_assembled);
+
+
+-- TODO define feasibility without collisions 
+LTLSPEC
+  G (! collision);

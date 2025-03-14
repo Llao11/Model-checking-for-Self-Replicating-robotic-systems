@@ -92,6 +92,32 @@
   <xacro:joint_revolution name="rev13_14" parent="block10" child="block14fix" axis="0 0 1" origin="0 0 ${1.5*cell_step}" rpy="0 0 0"/>
 
 
+  
+  <link name="camera_link">
+    <visual name="camera_link_visual">
+      <geometry>
+        <box size="0.05 0.05 0.05"/>  
+      </geometry>
+    </visual>
+    <inertial>
+      <mass value="0.1"/>
+      <inertia ixx="0.0001" ixy="0.0" ixz="0.0" iyy="0.0001" iyz="0.0" izz="0.0001"/>
+    </inertial>
+  </link>
+
+  <joint name="camera_joint" type="fixed">
+    <parent link="block14fix"/>  
+    <child link="camera_link"/>
+    <origin xyz="0.1 0 0" rpy="0 0 0"/>  
+  </joint>
+
+  <link name="camera_link_optical"/>
+  <joint name="camera_optical_joint" type="fixed">
+    <parent link="camera_link"/>
+    <child link="camera_link_optical"/>
+    <origin xyz="0 0 0" rpy="-1.5708 0 -1.5708"/> 
+  </joint>
+
 
   <ros2_control name="GazeboSimSystem" type="system">
     <hardware>
@@ -124,37 +150,62 @@
       <!-- <parameters>$(find srrs_sim)/config/two_blocks_controller.yaml</parameters> -->
       <parameters>$(find srrs_sim)/config/robot_controller.yaml</parameters>
     </plugin>
+
     <!-- <plugin
       filename="libgz-sim8-detachable-joint-system.so"
       name="gz::sim::systems::DetachableJoint">
-      <parent_link>block10</parent_link>
+      <parent_link>block14fix</parent_link>
       <child_model>voxel</child_model>
       <child_link>voxel_link</child_link>
       <attach_topic>attach_link_voxel</attach_topic>
       <detach_topic>detach_link_voxel</detach_topic>
       <output_topic>detachable_link_voxel_state</output_topic>
     </plugin> -->
+
     <plugin
       filename="libgz-sim8-detachable-joint-system.so"
       name="gz::sim::systems::DetachableJoint">
       <parent_link>block0_fix</parent_link>
-      <child_model>box_base</child_model>
+      <child_model>base</child_model>
       <child_link>base_link</child_link>
       <attach_topic>attach_link1</attach_topic>
       <detach_topic>detach_link1</detach_topic>
       <output_topic>detachable_link_state1</output_topic>
     </plugin>
+
     <plugin
       filename="libgz-sim8-detachable-joint-system.so"
       name="gz::sim::systems::DetachableJoint">
       <parent_link>block14fix</parent_link>
-      <child_model>box_base</child_model>
+      <child_model>base</child_model>
       <child_link>base_link</child_link>
       <attach_topic>attach_link2</attach_topic>
       <detach_topic>detach_link2</detach_topic>
       <output_topic>detachable_link_state2</output_topic>
     </plugin>
+
+
+    <sensor name="camera_sensor" type="camera">
+      <always_on>1</always_on>
+      <update_rate>30.0</update_rate>
+      <camera>
+        <horizontal_fov>1.5708</horizontal_fov> <!-- 90 degrees in radians -->
+        <image>
+          <width>640</width>
+          <height>480</height>
+          <format>R8G8B8</format>
+        </image>
+        <clip>
+          <near>0.1</near>
+          <far>100</far>
+        </clip>
+      </camera>
+      <plugin name="camera_plugin" filename="libgz-sensors8-camera.so">
+        <topic_name>/camera/image_raw</topic_name>
+        <frame_name>camera_link</frame_name>
+      </plugin>
+    </sensor>
+
   </gazebo>
 
-  <!-- ros2 run ros_gz_bridge parameter_bridge   /attach_link@std_msgs/msg/Empty@gz.msgs.Empty   /detach_link@std_msgs/msg/Empty@gz.msgs.Empty -->
 </robot>

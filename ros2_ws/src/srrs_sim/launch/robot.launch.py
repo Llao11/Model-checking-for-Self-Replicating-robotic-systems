@@ -41,7 +41,8 @@ def generate_launch_description():
             'config',
             'bridge_config.yaml',   
         ]
-    )
+    )   # ros2 run ros_gz_bridge parameter_bridge   /attach_link@std_msgs/msg/Empty@gz.msgs.Empty   /detach_link@std_msgs/msg/Empty@gz.msgs.Empty 
+
 
     bridge_node = Node(
         package='ros_gz_bridge',
@@ -92,9 +93,9 @@ def generate_launch_description():
         executable='create',
         output='screen',
         arguments=[
-            '-name', 'box_base',
+            '-name', 'base',
             # simple base plate:
-            '-file', '/home/lao/Documents/Masterarbeit/git/SRRS_gazebo_sim/ros2_ws/install/srrs_sim/share/srrs_sim/sdf/box_base.sdf',
+            '-file', '/home/lao/Documents/Masterarbeit/git/SRRS_gazebo_sim/ros2_ws/install/srrs_sim/share/srrs_sim/sdf/base.sdf',
             # 
             # big base plate:
             # '-file', '/home/lao/Documents/Masterarbeit/git/SRRS_gazebo_sim/ros2_ws/install/srrs_sim/share/srrs_sim/sdf/base10x10.sdf',
@@ -173,8 +174,8 @@ def generate_launch_description():
                                        'launch',
                                        'gz_sim.launch.py'])]),
             launch_arguments=[('gz_args',['-r -v 3 /home/lao/Documents/Masterarbeit/git/SRRS_gazebo_sim/ros2_ws/install/srrs_sim/share/srrs_sim/sdf/world.sdf'])]
-        ),
-            
+        ),        
+        gz_spawn_base,
         # create the event so that joint_state_broadcaster_spawner started after the end of gz_spawn_robot process
         RegisterEventHandler(
             event_handler=OnProcessExit(
@@ -189,7 +190,6 @@ def generate_launch_description():
         position_controller_spawner5,
         bridge_clock,
         node_robot_state_publisher,
-        gz_spawn_base,
         gz_spawn_parts,
         gz_spawn_robot,
         bridge_node, # for attaching and detaching joints

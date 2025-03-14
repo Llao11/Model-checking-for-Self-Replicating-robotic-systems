@@ -1,0 +1,233 @@
+MODULE main
+
+  -- Define a helper to check if the needed part type exists anywhere on the field
+  DEFINE
+
+    field_size := 9;
+
+    robot_size := 6;
+
+    TYPE1_num := 3;
+    TYPE2_num := 3;
+    TYPE3_num := 3;
+
+    empty_grid := [
+      [NONE,NONE,NONE,NONE,NONE,NONE,NONE,NONE,NONE,NONE],
+      [NONE,NONE,NONE,NONE,NONE,NONE,TYPE3,NONE,NONE,NONE],
+      [NONE,NONE,NONE,TYPE2,NONE,NONE,NONE,NONE,NONE,NONE],
+      [NONE,TYPE2,NONE,NONE,NONE,NONE,NONE,TYPE2,NONE,NONE],
+      [NONE,NONE,NONE,NONE,TYPE2,NONE,NONE,NONE,NONE,NONE],
+      [NONE,NONE,NONE,NONE,NONE,NONE,NONE,NONE,NONE,NONE],
+      [TYPE2,NONE,TYPE1,NONE,NONE,NONE,NONE,NONE,NONE,NONE],
+      [NONE,NONE,NONE,TYPE3,NONE,TYPE1,NONE,NONE,NONE,NONE],
+      [NONE,TYPE3,NONE,NONE,NONE,NONE,NONE,TYPE1,NONE,NONE],
+      [NONE,NONE,NONE,TYPE1,NONE,NONE,NONE,NONE,NONE,NONE]
+      ];
+
+  VAR 
+    -- 10x10 grid representing the field. Each cell can be NONE or a part type.
+    grid : array 0..field_size of array 0..field_size of { NONE, TYPE1, TYPE2, TYPE3 }; 
+     
+    -- Robot position coordinates (0 - field_size for each axis)
+    x : 0..field_size; -- horizontal axis
+    y : 0..field_size; -- vertical axis
+    
+    -- Robot's high-level state (mode of operation)
+    robot_state : {SEARCHING, CHECKING, TRANSPORTING, ASSEMBLED, FAILED };
+    
+    -- Coordinates of part being checked or transported (meaningful in CHECKING/TRANSPORTING states)
+    partX : 0..field_size;
+    partY : 0..field_size;
+    
+    -- Index of next required part in the assembly sequence (0..7, where 7 means fully assembled)
+    assembly_index : 0..robot_size;
+    
+    -- The required assembly sequence for robot2 (fixed array of length 7)
+    sequence : array 0..robot_size of { TYPE1, TYPE2, TYPE3 };
+
+
+  ASSIGN
+    -- Initial conditions
+    init(robot_state) := SEARCHING;      -- start in searching mode
+    init(x) := 0; init(y) := 0;          -- start at position (0,0) (assembly site for example)
+    init(assembly_index) := 0;           -- no parts assembled initially
+
+    init(grid) := empty_grid;
+    
+    -- Initialize the assembly sequence [TYPE1, TYPE2, TYPE2, TYPE3, TYPE2, TYPE2, TYPE1]
+    init(sequence[0]) := TYPE1;
+    init(sequence[1]) := TYPE2;
+    init(sequence[2]) := TYPE2;
+    init(sequence[3]) := TYPE3;
+    init(sequence[4]) := TYPE2;
+    init(sequence[5]) := TYPE2;
+    init(sequence[6]) := TYPE1;
+
+    -- State transitions for robot_state
+    next(robot_state) := case
+      -- Termination condition: if searching and no required part exists, go to FAILED
+      (robot_state = SEARCHING & 
+      assembly_index <= robot_size & 
+      (next(x) = x & next(y) = y)) : FAILED;
+      
+      -- From SEARCHING: if an adjacent cell has a part, transition to CHECKING that part
+      (robot_state = SEARCHING & 
+       ((x > 0 & grid[x - 1][y] != NONE) | 
+        (x < field_size & grid[x + 1][y] != NONE) | 
+        (y > 0 & grid[x][y - 1] != NONE) | 
+        (y < field_size & grid[x][y + 1] != NONE))
+      ) : CHECKING;
+      
+      -- From CHECKING: after inspecting, if part is needed type, go to TRANSPORTING (to pick it up)
+      (robot_state = CHECKING & 
+      assembly_index <= robot_size &
+      grid[partX][partY] = sequence[assembly_index]
+      ) : TRANSPORTING;
+      
+      -- From CHECKING: if part is not needed, go back to SEARCHING (continue looking)
+      (robot_state = CHECKING & 
+      assembly_index <= robot_size &
+      grid[partX][partY] != sequence[assembly_index]
+      ) : SEARCHING;
+      
+      -- From TRANSPORTING: after delivering the part, if that was the last required part, go to ASSEMBLED
+      (robot_state = TRANSPORTING & 
+      assembly_index = robot_size
+      ) : ASSEMBLED;
+      
+      -- From TRANSPORTING: if more parts are still needed, return to SEARCHING to find the next part
+      (robot_state = TRANSPORTING & 
+      assembly_index < robot_size
+      ) : SEARCHING;
+      
+      -- ASSEMBLED and FAILED are terminal (remain in same state once reached)
+      robot_state = ASSEMBLED : ASSEMBLED;
+      robot_state = FAILED    : FAILED;
+      
+      TRUE : robot_state;  -- default: no change (should not happen under normal conditions)
+    esac;
+
+
+-- -- Transitions for robot position (x and y) based on movement actions in SEARCHING state.
+--     -- The robot moves if remaining in SEARCHING and not performing a check.
+--     next(x) := case 
+--       -- Move left
+--       (robot_state = SEARCHING & next(robot_state) = SEARCHING & x > 0 & 
+--        !(x > 0 & grid[x-1][y] != NONE)) : x - 1;
+--       -- Move right
+--       (robot_state = SEARCHING & next(robot_state) = SEARCHING & x < 9 & 
+--        !(x < 9 & grid[x+1][y] != NONE)) : x + 1;
+--       -- No horizontal move (either moving vertically or checking)
+--       TRUE : x;
+--     esac;
+--     next(y) := case
+--       -- Move up
+--       (robot_state = SEARCHING & next(robot_state) = SEARCHING & y > 0 & 
+--        !(y > 0 & grid[x][y-1] != NONE)) : y - 1;
+--       -- Move down
+--       (robot_state = SEARCHING & next(robot_state) = SEARCHING & y < 9 & 
+--        !(y < 9 & grid[x][y+1] != NONE)) : y + 1;
+--       -- No vertical move (either moving horizontally or checking)
+--       TRUE : y;
+--     esac;
+
+
+    -- Record which part is being checked when transitioning to CHECKING.
+    -- (Set partX, partY to the coordinates of an adjacent part chosen for inspection.)
+    next(partX) := case
+      (robot_state = SEARCHING & next(robot_state) = CHECKING & 
+      x > 0 & 
+      grid[x - 1][y] != sequence[assembly_index]
+      ) : x - 1;  -- check left neighbor
+      (robot_state = SEARCHING & next(robot_state) = CHECKING & 
+      x < field_size & 
+      grid[x + 1][y] != sequence[assembly_index]
+      ) : x + 1;  -- check right neighbor
+      (robot_state = SEARCHING & next(robot_state) = CHECKING & 
+      y > 0 & 
+      grid[x][y - 1] != sequence[assembly_index]
+      ) : x;      -- check upper neighbor (same x)
+      (robot_state = SEARCHING & next(robot_state) = CHECKING & 
+      y < field_size & 
+      grid[x][y + 1] != sequence[assembly_index]
+      ) : x;      -- check lower neighbor (same x)
+      TRUE : partX;  -- otherwise, retain previous (or irrelevant outside checking context)
+    esac;
+    next(partY) := case
+      (robot_state = SEARCHING & next(robot_state) = CHECKING & 
+      y > 0 & 
+      grid[x][y - 1] != sequence[assembly_index]
+      ) : y - 1;  -- check up
+      (robot_state = SEARCHING & next(robot_state) = CHECKING & 
+      y < field_size & 
+      grid[x][y + 1] != sequence[assembly_index]
+      ) : y + 1;  -- check down
+      (robot_state = SEARCHING & next(robot_state) = CHECKING & 
+      x > 0 & 
+      grid[x - 1][y] != sequence[assembly_index]
+      ) : y;      -- check left (same y)
+      (robot_state = SEARCHING & next(robot_state) = CHECKING & 
+      x < field_size & 
+      grid[x + 1][y] != sequence[assembly_index]
+      ) : y;      -- check right (same y)
+      TRUE : partY;
+    esac;
+    
+    -- Assembly index updates: increment when a part is delivered (in TRANSPORTING state)
+    next(assembly_index) := case
+      robot_state = TRANSPORTING & (assembly_index < robot_size): assembly_index + 1;   -- delivered a part, count it
+      TRUE : assembly_index;
+    esac;
+    
+    -- Grid update: remove a part from the field when the robot transports it.
+    -- Only the cell at (partX, partY) is cleared (set to NONE) upon pickup; all other cells remain unchanged.
+    -- (We enforce that grid cells do not change otherwise, i.e., parts don’t move on their own.)
+    -- Example for one cell:
+    -- next(grid[partX][partY]) := case 
+    --   (robot_state = CHECKING & grid[partX][partY] = sequence[assembly_index]) : NONE;
+    --   TRUE : grid[partX][partY];
+    -- esac;
+    -- [In practice, we would write similar next() assignments or constraints for all grid cells to ensure only (partX,partY) changes to NONE and others stay same when a part is taken.]
+    
+
+    -- Robot can move left if within bounds and the left cell is empty
+  TRANS 
+    (robot_state = SEARCHING) -> ((next(x) = x - 1 & x > 0 & grid[x - 1][y] = NONE) |
+                                  (next(x) = x + 1 & x < field_size & grid[x + 1][y] = NONE) |
+                                  (next(y) = y - 1 & y > 0 & grid[x][y - 1] = NONE) |
+                                  (next(y) = y + 1 & y < field_size & grid[x][y + 1] = NONE) |
+                                  (next(x) = x & next(y) = y) -- No move if no valid direction
+                                  );
+    
+      
+  -- Safety: Only allow checking action when a part is actually adjacent
+  TRANS (robot_state = SEARCHING & next(robot_state) = CHECKING) -> 
+        ((x > 0 & grid[x -  1][y] != NONE & next(partX) = x - 1 & next(partY) = y) |
+         (x < field_size & grid[x + 1][y] != NONE & next(partX) = x + 1 & next(partY) = y) |
+         (y > 0 & grid[x][y - 1] != NONE & next(partX) = x   & next(partY) = y - 1) |
+         (y < field_size & grid[x][y + 1] != NONE & next(partX) = x   & next(partY) = y + 1));
+  
+  TRANS (
+    ((next(x) = x - 1 & next(y) = y & x > 0) |  -- Move left
+     (next(x) = x + 1 & next(y) = y & x < 9) |  -- Move right
+     (next(y) = y - 1 & next(x) = x & y > 0) |  -- Move up
+     (next(y) = y + 1 & next(x) = x & y < 9) |  -- Move down
+     (next(x) = x & next(y) = y)               -- Stay in place
+    )
+  );
+  
+  -- Safety: Only allow moves that stay in bounds (these conditions are inherently ensured by guards in next(x)/next(y) above).
+  TRANS (robot_state = SEARCHING & ((next(x) = x - 1) -> x > 0));
+  TRANS (robot_state = SEARCHING & ((next(x) = x + 1) -> x < field_size));
+  TRANS (robot_state = SEARCHING & ((next(y) = y - 1) -> y > 0));
+  TRANS (robot_state = SEARCHING & ((next(y) = y + 1) -> y < field_size));
+  
+  -- Ensure grid remains static unless a part is picked up (no spontaneous part appearance/disappearance).
+  -- If not transporting a part, the grid state does not change.
+  TRANS (robot_state != TRANSPORTING) -> (next(grid) = grid);
+
+  -- If transporting, the only change allowed is the picked part's cell becoming empty (others stay same).
+  TRANS (robot_state = TRANSPORTING) -> (next(grid[partX][partY]) = NONE);
+
+LTLSPEC
+  F (robot_state = ASSEMBLED);

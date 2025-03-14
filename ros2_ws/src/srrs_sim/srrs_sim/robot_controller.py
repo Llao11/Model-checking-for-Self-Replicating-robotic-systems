@@ -1,16 +1,39 @@
+from attr import s
 import rclpy
 from rclpy.node import Node
 from std_msgs.msg import Float64MultiArray,Empty
 import math
-# from ros_ign_interfaces.srv import SpawnEntity, DeleteEntity
-from std_srvs.srv import Trigger
-# from gz_msgs.srv import CreateJoint, RemoveJoint
+import json
+from ament_index_python.packages import get_package_share_directory
+import os
 
 
 class RobotController(Node):
     def __init__(self):
         super().__init__('robot_controller')
+        self.create_publishers()
+        [self.command_sequences_detachable, self.command_sequences_deg] = self.read_commands()
 
+        # Timer to periodically send commands
+        self.timer_period = 3  # seconds
+        self.timer = self.create_timer(self.timer_period, self.step)
+        
+        self.command_sequences = [[element * math.pi/180.0 for element in sublist] for sublist in self.command_sequences_deg]
+        self.step = 0
+
+        self.get_logger().info("RobotController node has been started.")
+
+    def read_commands(self):
+        package_name = 'srrs_sim'
+        share_directory = get_package_share_directory(package_name)
+        json_file_path = os.path.join(share_directory, 'commands', 'algorithm1.json')
+        with open(json_file_path, 'r') as json_file:
+            data = json.load(json_file)
+        attach_blocks = data['attach_blocks']
+        joint_angles = data['joint_angles']
+        return [attach_blocks, joint_angles]
+
+    def create_publishers(self):
         # Publishers for attach and detach topics
         self.attach_publisher_voxel = self.create_publisher(Empty, '/attach_link_voxel', 10)
         self.detach_publisher_voxel = self.create_publisher(Empty, '/detach_link_voxel', 10)
@@ -27,74 +50,38 @@ class RobotController(Node):
         self.command_publisher5 = self.create_publisher(Float64MultiArray,'/position_controller5/commands',10)
         self.command_publishers = [self.command_publisher1,self.command_publisher2,self.command_publisher3,
                                    self.command_publisher4,self.command_publisher5]
-                                   
 
-        # Timer to periodically send commands
-        self.timer_period = 4  # seconds
-        self.timer = self.create_timer(self.timer_period, self.timer_callback)
-        
-
-        # self.command_sequences_detachable = [
-        #     ["a",   "",    "d",     "",     "a",     "",     ""],  # block_0
-        #     ["d",   "",    "a",     "",     "d",     "",     ""],  # block_10
-        # ]
-
-        self.command_sequences_detachable = [   
-            # block_0, # block_10
-            ["a",   "d"], 
-            ["d",   "a"],
-            ["",   ""],
-            ["",   ""],
-
-            ["a",   "d"],
-            ["",   ""],
-            ["",   ""],
-        ]
-        # Separate command sequences for each joint
-        self.command_sequences_deg = [
-            # [0.0,  0.0,    0.0,    0.0,    0.0], 
-            [0,     30,     120,    30,     0],
-            [0,     60,     120,    0,     0], 
-            [180,   60,     120,    0,     180], 
-            [180,   30,     120,    30,    180],
-            
-            [180,   0,     120,    60,      180], 
-            [0,     0,     120,    60,     0],
-            [0,     30,     120,    30,     0], 
-            # [180,   0,     120,    30,     180], 
-            # [0.0,  0.0,    0.0,    0.0,    0.0]
-            ]
-        self.command_sequences = [[element * math.pi/180.0 for element in sublist] for sublist in self.command_sequences_deg]
-        self.step = 0
-
-        # self.detach()
-        self.get_logger().info("RobotController node has been started.")
-
-
-    def timer_callback(self):
+    def step(self):
         print(f"Step: {self.step}")
+        self.fix_blocks()
+        self.rotate_joins()
+
+    def fix_blocks(self):
+        msg = Empty()
         if self.command_sequences_detachable[self.step][0] == "a":
-            self.attach1()
+            self.attach_publisher1.publish(msg)
+            self.get_logger().info("Published attach1 message.")
         elif self.command_sequences_detachable[self.step][0] == "d":
-            self.detach1()
+            self.detach_publisher1.publish(msg)
+            self.get_logger().info("Published detach1 message.")
         
         if self.command_sequences_detachable[self.step][1] == "a":
-            self.attach2()
+            self.attach_publisher2.publish(msg)
+            self.get_logger().info("Published attach2 message.")
         elif self.command_sequences_detachable[self.step][1] == "d":
-            self.detach2()
+            self.detach_publisher2.publish(msg)
+            self.get_logger().info("Published detach2 message.")
 
-        # Publish commands for each joint separately
+    def rotate_joins(self):
         for joint_index in range(len(self.command_sequences[0])):
             command = Float64MultiArray()
             command.data = [self.command_sequences[self.step][joint_index]]
-            # command.data = [self.command_sequences[joint_index][self.step[joint_index]]]
-            
+
             # Publish to respective joint controller
             self.command_publishers[joint_index].publish(command)
-
             self.get_logger().info(f"Published command for joint {joint_index+1}: {command.data}")
 
-            # Update index for the next command
+        # Update index for the next command
         self.step += 1
         if self.step >= len(self.command_sequences):
             self.step = 0  # Loop back to the beginning
@@ -109,27 +96,7 @@ class RobotController(Node):
     def detach(self):
         msg = Empty()
         self.detach_publisher_voxel.publish(msg)
-        self.get_logger().info("Published detach message.")
-
-    def attach1(self):
-        msg = Empty()
-        self.attach_publisher1.publish(msg)
-        self.get_logger().info("Published attach1 message.")
-
-    def detach1(self):
-        msg = Empty()
-        self.detach_publisher1.publish(msg)
-        self.get_logger().info("Published detach1 message.")
-
-    def attach2(self):
-        msg = Empty()
-        self.attach_publisher2.publish(msg)
-        self.get_logger().info("Published attach2 message.")
-
-    def detach2(self):
-        msg = Empty()
-        self.detach_publisher2.publish(msg)
-        self.get_logger().info("Published detach2 message.")
+        self.get_logger().info("Published detach message.")        
 
 
 def main(args=None):
