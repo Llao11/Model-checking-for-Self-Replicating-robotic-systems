@@ -2,27 +2,103 @@ import subprocess
 import json
 
 # Define the NuSMV model as a string
-with open("SRRS_model_template.smv", "r") as file:
+template_file = "Assemble_checking_template.smv"
+model_file = "Assemble_checking.smv"
+with open(template_file, "r") as file:
     nusmv_model_template = file.read()
 
+# INITIAL PARAMETERS
+field_max_index=3
+visit_cells_types = "{UNKNOWN, VISITED}"
+robot_sequence = ["TYPE1","TYPE2","TYPE2","TYPE3"]
+robot_states = "{MOVING, CHECKING, ASSEMBLING, FINISHED, FAILED }"
+field_object_types = ["NONE", "TYPE1", "TYPE2", "TYPE3", "OBSTACLE1"]
+object_coordinates = {
+    (3,3):"TYPE1", 
+    (1,2):"TYPE2",
+    (2,0):"TYPE2",
+    (3,1):"TYPE3",
+    }
+
+
+# GENERATED PARAMETERS
+
+# Generate unchecked_cells: [ [UNKNOWN,UNKNOWN],[UNKNOWN,UNKNOWN] ];
+unchecked_cells="["
+for i in range(field_max_index+1):
+    unchecked_cells = unchecked_cells +"\n"+ str(["UNKNOWN"]*(field_max_index+1)).replace("'","")
+    if i<field_max_index: 
+        unchecked_cells= unchecked_cells + ","
+    else : 
+        unchecked_cells= unchecked_cells + "\n];"
+
+# Generate initial_grid based on object_coordinates: [ [NONE,NONE],[NONE,TYPE1] ];
+initial_grid="[\n"
+for x in range(field_max_index+1):
+    initial_grid= initial_grid + "["
+    for y in range(field_max_index+1):
+        if (x,y) in object_coordinates:
+            object_type = object_coordinates.get((x,y))
+        else: 
+            object_type = "NONE"
+        initial_grid = initial_grid + object_type
+        if y<field_max_index: 
+            initial_grid= initial_grid + "," 
+        else:
+            initial_grid= initial_grid + "]"
+    if x<field_max_index: 
+        initial_grid= initial_grid + ",\n" 
+    else:
+        initial_grid= initial_grid + "\n"
+    # initial_grid= initial_grid + ",\n"
+initial_grid= initial_grid + "];"
+
+# Generate checked_cells transitions:
+    # next(checked_cells[0][0]) :=case robot_state = ASSEMBLING  : UNKNOWN; x=0 & y=0 & robot_state != ASSEMBLING  : VISITED; TRUE : checked_cells[0][0];esac;
+checked_cells =""
+for x in range(field_max_index+1):
+    for y in range(field_max_index+1):
+        checked_cells = checked_cells + f"next(checked_cells[{x}][{y}])"+ \
+            f":=case robot_state = ASSEMBLING  : UNKNOWN; x={x} & y={y} &"+ \
+            f"robot_state != ASSEMBLING  : VISITED; TRUE : checked_cells[{x}][{y}];esac;\n"
+
+
+# Types of objects on the field {NONE, TYPE1, TYPE2, OBSTACLE1, TYPE3}
+object_types = f" {set(field_object_types)}".replace("'","")
+
+robot_size = len(robot_sequence)-1
+
+# set of part types: {TYPE1, TYPE2, TYPE3};
+robot_part_types = f" {set(robot_sequence)}".replace("'","")
+
+# Form cicle of: init(sequence[0]) := TYPE1;
+init_robot_sequence = ""
+for i in range(len(robot_sequence)):
+    init_robot_sequence = init_robot_sequence +f"\n init(sequence[{i}]) := {robot_sequence[i]};" 
+
+
 nusmv_model = nusmv_model_template.format(
-    MAX_POS=9,
-    STEPS=5,
-    R=3,
-    BUSY_CELLS = [ [1,6], [8,2] ],
-    coords_leg1 = [ [2,2], [3,2], [3,3], [4,3], [4,4] ],
-    coords_leg2 = [ [1,2], [1,3], [2,3], [2,4], [3,4] ],
+    field_max_index=field_max_index,
+    robot_size=robot_size,
+    object_types = object_types,
+    visit_cells_types = visit_cells_types,
+    robot_states = robot_states,
+    robot_part_types = robot_part_types,
+    init_robot_sequence = init_robot_sequence,
+    unchecked_cells=unchecked_cells,
+    initial_grid= initial_grid,
+    checked_cells = checked_cells,
     # TODO: change to one sequence of steps
     # TODO: integrate to the simulation
     # TODO: research interactive mode of NUSMV and how to use counterexamples
     )
 
 # Write the model to a file
-with open("2D_SimpleModel.smv", "w") as f:
+with open(model_file, "w") as f:
     f.write(nusmv_model)
 
 # Run NuSMV to verify the model
-result = subprocess.run(["./NuSMV-2.7.0-linux64/bin/NuSMV", "2D_SimpleModel.smv"], capture_output=True, text=True)
+result = subprocess.run(["./NuSMV-2.7.0-linux64/bin/NuSMV", "-dynamic", model_file], capture_output=True, text=True)
 
 # Print the output
 print(result.stdout)
@@ -32,3 +108,6 @@ if "is true" in result.stdout:
     print("The LTL property holds.")
 else:
     print("The LTL property does not hold.")
+
+#  TODO derive shortest path based on coordinates if G F (robot_state != FINISHED); is false
+# TODO derive problematic regions if G F (robot_state != FAILED); is false
