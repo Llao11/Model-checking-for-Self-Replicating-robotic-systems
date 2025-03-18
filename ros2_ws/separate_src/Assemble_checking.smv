@@ -23,7 +23,7 @@ MODULE main
 
   VAR 
     -- 10x10 grid representing the field. Each cell can be NONE or a part type.
-    grid : array 0..field_max_index of array 0..field_max_index of  {TYPE3, NONE, TYPE2, TYPE1, OBSTACLE1}; 
+    grid : array 0..field_max_index of array 0..field_max_index of  {TYPE1, OBSTACLE1, TYPE2, TYPE3, NONE}; 
      
     -- 10x10 grid representing the searched cells of the field
     checked_cells : array 0..field_max_index of array 0..field_max_index of {UNKNOWN, VISITED}; 
@@ -43,7 +43,7 @@ MODULE main
     assembly_index : 0..robot_size;
     
     -- The required assembly sequence for robot2 (fixed array of length 7)
-    sequence : array 0..robot_size of  {TYPE3, TYPE2, TYPE1};
+    sequence : array 0..robot_size of  {TYPE1, TYPE2, TYPE3};
 
   ASSIGN
     -- Initial conditions
