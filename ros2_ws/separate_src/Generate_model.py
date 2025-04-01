@@ -17,15 +17,15 @@ class Generate_model:
         self.visit_cells_types = "{UNKNOWN, VISITED}"
         self.robot_states = "{MOVING, CHECKING, ASSEMBLING, FINISHED, FAILED }"
 
-        return f"Model set"
+        return f"Model template loaded"
     
 
-    def generate(self,field_values, robot_sequence):
+    def generate(self,field_values, robot_sequence, object_types):
 
         self.robot_sequence = robot_sequence #["TYPE1","TYPE2","TYPE2","TYPE3"]
 
         # TODO derive field_object_types from field_values with set?
-        field_object_types = ["NONE", "TYPE1", "TYPE2", "TYPE3", "OBSTACLE1"]
+        # field_object_types = ["NONE", "TYPE1", "TYPE2", "TYPE3", "OBSTACLE1"]
 
         # object_coordinates = {
         #     (3,3):"TYPE1", 
@@ -58,7 +58,7 @@ class Generate_model:
 
 
         # Types of objects on the field {NONE, TYPE1, TYPE2, OBSTACLE1, TYPE3}
-        self.object_types = f" {set(field_object_types)}".replace("'","")
+        self.object_types = str(object_types).replace("'","") #f" {set(field_values)}".replace("'","")
 
         self.robot_size = len(self.robot_sequence)-1
 
@@ -88,10 +88,11 @@ class Generate_model:
         # Write the model to a file
         with open(self.model_file, "w") as f:
             f.write(nusmv_model)
-        return "Model generated: " + self.model_file +f"\nInitial_grid:\n"+ f"{field_values}"
+        return "Model generated: " + self.model_file +f"\nInitial_grid:\n"+ f"{field_values}" +f"\n Init_robot_sequence:\n"+ f"{self.init_robot_sequence}"
 
     def verify(self):
         # Run NuSMV to verify the model
+        print(["./NuSMV-2.7.0-linux64/bin/NuSMV", "-dynamic", self.model_file])
         result = subprocess.run(["./NuSMV-2.7.0-linux64/bin/NuSMV", "-dynamic", self.model_file], capture_output=True, text=True)
 
         # Print the output
@@ -125,9 +126,6 @@ class Generate_model:
         print(path_coordinates)
 
         # TODO: return SPEC result or error
-        if path_coordinates ==[]:
-            return result.stderr
-        else:
-            return str(result.stdout), path_coordinates
+        return str(result.stdout), path_coordinates
 
 # TODO derive problematic regions if G F (robot_state != FAILED); is false

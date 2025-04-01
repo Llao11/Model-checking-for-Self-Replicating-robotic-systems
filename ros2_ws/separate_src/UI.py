@@ -9,12 +9,15 @@ center_grid_frame = None
 right_column_frame = None
 part_list = []  # To store parsed part types
 default_parts = "NONE,TYPE1,TYPE2,TYPE3"
+default_robot_size = 4
+default_grid_size = 5
 output_text = None  # Output field reference
 canvas = None  # Canvas for drawing lines
 cell_buttons = {}  # Dictionary to store button references with their grid positions
 nusmv_model = Generate_model.Generate_model()
 field_size_val=1 # initial field size value
 cell_values = {} 
+robot_sequence_values = {} 
 
 # Functions for button actions
 def on_set():
@@ -85,10 +88,11 @@ def on_set():
         var = tk.StringVar(value=part_list[0] if part_list else '')
         option = tk.OptionMenu(right_column_frame, var, *part_list)
         option.pack(pady=2)
+        robot_sequence_values[i] = var
 
     # NUSMV part
     model_respond = nusmv_model.setup(field_size_val)
-    set_output_text(model_respond)
+    set_output_text(model_respond + "\nConfigure the field, the robot and press Generate model")
 
 
 def update_cell(var, btn, part):
@@ -107,7 +111,6 @@ def get_color(part):
 def on_generate():
     # Parse robot size and field size
     try:
-        robot_size_val = int(robot_entry.get().strip())
         field_size_val = int(field_entry.get().strip())
     except ValueError:
         return  # If invalid input, do nothing
@@ -116,6 +119,9 @@ def on_generate():
     for (r, c), var in cell_values.items():
         if 0 <= r < field_size_val and 0 <= c < field_size_val:  # Ensure indices are within bounds
             grid[r][c] = var.get()
+    print(len(grid))
+    
+    object_types = {f for row in grid for f in row}
 
     grid_str = "[\n"
     for row in grid:
@@ -123,22 +129,42 @@ def on_generate():
     grid_str=grid_str[:-2] + "\n];"
     print(grid_str)
 
+    if canvas is not None:
+        canvas.delete("all")  # Clear previous lines
+
     # Convert list to string and show it in the output field
 
     # TODO receive robot_sequence from right column
-    robot_sequence = ["TYPE1","TYPE2","TYPE2","TYPE3"]
-    model_respond = nusmv_model.generate(grid_str,robot_sequence)
-    set_output_text(grid_str)
+    robot_sequence=[]
+    for i, var in robot_sequence_values.items():
+        # print(i, var.get())
+        robot_sequence.append( var.get() )
+    # robot_sequence=robot_sequence[:-1] + ']'
+    
+    # robot_sequence = ["TYPE1","TYPE2","TYPE2","TYPE3"]
+    print(robot_sequence)
+    model_respond = nusmv_model.generate(grid_str,robot_sequence,object_types)
+    set_output_text(model_respond)
 
 
 def on_verify():
     """ Draw predefined lines on the central grid """
     output,path = nusmv_model.verify()
-    set_output_text("Path coordinates:" + str(path)+"\n"+output)
+    print_to_output = ""
+    for line in output:
+        if not line.startswith("***"):
+            print_to_output = print_to_output + line  
+    set_output_text(print_to_output)
 
     # Draw the lines on the canvas
-    for i in range(len(path)-1):
-        draw_line_between_cells(path[i][0], path[i][1], path[i+1][0], path[i+1][1])
+    if path==[]:
+        set_output_text("No path found")
+    else:
+        for i in range(len(path)-1):
+            draw_line_between_cells(path[i][0], path[i][1], path[i+1][0], path[i+1][1])
+
+    # print_to_output = "NuSMV output: \n"+ output + "Path coordinates:" + str(path)
+    
 
 
 def draw_line_between_cells(x1, y1, x2, y2):
@@ -160,8 +186,13 @@ def draw_line_between_cells(x1, y1, x2, y2):
 def set_output_text(text):
     """ Update the output field with the given text """
     output_text.config(state=tk.NORMAL)  # Enable editing temporarily
-    output_text.delete(1.0, tk.END)  # Clear previous text
     output_text.insert(tk.END, text)  # Insert new text
+    output_text.config(state=tk.DISABLED)  # Make it read-only again
+
+def clear_output_text():
+    """ Update the output field with the given text """
+    output_text.config(state=tk.NORMAL)  # Enable editing temporarily
+    output_text.delete(1.0, tk.END)  # Clear previous text
     output_text.config(state=tk.DISABLED)  # Make it read-only again
 
 # Main application window
@@ -180,18 +211,21 @@ part_entry.insert(0, default_parts)
 tk.Label(left_frame, text="Robot Size:").grid(row=1, column=0, sticky="e")
 robot_entry = tk.Entry(left_frame)
 robot_entry.grid(row=1, column=1, padx=5, pady=2)
+robot_entry.insert(0, default_robot_size)
 
 tk.Label(left_frame, text="Field Size:").grid(row=2, column=0, sticky="e")
 field_entry = tk.Entry(left_frame)
 field_entry.grid(row=2, column=1, padx=5, pady=2)
+field_entry.insert(0, default_grid_size)
 
-tk.Button(left_frame, text="Set", command=on_set).grid(row=3, column=0, padx=5, pady=5)
-tk.Button(left_frame, text="Generate", command=on_generate).grid(row=3, column=1, padx=5, pady=5)
-tk.Button(left_frame, text="Verify", command=on_verify).grid(row=3, column=2, padx=5, pady=5)
+tk.Button(left_frame, text="1. Create field", command=on_set).grid(row=3, column=0, padx=5, pady=5)
+tk.Button(left_frame, text="2. Generate model", command=on_generate).grid(row=3, column=1, padx=5, pady=5)
+tk.Button(left_frame, text="3. Verify model", command=on_verify).grid(row=3, column=2, padx=5, pady=5)
 
 # Output Field
-output_text = tk.Text(left_frame, height=10, width=40, state=tk.DISABLED, wrap=tk.WORD)
+output_text = tk.Text(left_frame, height=30, width=50, state=tk.DISABLED, wrap=tk.WORD)
 output_text.grid(row=4, column=0, columnspan=3, pady=5)
+tk.Button(left_frame, text="Clear output", command=clear_output_text).grid(row=5, column=0, padx=5, pady=5)
 
 # Center Panel
 center_frame = tk.Frame(root)
