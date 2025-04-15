@@ -28,11 +28,9 @@ ros2 run  srrs_sim robot_controller
 console control:
     ros2 topic pub -1 /position_controller2/commands std_msgs/msg/Float64MultiArray "{data: [1.5]}"
     ros2 topic pub /detach_link1 std_msgs/msg/Empty "{}"
+    ros2 topic pub /attach_obj_link1 std_msgs/msg/Empty "{}"
 
-
-
-
-Разобраться в примерах:
+Разобраться в примерах
 ros2 launch srrs_sim test.launch.py
 ros2 run srrs_sim example_velocity 
 

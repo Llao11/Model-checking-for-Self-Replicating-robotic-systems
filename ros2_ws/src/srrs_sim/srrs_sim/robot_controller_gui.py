@@ -15,23 +15,6 @@ class GUIController(Node):
         self.create_publishers()
         self.fixed_end=1
 
-    def send_velocity(self, linear=0.0, angular=0.0):
-        msg = Twist()
-        msg.linear.x = linear
-        msg.angular.z = angular
-        self.publisher.publish(msg)
-        self.get_logger().info(f'Publishing: linear={linear}, angular={angular}')
-
-    def read_commands(self):
-        package_name = 'srrs_sim'
-        share_directory = get_package_share_directory(package_name)
-        json_file_path = os.path.join(share_directory, 'commands', 'algorithm1.json')
-        with open(json_file_path, 'r') as json_file:
-            data = json.load(json_file)
-        attach_blocks = data['attach_blocks']
-        joint_angles = data['joint_angles']
-        return [attach_blocks, joint_angles]
-    
     # Fix to base
     def fix_1(self):
         msg = Empty()
@@ -62,26 +45,24 @@ class GUIController(Node):
 
     def fix_obj1(self):
         msg = Empty()
-        self.attach_publisher1.publish(msg)
+        self.attach_publisher_obj1.publish(msg)
         self.get_logger().info("Published attach1 message.")
-        self.fixed_end=1
-        self.free_2()
+        self.free_obj2()
 
     def fix_obj2(self):
         msg = Empty()
-        self.attach_publisher2.publish(msg)
+        self.attach_publisher_obj2.publish(msg)
         self.get_logger().info("Published attach2 message.")
-        self.fixed_end=2
-        self.free_1()
+        self.free_obj1()
 
     def free_obj1(self):
         msg = Empty()
-        self.detach_publisher1.publish(msg)
+        self.detach_publisher_obj1.publish(msg)
         self.get_logger().info("Published detach1 message.")
 
     def free_obj2(self):
         msg = Empty()
-        self.detach_publisher2.publish(msg)
+        self.detach_publisher_obj2.publish(msg)
         self.get_logger().info("Published detach2 message.")
 
     # The free end of robot si moving to x,y,z relative to the fixed part
@@ -133,6 +114,11 @@ class GUIController(Node):
         self.attach_publisher2 = self.create_publisher(Empty, '/attach_link2', 10)
         self.detach_publisher2 = self.create_publisher(Empty, '/detach_link2', 10)
 
+        self.attach_publisher_obj1 = self.create_publisher(Empty, '/attach_obj_link1', 10)
+        self.attach_publisher_obj2 = self.create_publisher(Empty, '/attach_obj_link2', 10)
+        self.detach_publisher_obj1 = self.create_publisher(Empty, '/detach_obj_link1', 10)
+        self.detach_publisher_obj2 = self.create_publisher(Empty, '/detach_obj_link2', 10)
+
         # Separate publishers for each joint controller
         self.command_publisher1 = self.create_publisher(Float64MultiArray,'/position_controller1/commands',10)
         self.command_publisher2 = self.create_publisher(Float64MultiArray,'/position_controller2/commands',10)
@@ -168,6 +154,8 @@ class GUI:
         btn_fix2_obj = tk.Button(self.root, text="Fix object to block 2", command=lambda: self.node.fix_obj2())
         btn_free1_obj = tk.Button(self.root, text="Free object from block 1", command=lambda: self.node.free_obj1())
         btn_free2_obj = tk.Button(self.root, text="Free object from block 2", command=lambda: self.node.free_obj2())
+        label_block1= tk.Label(self.root,text="Block1 - initially lower")
+        label_block2= tk.Label(self.root,text="Block2 - initially upper")
 
 
         joint1_angle = tk.Text(self.root, height=1,width=6)
@@ -201,14 +189,17 @@ class GUI:
         outputz.grid(row=2, column=1)
         btn_run.grid(row=3, column=0)
 
-        btn_fix1_base.grid(row=5, column=0)
+        btn_fix2_base.grid(row=5, column=0)
+        btn_fix1_base.grid(row=6, column=0)
         
-        btn_fix2_base.grid(row=6, column=0)
-
-        btn_fix1_obj.grid(row=7, column=0)
-        btn_fix2_obj.grid(row=8, column=0)
-        btn_free1_obj.grid(row=7, column=1)
-        btn_free2_obj.grid(row=8, column=1)
+        label_block2.grid(row=5, column=1)
+        label_block1.grid(row=6, column=1)
+        
+        btn_fix2_obj.grid(row=7, column=0)
+        btn_fix1_obj.grid(row=8, column=0)
+        
+        btn_free2_obj.grid(row=7, column=1)
+        btn_free1_obj.grid(row=8, column=1)
 
         joint1_angle.grid(row=1, column=5)
         joint2_angle.grid(row=2, column=5)

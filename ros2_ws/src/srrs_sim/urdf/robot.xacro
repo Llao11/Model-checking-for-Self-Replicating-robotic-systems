@@ -192,6 +192,28 @@
     </plugin>
 
 
+    <plugin
+      filename="libgz-sim8-detachable-joint-system.so"
+      name="gz::sim::systems::DetachableJoint">
+      <parent_link>block0_fix</parent_link>
+      <child_model>voxel</child_model>
+      <child_link>voxel</child_link>
+      <attach_topic>attach_obj_link1</attach_topic>
+      <detach_topic>detach_obj_link1</detach_topic>
+      <output_topic>detachable_obj_link_state1</output_topic>
+    </plugin>
+
+    <plugin
+      filename="libgz-sim8-detachable-joint-system.so"
+      name="gz::sim::systems::DetachableJoint">
+      <parent_link>block14fix</parent_link>
+      <child_model>voxel</child_model>
+      <child_link>voxel</child_link>
+      <attach_topic>attach_obj_link2</attach_topic>
+      <detach_topic>detach_obj_link2</detach_topic>
+      <output_topic>detachable_obj_link_state2</output_topic>
+    </plugin>
+
     <sensor name="camera_sensor" type="camera">
       <always_on>1</always_on>
       <update_rate>30.0</update_rate>
