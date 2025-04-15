@@ -51,10 +51,10 @@ MODULE main
 
     -- Initialize the assembly sequence [TYPE1, TYPE2, TYPE2, TYPE3, TYPE2, TYPE2, TYPE1]
     
- init(sequence[0]) := TYPE1;
- init(sequence[1]) := TYPE2;
- init(sequence[2]) := TYPE2;
- init(sequence[3]) := TYPE3;
+    init(sequence[0]) := TYPE1;
+    init(sequence[1]) := TYPE2;
+    init(sequence[2]) := TYPE2;
+    init(sequence[3]) := TYPE3;
 
     -- State transitions for robot_state
     next(robot_state) := case

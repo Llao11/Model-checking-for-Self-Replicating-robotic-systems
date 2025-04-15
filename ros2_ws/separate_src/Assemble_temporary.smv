@@ -5,19 +5,19 @@ MODULE main
 
     field_max_index := 4;
 
-    robot_size := 3;
+    robot_size := 2;
 
     initial_grid := [
-    [NONE,NONE,NONE,NONE,TYssffPE3],
     [NONE,NONE,NONE,NONE,NONE],
-    [NONE,NONE,NONE,NONE,TYPE2ss],
+    [NONE,NONE,NONE,NONE,TYPE3],
     [NONE,NONE,NONE,NONE,NONE],
-    [TYPE1,NONE,NONE,TYPE2ss,NONE]
+    [NONE,NONE,NONE,NONE,NONE],
+    [TYPE1,NONE,NONE,TYPE2,NONE]
 ];
 
   VAR 
     -- 10x10 grid representing the field. Each cell can be NONE or a part type.
-    grid : array 0..field_max_index of array 0..field_max_index of {NONE, TYPE2ss, TYPE1, TYssffPE3}; 
+    grid : array 0..field_max_index of array 0..field_max_index of {TYPE3, TYPE1, NONE, TYPE2}; 
      
     -- 10x10 grid representing the searched cells of the field
     checked_cells : array 0..field_max_index of array 0..field_max_index of {UNKNOWN, VISITED}; 
@@ -37,7 +37,7 @@ MODULE main
     assembly_index : 0..robot_size;
     
     -- The required assembly sequence for robot2 (fixed array of length 7)
-    sequence : array 0..robot_size of  {TYPE2ss, TYPE1, TYssffPE3};
+    sequence : array 0..robot_size of  {TYPE3, TYPE1, TYPE2};
 
   ASSIGN
     -- Initial conditions
@@ -50,9 +50,8 @@ MODULE main
     -- Initialize the assembly sequence [TYPE1, TYPE2, TYPE2, TYPE3, TYPE2, TYPE2, TYPE1]
     
  init(sequence[0]) := TYPE1;
- init(sequence[1]) := TYPE2ss;
- init(sequence[2]) := TYPE2ss;
- init(sequence[3]) := TYssffPE3;
+ init(sequence[1]) := TYPE2;
+ init(sequence[2]) := TYPE3;
     -- init(sequence[0]) := TYPE1;
     -- init(sequence[1]) := TYPE2;
     -- init(sequence[2]) := TYPE2;

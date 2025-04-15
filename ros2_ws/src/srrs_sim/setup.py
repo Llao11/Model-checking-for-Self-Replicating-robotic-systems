@@ -33,7 +33,9 @@ setup(
             'example_velocity = srrs_sim.example_velocity:main' ,
             'two_blocks_controller = srrs_sim.two_blocks_controller:main',
             'joints_controller = srrs_sim.joints_controller:main',
-            'robot_controller = srrs_sim.robot_controller:main',
+            'robot_controller_file = srrs_sim.robot_controller_file:main',
+            'robot_controller_keyboard = srrs_sim.robot_controller_keyboard:main',
+            'robot_controller_gui = srrs_sim.robot_controller_gui:main',
         ],
     },
 )

@@ -82,7 +82,8 @@ def generate_launch_description():
             # 
             # big base:
             '-file', '/home/lao/Documents/Masterarbeit/git/SRRS_gazebo_sim/ros2_ws/install/srrs_sim/share/srrs_sim/sdf/voxel.sdf',
-            '-x', '0.234', '-y', '0.234', '-z', '0.234',  # Set X, Y, Z coordinates
+            # '-x', '0.234', '-y', '0.234', '-z', '0.234',  # Set X, Y, Z coordinates
+            '-x', '0.134', '-y', '0.134', '-z', '0.134',  # Set X, Y, Z coordinates
             '-X', '0.0','-Y', '0.0','-Z', '0.0',  # Set Yaw (rotation in radians)
             '-allow_renaming', 'true'
         ]

@@ -1,26 +1,41 @@
 <?xml version="1.0"?>
 <sdf version="1.10">
   <model name="base">
-    <pose>0 0 0 0 0 0</pose>
+    <!-- <pose>0 0 0 0 0 0</pose> -->
       <link name="base_link">
       <pose>0 0 0 0 0 0</pose>
-      <visual name="body_visual">
-        <geometry>
-          <!-- <box> 
-            <size>2 2 0.01 </size>
-          </box> -->
-          <mesh>
-            <!-- <uri>file:///media/lao/ssdLIBRARY/BauhausUni/Masterarbeit/Simulation/ros2_ws/src/srrs_sim/stl/base10x10.stl</uri> -->
-            <uri>file:///home/lao/Documents/Masterarbeit/git/SRRS_gazebo_sim/ros2_ws/src/srrs_sim/meshes/base10x10.stl</uri>
-            <scale> 0.001 0.001 0.001 </scale>
-          </mesh>
-        </geometry>
-        <material>
-          <ambient>0.1 0.1 0.1 1</ambient>
-          <diffuse>0.1 0.1 0.1 1</diffuse>
-        </material>
-      </visual>
+        <visual name="body_visual">
+          <!-- <origin xyz="0 0 1.5" rpy="0 0 0" /> -->
+          <geometry>
+            <!-- <box> 
+              <size>2 2 0.265 </size>
+            </box> -->
+            <mesh>
+              <uri>file:///home/lao/Documents/Masterarbeit/git/SRRS_gazebo_sim/ros2_ws/src/srrs_sim/meshes/base10x10.stl</uri>
+              <scale> 0.001 0.001 0.001 </scale>
+            </mesh>
+            
+          </geometry>
+          <material>
+            <ambient>0.1 0.1 0.1 1</ambient>
+            <diffuse>0.1 0.1 0.1 1</diffuse>
+          </material>
+        </visual>
+
+        <collision name="body_collision">
+          <geometry>
+            <!-- <mesh>
+              <uri>file:///home/lao/Documents/Masterarbeit/git/SRRS_gazebo_sim/ros2_ws/src/srrs_sim/meshes/base10x10.stl</uri>
+              <scale> 0.001 0.001 0.001 </scale>
+            </mesh> -->
+
+            <box> 
+              <size>2 2 0.265 </size>
+            </box>
+          </geometry>
+        </collision>
       </link>
+
       <joint name="fixed_to_world" type="fixed">
         <parent>world</parent>
         <child>base_link</child>

@@ -24,38 +24,6 @@ class Generate_model:
 
         self.robot_sequence = robot_sequence #["TYPE1","TYPE2","TYPE2","TYPE3"]
 
-        # TODO derive field_object_types from field_values with set?
-        # field_object_types = ["NONE", "TYPE1", "TYPE2", "TYPE3", "OBSTACLE1"]
-
-        # object_coordinates = {
-        #     (3,3):"TYPE1", 
-        #     (1,2):"TYPE2",
-        #     (2,0):"TYPE2",
-        #     (3,1):"TYPE3",
-        #     }
-
-        # GENERATED PARAMETERS
-
-        # Generate initial_grid based on object_coordinates: [ [NONE,NONE],[NONE,TYPE1] ];
-        # initial_grid="[\n"
-        # for x in range(self.field_size):
-        #     initial_grid= initial_grid + "["
-        #     for y in range(self.field_size):
-        #         if (x,y) in object_coordinates:
-        #             object_type = object_coordinates.get((x,y))
-        #         else: 
-        #             object_type = "NONE"
-        #         initial_grid = initial_grid + object_type
-        #         if y<self.field_max_index: 
-        #             initial_grid= initial_grid + "," 
-        #         else:
-        #             initial_grid= initial_grid + "]"
-        #     if x<self.field_max_index: 
-        #         initial_grid= initial_grid + ",\n" 
-        #     else:
-        #         initial_grid= initial_grid + "\n"
-        # self.initial_grid= initial_grid + "];"
-
 
         # Types of objects on the field {NONE, TYPE1, TYPE2, OBSTACLE1, TYPE3}
         self.object_types = str(object_types).replace("'","") #f" {set(field_values)}".replace("'","")
@@ -98,13 +66,7 @@ class Generate_model:
         # Print the output
         print(result.stdout)
 
-# Check if the verification was successful
-# if "is true" in result.stdout:
-#     print("The LTL property holds.")
-# else:
-#     print("The LTL property does not hold.")
 
-#  TODO derive shortest path based on coordinates if G F (robot_state != FINISHED); is false
 
         result_analysis = result.stdout
         words_to_find = [ "x = ", "y = ","robot_state = FINISHED"]
@@ -127,5 +89,24 @@ class Generate_model:
 
         # TODO: return SPEC result or error
         return str(result.stdout), path_coordinates
+    
+# Check if the verification was successful
+# if "is true" in result.stdout:
+#     print("The LTL property holds.")
+# else:
+#     print("The LTL property does not hold.")
+
+#  TODO derive shortest path based on coordinates if G F (robot_state != FINISHED); is false
 
 # TODO derive problematic regions if G F (robot_state != FAILED); is false
+
+
+# TODO derive field_object_types from field_values with set?
+# field_object_types = ["NONE", "TYPE1", "TYPE2", "TYPE3", "OBSTACLE1"]
+
+# object_coordinates = {
+#     (3,3):"TYPE1", 
+#     (1,2):"TYPE2",
+#     (2,0):"TYPE2",
+#     (3,1):"TYPE3",
+#     }

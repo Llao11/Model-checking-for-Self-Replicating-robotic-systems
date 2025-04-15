@@ -1,6 +1,8 @@
 import tkinter as tk
 import Generate_model
 
+
+
 # Predefined colors for part types
 COLOR_PALETTE = ["white", "lightgreen", "lightcoral", "lightyellow", "lightpink", "lightgray", "lightcyan", "lightgoldenrod"]
 
@@ -58,7 +60,7 @@ def on_set():
     
     cell_buttons = {}  # Reset button dictionary
 
-    # Generate the central grid of OptionMenu buttons
+    # Generate the central grid of Option Menu buttons
     cell_size = 50  # Fixed size for square cells
     for r in range(field_size_val):
         for c in range(field_size_val):
@@ -82,6 +84,9 @@ def on_set():
     for i in range(field_size_val):
         center_grid_frame.columnconfigure(i, weight=1)
         center_grid_frame.rowconfigure(i, weight=1)
+    
+    tk.Button(center_grid_frame, text="Load model", command=on_load_model).grid(row=field_size_val, column=0,columnspan=2, padx=5, pady=5)
+    tk.Button(center_grid_frame, text="Save model", command=on_save_model).grid(row=field_size_val, column=2,columnspan=2, padx=5, pady=5)
 
     # Generate the right column of OptionMenus
     for i in range(robot_size_val):
@@ -106,7 +111,6 @@ def get_color(part):
         index = part_list.index(part)
         return COLOR_PALETTE[index % len(COLOR_PALETTE)]  # Cycle through colors if needed
     return "white"  # Default color
-
 
 def on_generate():
     # Parse robot size and field size
@@ -194,6 +198,12 @@ def clear_output_text():
     output_text.config(state=tk.NORMAL)  # Enable editing temporarily
     output_text.delete(1.0, tk.END)  # Clear previous text
     output_text.config(state=tk.DISABLED)  # Make it read-only again
+
+def on_save_model():
+    on_generate()
+
+def on_load_model():
+    pass
 
 # Main application window
 root = tk.Tk()

@@ -10,9 +10,16 @@
       <visual>
         <geometry>
             <mesh filename="/home/lao/Documents/Masterarbeit/git/SRRS_gazebo_sim/ros2_ws/src/srrs_sim/meshes/Voxel.stl" scale="0.001 0.001 0.001"/>
+            <!-- <box size="0.1 0.1 0.1"/> -->
         </geometry>
         <origin xyz="${origin}"/>
       </visual>
+      <collision>
+         <geometry>
+          <mesh filename="/home/lao/Documents/Masterarbeit/git/SRRS_gazebo_sim/ros2_ws/src/srrs_sim/meshes/Voxel.stl" scale="0.001 0.001 0.001"/>
+            <!-- <box size="0.1 0.1 0.1"/> -->
+         </geometry>
+      </collision>
       <inertial>
         <mass value="0.1"/>
         <inertia ixx="1.0" ixy="0.0" ixz="0.0" iyy="1.0" iyz="0.0" izz="1.0"/>

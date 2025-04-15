@@ -10,7 +10,7 @@ import os
 
 class RobotController(Node):
     def __init__(self):
-        super().__init__('robot_controller')
+        super().__init__('robot_controller_file')
         self.create_publishers()
         [self.command_sequences_detachable, self.command_sequences_deg] = self.read_commands()
 
