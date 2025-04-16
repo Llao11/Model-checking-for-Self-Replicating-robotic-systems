@@ -16,6 +16,7 @@ class GUIController(Node):
         self.fixed_end=1
 
     # Fix to base
+
     def fix_1(self):
         msg = Empty()
         self.attach_publisher1.publish(msg)
@@ -65,6 +66,7 @@ class GUIController(Node):
         self.detach_publisher_obj2.publish(msg)
         self.get_logger().info("Published detach2 message.")
 
+
     # The free end of robot si moving to x,y,z relative to the fixed part
     def goto_XYZ(self, x,y,z):
         if x == '\n': x=0
@@ -74,16 +76,23 @@ class GUIController(Node):
         y = float(y)
         z = float(z)
         alpha = math.degrees(math.asin( math.sqrt(x*x+z*z)/4 ))
-        gamma = math.degrees(math.atan2( z,x ))
+        gamma = math.degrees(math.atan2( z,abs(x) ))
         self.get_logger().info(f"alpha: {alpha}  gamma: {gamma}")
         joint2 = alpha-gamma
         joint3 = 180-2*alpha
         joint4 = alpha+gamma
+        
+        if x<0:
+            joint2 = -joint2
+            joint3 = -joint3
+            joint4 = -joint4
+
         if self.fixed_end==1:
-            self.get_logger().info(f"ANGLES:{joint2}  {joint3}  {joint4}")
+            self.get_logger().info(f"ANGLES fix1:{joint2}  {joint3}  {joint4}")
             command_sequences = [0, joint2, joint3, joint4, 180]
+
         elif self.fixed_end==2:
-            self.get_logger().info(f"ANGLES:{joint2}  {joint3}  {joint4}")
+            self.get_logger().info(f"ANGLES fix2:{joint2}  {joint3}  {joint4}")
             command_sequences = [180, joint4, joint3, joint2, 0]
         
         for joint_index in range(len(command_sequences)):
@@ -100,9 +109,10 @@ class GUIController(Node):
         try:
             command.data = [float(angle)* math.pi/180.0]
             self.command_publishers[joint_index].publish(command)
-            self.get_logger().info(f"Published command for joint {joint_index}: {command.data}")
+            # self.get_logger().info(f"Published command for joint {joint_index}: {command.data}")
         except:
-            self.get_logger().info(f"No data for joint {joint_index}: {command.data}")
+            pass
+            # self.get_logger().info(f"No data for joint {joint_index}: {command.data}")
 
 
     def create_publishers(self):
