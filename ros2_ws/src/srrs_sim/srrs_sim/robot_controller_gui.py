@@ -23,6 +23,7 @@ class GUIController(Node):
         self.get_logger().info("Published attach1 message.")
         self.fixed_end=1
         self.free_2()
+        self.get_logger().info(f"fixed_end=1")
 
     def fix_2(self):
         msg = Empty()
@@ -30,6 +31,7 @@ class GUIController(Node):
         self.get_logger().info("Published attach2 message.")
         self.fixed_end=2
         self.free_1()
+        self.get_logger().info(f"fixed_end=2")
 
     def free_1(self):
         msg = Empty()
@@ -75,25 +77,35 @@ class GUIController(Node):
         x = float(x)
         y = float(y)
         z = float(z)
-        alpha = math.degrees(math.asin( math.sqrt(x*x+z*z)/4 ))
-        gamma = math.degrees(math.atan2( z,abs(x) ))
-        self.get_logger().info(f"alpha: {alpha}  gamma: {gamma}")
+
+        # in XY plane:
+        r = math.sqrt(x*x + y*y)
+        r_0 = math.sqrt(x*x + y*y - 1)
+
+        beta  = math.degrees(math.atan2(y,x))
+        beta_0 = beta - math.degrees(math.asin(1/r))
+
+        alpha = math.degrees(math.asin( math.sqrt(r_0*r_0+z*z)/4 ))
+        gamma = math.degrees(math.atan2( z,abs(r_0) ))
+
+        joint1 = beta_0
         joint2 = alpha-gamma
         joint3 = 180-2*alpha
         joint4 = alpha+gamma
+        joint5 = beta_0
         
-        if x<0:
-            joint2 = -joint2
-            joint3 = -joint3
-            joint4 = -joint4
-
         if self.fixed_end==1:
-            self.get_logger().info(f"ANGLES fix1:{joint2}  {joint3}  {joint4}")
-            command_sequences = [0, joint2, joint3, joint4, 180]
+             # change the basic direction if 
+            joint1 = joint1-180 
+            self.get_logger().info(f"joint1: {joint1}")
+            self.get_logger().info(f"joint1: {joint1}")
+            self.get_logger().info(f"ANGLES fix1: {joint1}  {joint2}  {joint3}  {joint4}  {joint5}" )
+            command_sequences = [joint1, joint2, joint3, joint4, joint5]
 
         elif self.fixed_end==2:
-            self.get_logger().info(f"ANGLES fix2:{joint2}  {joint3}  {joint4}")
-            command_sequences = [180, joint4, joint3, joint2, 0]
+            joint1 = joint1+180
+            self.get_logger().info(f"ANGLES fix2:  {joint1} {joint2}  {joint3}  {joint4}  {joint5}")
+            command_sequences = [joint5, joint4, joint3, joint2, joint1]
         
         for joint_index in range(len(command_sequences)):
             self.rotate_joint(joint_index,command_sequences[joint_index])
