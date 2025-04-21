@@ -3,6 +3,8 @@
   <xacro:property name="green" value="0 0.8 0 1" />
   <xacro:property name="red" value="0.8 0 0 1" />
   <xacro:property name="blue" value="0 0 0.8 1" />
+  <xacro:property name="yellow" value="1 1 0 1" />
+  <xacro:property name="white" value="1 1 1 1" />
   <xacro:property name="cell_step" value="0.134"/>
 
   <xacro:macro name="voxel" params="name origin color" >
@@ -95,7 +97,7 @@
   <xacro:voxel name="block10" origin="0 0 ${0.5*cell_step}" color="${green}"/>
   <xacro:joint_fix name="fixed9_10" parent="block9_rev" child="block10"/> 
 
-  <xacro:voxel name="block14fix" origin="0 0 0" color="${red}"/>
+  <xacro:voxel name="block14fix" origin="0 0 0" color="${yellow}"/>
   <xacro:joint_revolution name="rev13_14" parent="block10" child="block14fix" axis="0 0 1" origin="0 0 ${1.5*cell_step}" rpy="0 0 0"/>
 
 
@@ -110,6 +112,26 @@
       <mass value="0.1"/>
       <inertia ixx="0.0001" ixy="0.0" ixz="0.0" iyy="0.0001" iyz="0.0" izz="0.0001"/>
     </inertial>
+
+    <sensor name="camera_sensor" type="camera">
+      <always_on>1</always_on>
+      <update_rate>30.0</update_rate>
+      <visualize>true</visualize>
+      <topic>/camera/image_raw</topic>
+      <camera>
+        <horizontal_fov>1.5708</horizontal_fov> <!-- 90 degrees in radians -->
+        <image>
+          <width>640</width>
+          <height>480</height>
+          <format>R8G8B8</format>
+        </image>
+        <clip>
+          <near>0.1</near>
+          <far>100</far>
+        </clip>
+      </camera>
+    </sensor>
+
   </link>
 
   <joint name="camera_joint" type="fixed">
@@ -158,16 +180,6 @@
       <parameters>$(find srrs_sim)/config/robot_controller.yaml</parameters>
     </plugin>
 
-    <!-- <plugin
-      filename="libgz-sim8-detachable-joint-system.so"
-      name="gz::sim::systems::DetachableJoint">
-      <parent_link>block14fix</parent_link>
-      <child_model>voxel</child_model>
-      <child_link>voxel_link</child_link>
-      <attach_topic>attach_link_voxel</attach_topic>
-      <detach_topic>detach_link_voxel</detach_topic>
-      <output_topic>detachable_link_voxel_state</output_topic>
-    </plugin> -->
 
     <plugin
       filename="libgz-sim8-detachable-joint-system.so"
@@ -214,26 +226,12 @@
       <output_topic>detachable_obj_link_state2</output_topic>
     </plugin>
 
-    <sensor name="camera_sensor" type="camera">
-      <always_on>1</always_on>
-      <update_rate>30.0</update_rate>
-      <camera>
-        <horizontal_fov>1.5708</horizontal_fov> <!-- 90 degrees in radians -->
-        <image>
-          <width>640</width>
-          <height>480</height>
-          <format>R8G8B8</format>
-        </image>
-        <clip>
-          <near>0.1</near>
-          <far>100</far>
-        </clip>
-      </camera>
-      <plugin name="camera_plugin" filename="libgz-sensors8-camera.so">
-        <topic_name>/camera/image_raw</topic_name>
-        <frame_name>camera_link</frame_name>
-      </plugin>
-    </sensor>
+
+
+    <!-- <plugin name="gz::sim::systems::LogicalCamera" filename="libgz-sim8-logical-camera-system.so">
+      <topic_name>/camera/image_raw</topic_name>
+      <frame_name>camera_link</frame_name>
+    </plugin> -->
 
   </gazebo>
 

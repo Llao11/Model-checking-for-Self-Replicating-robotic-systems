@@ -40,6 +40,8 @@ Error:Failed to load system plugin [libign_ros2_control-system.so] : Could not f
 sudo apt install ros-jazzy-gz-ros2-control
 export GZ_SIM_SYSTEM_PLUGIN_PATH=/opt/ros/jazzy/lib/
 
+Gazebo plugins: /opt/ros/jazzy/opt/gz_sim_vendor/lib
+
 Error with faled position_controller is because of the base model (too slow to load it or smthg like this)
 
 For gripping simulation:

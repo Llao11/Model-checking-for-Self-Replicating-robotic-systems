@@ -1,163 +1,18 @@
 import rclpy
-from rclpy.node import Node
-from geometry_msgs.msg import Twist
-from std_msgs.msg import Float64MultiArray,Empty
-from ament_index_python.packages import get_package_share_directory
+import math
 import tkinter as tk
 import threading
-import math
-import json
-import os
 
-class GUIController(Node):
-    def __init__(self):
-        super().__init__('robot_controller_gui')
-        self.create_publishers()
-        self.fixed_end=1
+from . import SRRSController
 
-    # Fix to base
-
-    def fix_1(self):
-        msg = Empty()
-        self.attach_publisher1.publish(msg)
-        self.get_logger().info("Published attach1 message.")
-        self.fixed_end=1
-        self.free_2()
-        self.get_logger().info(f"fixed_end=1")
-
-    def fix_2(self):
-        msg = Empty()
-        self.attach_publisher2.publish(msg)
-        self.get_logger().info("Published attach2 message.")
-        self.fixed_end=2
-        self.free_1()
-        self.get_logger().info(f"fixed_end=2")
-
-    def free_1(self):
-        msg = Empty()
-        self.detach_publisher1.publish(msg)
-        self.get_logger().info("Published detach1 message.")
-
-    def free_2(self):
-        msg = Empty()
-        self.detach_publisher2.publish(msg)
-        self.get_logger().info("Published detach2 message.")
-
-    
-    # Fix objects
-
-    def fix_obj1(self):
-        msg = Empty()
-        self.attach_publisher_obj1.publish(msg)
-        self.get_logger().info("Published attach1 message.")
-        self.free_obj2()
-
-    def fix_obj2(self):
-        msg = Empty()
-        self.attach_publisher_obj2.publish(msg)
-        self.get_logger().info("Published attach2 message.")
-        self.free_obj1()
-
-    def free_obj1(self):
-        msg = Empty()
-        self.detach_publisher_obj1.publish(msg)
-        self.get_logger().info("Published detach1 message.")
-
-    def free_obj2(self):
-        msg = Empty()
-        self.detach_publisher_obj2.publish(msg)
-        self.get_logger().info("Published detach2 message.")
-
-
-    # The free end of robot si moving to x,y,z relative to the fixed part
-    def goto_XYZ(self, x,y,z):
-        if x == '\n': x=0
-        if y == '\n': y=0
-        if z == '\n': z=0
-        x = float(x)
-        y = float(y)
-        z = float(z)
-
-        # in XY plane:
-        r = math.sqrt(x*x + y*y)
-        r_0 = math.sqrt(x*x + y*y - 1)
-
-        beta  = math.degrees(math.atan2(y,x))
-        beta_0 = beta - math.degrees(math.asin(1/r))
-
-        alpha = math.degrees(math.asin( math.sqrt(r_0*r_0+z*z)/4 ))
-        gamma = math.degrees(math.atan2( z,abs(r_0) ))
-
-        joint1 = beta_0
-        joint2 = alpha-gamma
-        joint3 = 180-2*alpha
-        joint4 = alpha+gamma
-        joint5 = beta_0
-        
-        if self.fixed_end==1:
-             # change the basic direction if 
-            joint1 = joint1-180 
-            self.get_logger().info(f"joint1: {joint1}")
-            self.get_logger().info(f"joint1: {joint1}")
-            self.get_logger().info(f"ANGLES fix1: {joint1}  {joint2}  {joint3}  {joint4}  {joint5}" )
-            command_sequences = [joint1, joint2, joint3, joint4, joint5]
-
-        elif self.fixed_end==2:
-            joint1 = joint1+180
-            self.get_logger().info(f"ANGLES fix2:  {joint1} {joint2}  {joint3}  {joint4}  {joint5}")
-            command_sequences = [joint5, joint4, joint3, joint2, joint1]
-        
-        for joint_index in range(len(command_sequences)):
-            self.rotate_joint(joint_index,command_sequences[joint_index])
-
-    
-    def rotate_joints(self,command_sequences):
-        for joint_index in range(len(command_sequences)):
-            self.rotate_joint(joint_index,command_sequences[joint_index])
-
-    def rotate_joint(self,joint_index,angle):
-        command = Float64MultiArray()
-        # Degrees to Radians
-        try:
-            command.data = [float(angle)* math.pi/180.0]
-            self.command_publishers[joint_index].publish(command)
-            # self.get_logger().info(f"Published command for joint {joint_index}: {command.data}")
-        except:
-            pass
-            # self.get_logger().info(f"No data for joint {joint_index}: {command.data}")
-
-
-    def create_publishers(self):
-        # Publishers for attach and detach topics
-        self.attach_publisher_voxel = self.create_publisher(Empty, '/attach_link_voxel', 10)
-        self.detach_publisher_voxel = self.create_publisher(Empty, '/detach_link_voxel', 10)
-        self.attach_publisher1 = self.create_publisher(Empty, '/attach_link1', 10)
-        self.detach_publisher1 = self.create_publisher(Empty, '/detach_link1', 10)
-        self.attach_publisher2 = self.create_publisher(Empty, '/attach_link2', 10)
-        self.detach_publisher2 = self.create_publisher(Empty, '/detach_link2', 10)
-
-        self.attach_publisher_obj1 = self.create_publisher(Empty, '/attach_obj_link1', 10)
-        self.attach_publisher_obj2 = self.create_publisher(Empty, '/attach_obj_link2', 10)
-        self.detach_publisher_obj1 = self.create_publisher(Empty, '/detach_obj_link1', 10)
-        self.detach_publisher_obj2 = self.create_publisher(Empty, '/detach_obj_link2', 10)
-
-        # Separate publishers for each joint controller
-        self.command_publisher1 = self.create_publisher(Float64MultiArray,'/position_controller1/commands',10)
-        self.command_publisher2 = self.create_publisher(Float64MultiArray,'/position_controller2/commands',10)
-        self.command_publisher3 = self.create_publisher(Float64MultiArray,'/position_controller3/commands',10)
-        self.command_publisher4 = self.create_publisher(Float64MultiArray,'/position_controller4/commands',10)
-        self.command_publisher5 = self.create_publisher(Float64MultiArray,'/position_controller5/commands',10)
-        self.command_publishers = [self.command_publisher1,self.command_publisher2,self.command_publisher3,
-                                   self.command_publisher4,self.command_publisher5]
-        
-    def get_fixed_end(self):
-        return self.fixed_end
 
 class GUI:
-    def __init__(self, node: GUIController):
+    def __init__(self, node: SRRSController):
         self.node = node
         self.root = tk.Tk()
         self.root.title("Robot Controller")
+
+        # Coordinate control
 
         label_x= tk.Label(self.root,text="X")
         outputx = tk.Text(self.root, height=1, width=6)
@@ -168,17 +23,43 @@ class GUI:
         btn_run = tk.Button(self.root, text="Go to XYZ", command=lambda: self.node.goto_XYZ(x=outputx.get('1.0', tk.END), 
                                                                                             y=outputy.get('1.0', tk.END), 
                                                                                             z=outputz.get('1.0', tk.END)))
+        label_x.grid(row=0, column=0)
+        outputx.grid(row=0, column=1)
+        label_y.grid(row=1, column=0)
+        outputy.grid(row=1, column=1)
+        label_z.grid(row=2, column=0)
+        outputz.grid(row=2, column=1)
+        btn_run.grid(row=3, column=0)
 
-        btn_fix1_base = tk.Button(self.root, text="Fix block1 to base", command=lambda: self.node.fix_1())
-        btn_fix2_base = tk.Button(self.root, text="Fix block2 to base", command=lambda: self.node.fix_2())
+        #  End block fix
 
-        btn_fix1_obj = tk.Button(self.root, text="Fix object to block 1", command=lambda: self.node.fix_obj1())
-        btn_fix2_obj = tk.Button(self.root, text="Fix object to block 2", command=lambda: self.node.fix_obj2())
-        btn_free1_obj = tk.Button(self.root, text="Free object from block 1", command=lambda: self.node.free_obj1())
-        btn_free2_obj = tk.Button(self.root, text="Free object from block 2", command=lambda: self.node.free_obj2())
-        label_block1= tk.Label(self.root,text="Block1 - initially lower")
-        label_block2= tk.Label(self.root,text="Block2 - initially upper")
+        self.btn_fix1_base = tk.Button(self.root, text="Fix block1 to base", command=lambda: self.node.fix_1(gui=self))
+        self.btn_fix2_base = tk.Button(self.root, text="Fix block2 to base", command=lambda: self.node.fix_2(gui=self))
 
+        self.btn_fix1_obj = tk.Button(self.root, text="Fix object to block 1", command=lambda: self.node.fix_obj1(gui=self))
+        self.btn_fix2_obj = tk.Button(self.root, text="Fix object to block 2", command=lambda: self.node.fix_obj2(gui=self))
+        self.btn_free1_obj = tk.Button(self.root, text="Free object from block 1", command=lambda: self.node.free_obj1(gui=self))
+        self.btn_free2_obj = tk.Button(self.root, text="Free object from block 2", command=lambda: self.node.free_obj2(gui=self))
+
+        self.fixed_block_var = tk.StringVar(value = self.node.get_fixed_end())
+        label_fixed_block = tk.Label(self.root, textvariable=self.fixed_block_var)
+        self.label_fix_block1= tk.Label(self.root,text="Block1 fixed - initially lower", bg="red")
+        self.label_fix_block2= tk.Label(self.root,text="Block2 fixed - initially upper", bg="yellow")
+
+        self.btn_fix2_base.grid(row=5, column=0)
+        self.btn_fix1_base.grid(row=6, column=0)
+        
+        label_fixed_block.grid(row=4, column=1)
+        self.label_fix_block2.grid(row=5, column=1)
+        self.label_fix_block1.grid(row=6, column=1)
+        
+        self.btn_fix2_obj.grid(row=7, column=0)
+        self.btn_fix1_obj.grid(row=8, column=0)
+        
+        self.btn_free2_obj.grid(row=7, column=1)
+        self.btn_free1_obj.grid(row=8, column=1)
+
+        # Individual joint control
 
         joint1_angle = tk.Text(self.root, height=1,width=6)
         joint2_angle = tk.Text(self.root, height=1,width=6)
@@ -203,26 +84,6 @@ class GUI:
                                                                                                    joint4_angle.get('1.0', tk.END),
                                                                                                    joint5_angle.get('1.0', tk.END),]))
 
-        label_x.grid(row=0, column=0)
-        outputx.grid(row=0, column=1)
-        label_y.grid(row=1, column=0)
-        outputy.grid(row=1, column=1)
-        label_z.grid(row=2, column=0)
-        outputz.grid(row=2, column=1)
-        btn_run.grid(row=3, column=0)
-
-        btn_fix2_base.grid(row=5, column=0)
-        btn_fix1_base.grid(row=6, column=0)
-        
-        label_block2.grid(row=5, column=1)
-        label_block1.grid(row=6, column=1)
-        
-        btn_fix2_obj.grid(row=7, column=0)
-        btn_fix1_obj.grid(row=8, column=0)
-        
-        btn_free2_obj.grid(row=7, column=1)
-        btn_free1_obj.grid(row=8, column=1)
-
         joint1_angle.grid(row=1, column=5)
         joint2_angle.grid(row=2, column=5)
         joint3_angle.grid(row=3, column=5)
@@ -245,7 +106,7 @@ class GUI:
 
 def main():
     rclpy.init()
-    node = GUIController()
+    node = SRRSController.SRRSController()
 
     # Run ROS spin in a separate thread
     threading.Thread(target=rclpy.spin, args=(node,), daemon=True).start()
