@@ -13,6 +13,11 @@ def generate_launch_description():
     # Launch Arguments
     use_sim_time = LaunchConfiguration('use_sim_time', default=True)
 
+    # spawn parts locations:
+    step = 0.134
+    x = str(7 * step)
+    y = str(7 * step)
+
     # Get URDF via xacro
     robot_description_content = Command(
         [
@@ -71,6 +76,19 @@ def generate_launch_description():
         ],
     )
 
+    gz_spawn_robot_camera = Node(
+        package='ros_gz_sim',
+        executable='create',
+        output='screen',
+        arguments=[
+            '-name', 'head_camera',
+            '-x', '1.0', '-y', '0.0', '-z', '0.134',  # Set X, Y, Z coordinates
+            '-X', '0.0','-Y', '0.0','-Z', '0.0',  # Set Yaw (rotation in radians)
+            '-file', '/home/lao/Documents/Masterarbeit/git/SRRS_gazebo_sim/ros2_ws/install/srrs_sim/share/srrs_sim/sdf/head_camera.sdf',
+            '-allow_renaming', 'true'
+        ],
+    )
+
     gz_spawn_parts = Node(
         package='ros_gz_sim',
         executable='create',
@@ -82,8 +100,8 @@ def generate_launch_description():
             # 
             # big base:
             '-file', '/home/lao/Documents/Masterarbeit/git/SRRS_gazebo_sim/ros2_ws/install/srrs_sim/share/srrs_sim/sdf/voxel.sdf',
-            # '-x', '0.234', '-y', '0.234', '-z', '0.234',  # Set X, Y, Z coordinates
-            '-x', '0.134', '-y', '0.134', '-z', '0.134',  # Set X, Y, Z coordinates
+            '-x', x, '-y', y, '-z', '0.134',  # Set X, Y, Z coordinates
+            # '-x', '0.134', '-y', '0.134', '-z', '0.134',  # Set X, Y, Z coordinates
             '-X', '0.0','-Y', '0.0','-Z', '0.0',  # Set Yaw (rotation in radians)
             '-allow_renaming', 'true'
         ]
@@ -193,6 +211,7 @@ def generate_launch_description():
         node_robot_state_publisher,
         gz_spawn_parts,
         gz_spawn_robot,
+        gz_spawn_robot_camera,
         bridge_node, # for attaching and detaching joints
         
         # Launch Arguments

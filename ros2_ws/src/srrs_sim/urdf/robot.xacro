@@ -112,40 +112,23 @@
       <mass value="0.1"/>
       <inertia ixx="0.0001" ixy="0.0" ixz="0.0" iyy="0.0001" iyz="0.0" izz="0.0001"/>
     </inertial>
-
-    <sensor name="camera_sensor" type="camera">
-      <always_on>1</always_on>
-      <update_rate>30.0</update_rate>
-      <visualize>true</visualize>
-      <topic>/camera/image_raw</topic>
-      <camera>
-        <horizontal_fov>1.5708</horizontal_fov> <!-- 90 degrees in radians -->
-        <image>
-          <width>640</width>
-          <height>480</height>
-          <format>R8G8B8</format>
-        </image>
-        <clip>
-          <near>0.1</near>
-          <far>100</far>
-        </clip>
-      </camera>
-    </sensor>
-
   </link>
 
-  <joint name="camera_joint" type="fixed">
+
+  <joint name="camera_visual_block_joint" type="fixed">
     <parent link="block14fix"/>  
     <child link="camera_link"/>
     <origin xyz="0.1 0 0" rpy="0 0 0"/>  
   </joint>
 
-  <link name="camera_link_optical"/>
-  <joint name="camera_optical_joint" type="fixed">
-    <parent link="camera_link"/>
-    <child link="camera_link_optical"/>
-    <origin xyz="0 0 0" rpy="-1.5708 0 -1.5708"/> 
-  </joint>
+  
+
+  <!-- <joint name="camera_joint" type="fixed">
+    <parent link="camera_link"/>  
+    <child link="sensor_link"/>
+    <origin xyz="0.1 0 0" rpy="0 0 0"/>  
+  </joint> -->
+
 
 
   <ros2_control name="GazeboSimSystem" type="system">
@@ -174,12 +157,13 @@
     </joint>
   </ros2_control>
 
+  
+
   <gazebo>
     <plugin filename="gz_ros2_control-system" name="gz_ros2_control::GazeboSimROS2ControlPlugin">
       <!-- <parameters>$(find srrs_sim)/config/two_blocks_controller.yaml</parameters> -->
       <parameters>$(find srrs_sim)/config/robot_controller.yaml</parameters>
     </plugin>
-
 
     <plugin
       filename="libgz-sim8-detachable-joint-system.so"
@@ -226,13 +210,8 @@
       <output_topic>detachable_obj_link_state2</output_topic>
     </plugin>
 
-
-
-    <!-- <plugin name="gz::sim::systems::LogicalCamera" filename="libgz-sim8-logical-camera-system.so">
-      <topic_name>/camera/image_raw</topic_name>
-      <frame_name>camera_link</frame_name>
-    </plugin> -->
-
   </gazebo>
+
+
 
 </robot>

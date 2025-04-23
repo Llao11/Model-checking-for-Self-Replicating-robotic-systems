@@ -61,8 +61,16 @@
 
 
 
-- ros_topic_name: "/camera/image_raw"
-  gz_topic_name: "/camera/image_raw"
+- ros_topic_name: "/camera/image"
+  gz_topic_name: "/camera/image"
   ros_type_name: "sensor_msgs/msg/Image"
   gz_type_name: "gz.msgs.Image"
   direction: BIDIRECTIONAL
+
+- ros_topic_name: "/camera/camera_info"
+  gz_topic_name: "/camera/camera_info"
+  ros_type_name: "sensor_msgs/msg/CameraInfo"
+  gz_type_name: "gz.msgs.CameraInfo"
+  direction: BIDIRECTIONAL
+
+  
