@@ -8,10 +8,15 @@ from launch.substitutions import Command, FindExecutable, LaunchConfiguration, P
 from launch_ros.actions import Node
 from launch_ros.substitutions import FindPackageShare
 from launch.actions import LogInfo
+from launch.launch_context import LaunchContext
 
 def generate_launch_description():
     # Launch Arguments
     use_sim_time = LaunchConfiguration('use_sim_time', default=True)
+
+    # path to share sdf folder
+    context = LaunchContext()
+    sdf_path = PathJoinSubstitution([FindPackageShare("srrs_sim"), "sdf" ]).perform(context)
 
     # spawn parts locations:
     step = 0.134
@@ -76,18 +81,6 @@ def generate_launch_description():
         ],
     )
 
-    gz_spawn_robot_camera = Node(
-        package='ros_gz_sim',
-        executable='create',
-        output='screen',
-        arguments=[
-            '-name', 'head_camera',
-            '-x', '1.0', '-y', '0.0', '-z', '0.134',  # Set X, Y, Z coordinates
-            '-X', '0.0','-Y', '0.0','-Z', '0.0',  # Set Yaw (rotation in radians)
-            '-file', '/home/lao/Documents/Masterarbeit/git/SRRS_gazebo_sim/ros2_ws/install/srrs_sim/share/srrs_sim/sdf/head_camera.sdf',
-            '-allow_renaming', 'true'
-        ],
-    )
 
     gz_spawn_parts = Node(
         package='ros_gz_sim',
@@ -99,9 +92,8 @@ def generate_launch_description():
             # '-file', '/home/lao/Documents/Masterarbeit/git/SRRS_gazebo_sim/ros2_ws/install/srrs_sim/share/srrs_sim/sdf/base1x1.sdf',
             # 
             # big base:
-            '-file', '/home/lao/Documents/Masterarbeit/git/SRRS_gazebo_sim/ros2_ws/install/srrs_sim/share/srrs_sim/sdf/voxel.sdf',
+            '-file', f'{sdf_path}/voxel.sdf',
             '-x', x, '-y', y, '-z', '0.134',  # Set X, Y, Z coordinates
-            # '-x', '0.134', '-y', '0.134', '-z', '0.134',  # Set X, Y, Z coordinates
             '-X', '0.0','-Y', '0.0','-Z', '0.0',  # Set Yaw (rotation in radians)
             '-allow_renaming', 'true'
         ]
@@ -114,7 +106,7 @@ def generate_launch_description():
         arguments=[
             '-name', 'base',
             # simple base plate:
-            '-file', '/home/lao/Documents/Masterarbeit/git/SRRS_gazebo_sim/ros2_ws/install/srrs_sim/share/srrs_sim/sdf/base.sdf',
+            '-file', f'{sdf_path}/base.sdf',
             # 
             # big base plate:
             # '-file', '/home/lao/Documents/Masterarbeit/git/SRRS_gazebo_sim/ros2_ws/install/srrs_sim/share/srrs_sim/sdf/base10x10.sdf',
@@ -183,7 +175,7 @@ def generate_launch_description():
         output='screen'
     )
 
-    world_path = PathJoinSubstitution([FindPackageShare("srrs_sim"), "sdf", "world1.sdf"])
+    
 
     return LaunchDescription([
         # Launch gazebo environment
@@ -192,7 +184,7 @@ def generate_launch_description():
                 [PathJoinSubstitution([FindPackageShare('ros_gz_sim'),
                                        'launch',
                                        'gz_sim.launch.py'])]),
-            launch_arguments=[('gz_args',['-r -v 3 /home/lao/Documents/Masterarbeit/git/SRRS_gazebo_sim/ros2_ws/install/srrs_sim/share/srrs_sim/sdf/world.sdf'])]
+            launch_arguments=[('gz_args',[f'-r -v 3 {sdf_path}/world.sdf'])] # -r runs the simulation immediately, -v 3 sets the verbosity level.
         ),        
         gz_spawn_base,
         # create the event so that joint_state_broadcaster_spawner started after the end of gz_spawn_robot process
@@ -209,16 +201,17 @@ def generate_launch_description():
         position_controller_spawner5,
         bridge_clock,
         node_robot_state_publisher,
+        bridge_node, # for attaching and detaching joints
         gz_spawn_parts,
         gz_spawn_robot,
-        gz_spawn_robot_camera,
-        bridge_node, # for attaching and detaching joints
         
         # Launch Arguments
         DeclareLaunchArgument(
             'use_sim_time',
             default_value=use_sim_time,
             description='If true, use simulated clock'),
+
+        
         LogInfo(msg="some info"),
 
         # print robot sdf in Log output

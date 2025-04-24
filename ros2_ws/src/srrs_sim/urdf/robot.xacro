@@ -16,7 +16,7 @@
         </geometry>
         <origin xyz="${origin}"/>
       </visual>
-      <collision>
+      <collision name="${name}_collision">
          <geometry>
           <mesh filename="/home/lao/Documents/Masterarbeit/git/SRRS_gazebo_sim/ros2_ws/src/srrs_sim/meshes/Voxel.stl" scale="0.001 0.001 0.001"/>
             <!-- <box size="0.1 0.1 0.1"/> -->
@@ -65,6 +65,27 @@
     <xacro:joint_fix name="${name}visualfixed" parent="${parent}" child="${name}visual"/>
   </xacro:macro>
 
+  <xacro:macro name="contact_plate" params="name parent" >
+    <link name="${name}">
+      <visual>
+        <geometry>
+            <box size="0.1 0.1 0.01"/>
+        </geometry>
+        <!-- <origin xyz="${origin}"/> -->
+      </visual>
+      <collision name="${name}_collision">
+        <geometry>
+          <box size="0.1 0.1 0.01"/>
+        </geometry>
+      </collision>
+    </link>
+    <joint name="${name}_joint" type="fixed">
+      <origin xyz="0 0 0.2"/>
+      <parent link="${parent}"/>
+      <child link="${name}"/>
+    </joint>
+  </xacro:macro>
+
   <!-- <link name="world"/> -->
   <xacro:voxel name="block0_fix" origin="0 0 0" color="${red}"/>
   <!-- <xacro:joint_fix name="world_to_base" parent="world" child="block0_fix"/> -->
@@ -99,6 +120,9 @@
 
   <xacro:voxel name="block14fix" origin="0 0 0" color="${yellow}"/>
   <xacro:joint_revolution name="rev13_14" parent="block10" child="block14fix" axis="0 0 1" origin="0 0 ${1.5*cell_step}" rpy="0 0 0"/>
+
+  
+  <!-- <xacro:contact_plate name="block14fix_contact" parent="block14fix"/> -->
 
 
   
@@ -210,6 +234,45 @@
       <output_topic>detachable_obj_link_state2</output_topic>
     </plugin>
 
+    <plugin 
+      filename="gz-sim-contact-system" 
+      name="gz::sim::systems::Contact"/>
+
+  </gazebo>
+
+  <gazebo reference="camera_link">
+    <sensor name="camera_sensor" type="camera">
+      <camera>
+        <horizontal_fov>1.3962634</horizontal_fov>
+        <image>
+          <width>640</width>
+          <height>480</height>
+          <format>R8G8B8</format>
+        </image>
+        <clip>
+          <near>0.1</near>
+          <far>15</far>
+        </clip>
+        <optical_frame_id>camera_link_optical</optical_frame_id>
+        <camera_info_topic>camera/camera_info</camera_info_topic>
+      </camera>
+      <always_on>1</always_on>
+      <update_rate>20</update_rate>
+      <visualize>true</visualize>
+      <topic>camera/image</topic>
+    </sensor>
+  </gazebo>
+
+  <gazebo reference="block14fix_contact">
+    <sensor name="contact_sensor" type="contact">
+      <contact>
+        <!-- Match the collision element name in the link -->
+        <collision>block14fix_contact_collision</collision>
+      </contact>
+      <always_on>true</always_on>
+      <update_rate>100</update_rate>
+      <topic>robot/contacts</topic>
+    </sensor>
   </gazebo>
 
 
