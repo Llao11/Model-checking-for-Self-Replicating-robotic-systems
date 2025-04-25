@@ -1,6 +1,6 @@
 from launch import LaunchDescription
 from launch.actions import DeclareLaunchArgument, IncludeLaunchDescription
-from launch.actions import RegisterEventHandler
+from launch.actions import RegisterEventHandler,TimerAction
 from launch.event_handlers import OnProcessExit
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.substitutions import Command, FindExecutable, LaunchConfiguration, PathJoinSubstitution
@@ -177,7 +177,8 @@ def generate_launch_description():
 
     
 
-    return LaunchDescription([
+    return LaunchDescription(
+        [
         # Launch gazebo environment
         IncludeLaunchDescription(
             PythonLaunchDescriptionSource(
@@ -185,25 +186,41 @@ def generate_launch_description():
                                        'launch',
                                        'gz_sim.launch.py'])]),
             launch_arguments=[('gz_args',[f'-r -v 3 {sdf_path}/world.sdf'])] # -r runs the simulation immediately, -v 3 sets the verbosity level.
-        ),        
-        gz_spawn_base,
-        # create the event so that joint_state_broadcaster_spawner started after the end of gz_spawn_robot process
+        ),    
+
         RegisterEventHandler(
-            event_handler=OnProcessExit(
-                target_action=gz_spawn_robot,
-                on_exit=[joint_state_broadcaster_spawner],
-            )
-        ),
-        position_controller_spawner1,
-        position_controller_spawner2,
-        position_controller_spawner3,
-        position_controller_spawner4,
-        position_controller_spawner5,
+                event_handler=OnProcessExit(
+                    target_action=gz_spawn_base,
+                    on_exit=[TimerAction(
+                            period=5.0,
+                            actions=[
+                                gz_spawn_robot,
+                                gz_spawn_parts]
+                        )],
+                )
+            ),
+
+        RegisterEventHandler(
+                event_handler=OnProcessExit(
+                    target_action=gz_spawn_robot,
+                    on_exit=[TimerAction(
+                            period=1.0,
+                            actions=[
+                                position_controller_spawner1,
+                                position_controller_spawner2,
+                                position_controller_spawner3,
+                                position_controller_spawner4,
+                                position_controller_spawner5,
+                                joint_state_broadcaster_spawner,
+                                ]
+                        )],
+                )
+            ),
+
+        gz_spawn_base,
         bridge_clock,
         node_robot_state_publisher,
         bridge_node, # for attaching and detaching joints
-        gz_spawn_parts,
-        gz_spawn_robot,
         
         # Launch Arguments
         DeclareLaunchArgument(

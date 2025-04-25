@@ -109,15 +109,19 @@ class SRRSController(Node):
             if x > step_size:
                 stepX = step_size
                 x = x-step_size
-            if x < -step_size:
+            elif x < -step_size:
                 stepX = -step_size
                 x = x+step_size
+            else: 
+                stepX = 0
             if y > step_size:
                 stepY = step_size
                 y = y-step_size
-            if y < -step_size:
+            elif y < -step_size:
                 stepY = -step_size
                 y = y+step_size
+            else: 
+                stepY = 0
             self.get_logger().info(f"\nX: {x}\n Y:{y}\n Z:{z}")
             self.goto_XYZ(stepX,stepY,0)
             time.sleep(4)
