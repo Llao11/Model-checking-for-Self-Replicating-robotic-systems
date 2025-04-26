@@ -22,6 +22,7 @@ def generate_launch_description():
     step = 0.134
     x = str(7 * step)
     y = str(7 * step)
+    z = str(1 * step)
 
     # Get URDF via xacro
     robot_description_content = Command(
@@ -93,7 +94,7 @@ def generate_launch_description():
             # 
             # big base:
             '-file', f'{sdf_path}/voxel.sdf',
-            '-x', x, '-y', y, '-z', '0.134',  # Set X, Y, Z coordinates
+            '-x', x, '-y', y, '-z', z,  # Set X, Y, Z coordinates
             '-X', '0.0','-Y', '0.0','-Z', '0.0',  # Set Yaw (rotation in radians)
             '-allow_renaming', 'true'
         ]

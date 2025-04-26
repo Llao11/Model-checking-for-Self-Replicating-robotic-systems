@@ -59,8 +59,6 @@
   gz_type_name: "gz.msgs.Empty"
   direction: BIDIRECTIONAL
 
-
-
 - ros_topic_name: "/camera/image"
   gz_topic_name: "/camera/image"
   ros_type_name: "sensor_msgs/msg/Image"
@@ -73,4 +71,14 @@
   gz_type_name: "gz.msgs.CameraInfo"
   direction: BIDIRECTIONAL
 
-  
+- ros_topic_name: "/robot/contact1"
+  gz_topic_name: "/robot/contact1"
+  ros_type_name: "ros_gz_interfaces/msg/Contacts"
+  gz_type_name: "gz.msgs.Contacts"
+  direction: BIDIRECTIONAL  
+
+- ros_topic_name: "/robot/contact2"
+  gz_topic_name: "/robot/contact2"
+  ros_type_name: "ros_gz_interfaces/msg/Contacts"
+  gz_type_name: "gz.msgs.Contacts"
+  direction: BIDIRECTIONAL  

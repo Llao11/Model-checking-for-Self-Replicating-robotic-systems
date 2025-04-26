@@ -123,8 +123,10 @@ class SRRSController(Node):
             else: 
                 stepY = 0
             self.get_logger().info(f"\nX: {x}\n Y:{y}\n Z:{z}")
-            self.goto_XYZ(stepX,stepY,0)
+            self.goto_XYZ(stepX,stepY,1)
             time.sleep(4)
+            self.goto_XYZ(stepX,stepY,0)
+            time.sleep(1)
             self.swap_fix_block()
             time.sleep(1)
             self.goto_XYZ( x, y, z, step_size)
