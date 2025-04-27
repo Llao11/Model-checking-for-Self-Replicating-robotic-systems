@@ -102,6 +102,54 @@
 
   </xacro:macro>
 
+
+  <xacro:macro name="camera_sensor" params="name parent origin_xyz origin_rpy" >
+    <link name="${name}">
+      <visual name="${name}_visual">
+        <geometry>
+          <box size="0.05 0.05 0.05"/>  
+        </geometry>
+      </visual>
+    </link>
+
+    <joint name="${name}_joint" type="fixed">
+      <parent link="${parent}"/>  
+      <child link="${name}"/>
+    </joint>
+
+    <link name="${name}_optical"></link>
+
+    <joint name="${name}_optical_joint" type="fixed">
+      <parent link="${name}"/>  
+      <child link="${name}_optical"/>
+      <origin xyz="${origin_xyz}" rpy="${origin_rpy}"/>
+    </joint>
+
+    <gazebo reference="${name}">
+      <sensor name="${name}_sensor" type="camera">
+      <visualize>true</visualize>
+        <camera>
+          <horizontal_fov>1.3962634</horizontal_fov>
+          <image>
+            <width>640</width>
+            <height>480</height>
+            <format>R8G8B8</format>
+          </image>
+          <clip>
+            <near>0.1</near>
+            <far>15</far>
+          </clip>
+          <optical_frame_id>${name}_optical</optical_frame_id>
+          <camera_info_topic>/${name}/camera_info</camera_info_topic>
+        </camera>
+        <always_on>1</always_on>
+        <update_rate>20</update_rate>
+        <visualize>true</visualize>
+        <topic>/${name}/image</topic>
+      </sensor>
+    </gazebo>
+  </xacro:macro>
+
 <!-- MAIN STRUCTURE -->
 
   <xacro:voxel name="block0_fix" origin="0 0 0" color="${red}"/>
@@ -141,53 +189,9 @@
  
 
   <!-- CAMERA PART -->
-  
-  <link name="camera_link">
-    <visual name="camera_link_visual">
-      <geometry>
-        <box size="0.05 0.05 0.05"/>  
-      </geometry>
-    </visual>
-  </link>
 
-  <joint name="camera_joint" type="fixed">
-    <parent link="block14fix"/>  
-    <child link="camera_link"/>
-  </joint>
-
-  <link name="camera_link_optical"></link>
-
-  <joint name="camera_optical_joint" type="fixed">
-    <parent link="camera_link"/>  
-    <child link="camera_link_optical"/>
-    <origin xyz = "0 0 0" rpy = "${-pi/2} 0 ${-pi/2}"/>
-  </joint>
-
-  <gazebo reference="camera_link">
-    <sensor name="camera_sensor" type="camera">
-    <visualize>true</visualize>
-      <camera>
-        <horizontal_fov>1.3962634</horizontal_fov>
-        <image>
-          <width>640</width>
-          <height>480</height>
-          <format>R8G8B8</format>
-        </image>
-        <clip>
-          <near>0.1</near>
-          <far>15</far>
-        </clip>
-        <optical_frame_id>camera_link_optical</optical_frame_id>
-        <camera_info_topic>camera/camera_info</camera_info_topic>
-      </camera>
-      <always_on>1</always_on>
-      <update_rate>20</update_rate>
-      <visualize>true</visualize>
-      <topic>camera/image</topic>
-    </sensor>
-  </gazebo>
-
-
+  <xacro:camera_sensor name="camera1" parent="block0_fix" origin_xyz="0 0 0" origin_rpy="${-pi/2} ${-pi/2} ${-pi/2}"/>
+  <xacro:camera_sensor name="camera2" parent="block14fix" origin_xyz="0 0 0" origin_rpy="0 ${-pi/2} 0"/>
 
   <!--  CONTACT sensors -->
 
