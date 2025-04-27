@@ -47,3 +47,11 @@ Error with faled position_controller is because of the base model (too slow to l
 For gripping simulation:
     sudo apt install ros-jazzy-moveit  -- didnt work
     libDetachableJointPlugin
+
+
+ADD SENSORS:
+    Contact sensors:
+        - check names in sdf:
+            xacro robot.xacro > temp_robot.urdf 
+            gz sdf -p temp_robot.urdf > temp_robot.sdf
+

@@ -30,6 +30,23 @@
           </friction>
         </surface>
       </collision>
+      <collision name='block0_fix_fixed_joint_lump__contact1_collision_collision_1'>
+        <pose>0 0 0 0 0 0</pose>
+        <geometry>
+          <cylinder>
+            <length>0.001</length>
+            <radius>0.070000000000000007</radius>
+          </cylinder>
+        </geometry>
+        <surface>
+          <contact>
+            <ode/>
+          </contact>
+          <friction>
+            <ode/>
+          </friction>
+        </surface>
+      </collision>
       <visual name='block0_fix_visual'>
         <pose>0 0 0 0 0 0</pose>
         <geometry>
@@ -43,7 +60,16 @@
           <diffuse>0.800000012 0 0 1</diffuse>
         </material>
       </visual>
-      <visual name='block0_fix_fixed_joint_lump__rev0_1visual_visual_1'>
+      <visual name='block0_fix_fixed_joint_lump__contact1_visual_1'>
+        <pose>0 0 0 0 0 0</pose>
+        <geometry>
+          <cylinder>
+            <length>0.001</length>
+            <radius>0.070000000000000007</radius>
+          </cylinder>
+        </geometry>
+      </visual>
+      <visual name='block0_fix_fixed_joint_lump__rev0_1visual_visual_2'>
         <pose>0 0 0.13400000000000001 0 0 0</pose>
         <geometry>
           <cylinder>
@@ -52,6 +78,15 @@
           </cylinder>
         </geometry>
       </visual>
+      <sensor name='contact1_sensor' type='contact'>
+        <contact>
+          <collision>block0_fix_fixed_joint_lump__contact1_collision_collision_1</collision>
+          <topic>/robot/contact1</topic>
+        </contact>
+        <always_on>true</always_on>
+        <update_rate>50</update_rate>
+        <pose>0 0 0 0 0 0</pose>
+      </sensor>
     </link>
     <joint name='rev0_1' type='revolute'>
       <pose relative_to='block0_fix'>0 0 0.13400000000000001 0 0 0</pose>
@@ -580,12 +615,13 @@
           </friction>
         </surface>
       </collision>
-      <collision name='block14fix_fixed_joint_lump__contact_link_collision_collision_1'>
-        <pose>0 0 0.20000000000000001 0 0 0</pose>
+      <collision name='block14fix_fixed_joint_lump__contact2_collision_collision_1'>
+        <pose>0 0 0.13700000000000001 0 0 0</pose>
         <geometry>
-          <box>
-            <size>0.10000000000000001 0.10000000000000001 0.01</size>
-          </box>
+          <cylinder>
+            <length>0.001</length>
+            <radius>0.070000000000000007</radius>
+          </cylinder>
         </geometry>
         <surface>
           <contact>
@@ -617,12 +653,13 @@
           </box>
         </geometry>
       </visual>
-      <visual name='block14fix_fixed_joint_lump__contact_link_visual_2'>
-        <pose>0 0 0.20000000000000001 0 0 0</pose>
+      <visual name='block14fix_fixed_joint_lump__contact2_visual_2'>
+        <pose>0 0 0.13700000000000001 0 0 0</pose>
         <geometry>
-          <box>
-            <size>0.10000000000000001 0.10000000000000001 0.01</size>
-          </box>
+          <cylinder>
+            <length>0.001</length>
+            <radius>0.070000000000000007</radius>
+          </cylinder>
         </geometry>
       </visual>
       <sensor name='camera_sensor' type='camera'>
@@ -647,21 +684,15 @@
         <topic>camera/image</topic>
         <pose>0 0 0 0 0 0</pose>
       </sensor>
-      <sensor name='contact_sensor' type='contact'>
+      <sensor name='contact2_sensor' type='contact'>
         <contact>
-          <collision>contact_link_collision</collision>
-          <topic>__default_topic__</topic>
+          <collision>block14fix_fixed_joint_lump__contact2_collision_collision_1</collision>
+          <topic>/robot/contact2</topic>
         </contact>
         <always_on>true</always_on>
         <update_rate>50</update_rate>
-        <pose>0 0 0.20000000000000001 0 0 0</pose>
+        <pose>0 0 0.13700000000000001 0 0 0</pose>
       </sensor>
-      <plugin filename='gz-sim-touchplugin-system' name='gz::sim::systems::TouchPlugin'>
-        <target>voxel</target>
-        <namespace>robot_sensor</namespace>
-        <time>0.001</time>
-        <enabled>true</enabled>
-      </plugin>
     </link>
     <plugin name='gz_ros2_control::GazeboSimROS2ControlPlugin' filename='gz_ros2_control-system'>
       <parameters>/home/lao/Documents/Masterarbeit/git/SRRS_gazebo_sim/ros2_ws/install/srrs_sim/share/srrs_sim/config/robot_controller.yaml</parameters>
@@ -699,6 +730,12 @@
       <output_topic>detachable_obj_link_state2</output_topic>
     </plugin>
     <plugin name='gz::sim::systems::Contact' filename='gz-sim-contact-system'/>
+    <frame name='contact1_joint' attached_to='block0_fix'>
+      <pose>0 0 0 0 0 0</pose>
+    </frame>
+    <frame name='contact1' attached_to='contact1_joint'>
+      <pose>0 0 0 0 0 0</pose>
+    </frame>
     <frame name='rev0_1visualfixed' attached_to='block0_fix'>
       <pose>0 0 0 0 0 0</pose>
     </frame>
@@ -765,10 +802,10 @@
     <frame name='camera_link' attached_to='camera_joint'>
       <pose>0 0 0 0 0 0</pose>
     </frame>
-    <frame name='contact_link_joint' attached_to='block14fix'>
-      <pose>0 0 0.20000000000000001 0 0 0</pose>
+    <frame name='contact2_joint' attached_to='block14fix'>
+      <pose>0 0 0.13700000000000001 0 0 0</pose>
     </frame>
-    <frame name='contact_link' attached_to='contact_link_joint'>
+    <frame name='contact2' attached_to='contact2_joint'>
       <pose>0 0 0 0 0 0</pose>
     </frame>
     <frame name='fixed6_7' attached_to='block6'>

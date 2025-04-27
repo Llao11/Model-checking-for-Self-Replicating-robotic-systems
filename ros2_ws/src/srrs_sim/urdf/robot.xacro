@@ -67,25 +67,39 @@
     <xacro:joint_fix name="${name}visualfixed" parent="${parent}" child="${name}visual"/>
   </xacro:macro>
 
-  <xacro:macro name="contact_plate" params="name parent" >
+  <xacro:macro name="contact_plate" params="name parent origin" >
     <link name="${name}">
       <visual>
         <geometry>
-            <box size="0.1 0.1 0.01"/>
+            <cylinder radius="0.03" length="0.001"/>
         </geometry>
         <!-- <origin xyz="${origin}"/> -->
       </visual>
       <collision name="${name}_collision">
         <geometry>
-          <box size="0.1 0.1 0.01"/>
+          <cylinder radius="0.03" length="0.001"/>
         </geometry>
       </collision>
     </link>
+
     <joint name="${name}_joint" type="fixed">
-      <origin xyz="0 0 0.2"/>
+      <origin xyz="${origin}"/>
       <parent link="${parent}"/>
       <child link="${name}"/>
     </joint>
+
+    <gazebo reference="${name}">
+      <sensor name="${name}_sensor" type="contact">
+        <contact>
+        <!-- If doesnt work - check contact collision name in SDF, transfer xacro to urdf to sdf -->
+          <collision>${parent}_fixed_joint_lump__${name}_collision_collision_1</collision>
+          <topic>/robot/${name}</topic>
+        </contact>
+        <always_on>true</always_on>
+        <update_rate>50</update_rate>
+      </sensor>
+    </gazebo>
+
   </xacro:macro>
 
 <!-- MAIN STRUCTURE -->
@@ -175,42 +189,10 @@
 
 
 
-  <!--  CONTACT SENSOR -->
+  <!--  CONTACT sensors -->
 
-   <!-- <xacro:contact_plate name="block14fix_contact" parent="block14fix"/> -->
-
-  <link name="contact_link">
-    <visual>
-      <geometry>
-          <box size="0.1 0.1 0.001"/>
-      </geometry>
-      <!-- <origin xyz="${origin}"/> -->
-    </visual>
-    <collision name="contact_link_collision">
-      <geometry>
-        <box size="0.1 0.1 0.001"/>
-      </geometry>
-    </collision>
-  </link>
-
-  <joint name="contact_link_joint" type="fixed">
-    <origin xyz="0 0 0.137"/>
-    <parent link="block14fix"/>
-    <child link="contact_link"/>
-  </joint>
-
-  <gazebo reference="contact_link">
-    <sensor name="contact_sensor" type="contact">
-      <contact>
-      <!-- If doesnt work - check contact collision name in SDF, transfer xacro to urdf to sdf -->
-        <collision>block14fix_fixed_joint_lump__contact_link_collision_collision_1</collision>
-        <topic>/robot/contact2</topic>
-      </contact>
-      <always_on>true</always_on>
-      <update_rate>50</update_rate>
-    </sensor>
-  </gazebo>
-
+   <xacro:contact_plate name="contact1" parent="block0_fix" origin="0 0 0"/>
+   <xacro:contact_plate name="contact2" parent="block14fix" origin="0 0 0.137"/>
 
 
 <!-- JOINTS CONTROL -->
