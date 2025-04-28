@@ -1,14 +1,15 @@
 import rclpy
-import math
 import tkinter as tk
 import threading
+from rclpy.executors import MultiThreadedExecutor
 
-from . import SRRSController
+from . import SRRScontrollerNode
+from . import SRRSsensorsNode
 
 
 class GUI:
-    def __init__(self, node: SRRSController):
-        self.node = node
+    def __init__(self, controller_node: SRRScontrollerNode, sensor_node: SRRSsensorsNode):
+        self.controller_node = controller_node
         self.root = tk.Tk()
         self.root.title("Robot Controller")
 
@@ -20,7 +21,7 @@ class GUI:
         outputy = tk.Text(self.root, height=1, width=6)
         label_z= tk.Label(self.root,text="Z")
         outputz = tk.Text(self.root, height=1, width=6)
-        btn_run = tk.Button(self.root, text="Go to XYZ", command=lambda: self.node.goto_XYZ(x=outputx.get('1.0', tk.END), 
+        btn_run = tk.Button(self.root, text="Go to XYZ", command=lambda: self.controller_node.goto_XYZ(x=outputx.get('1.0', tk.END), 
                                                                                             y=outputy.get('1.0', tk.END), 
                                                                                             z=outputz.get('1.0', tk.END)))
         label_x.grid(row=0, column=0)
@@ -33,15 +34,15 @@ class GUI:
 
         #  End block fix
 
-        self.btn_fix1_base = tk.Button(self.root, text="Fix block1 to base", command=lambda: self.node.fix_1(gui=self))
-        self.btn_fix2_base = tk.Button(self.root, text="Fix block2 to base", command=lambda: self.node.fix_2(gui=self))
+        self.btn_fix1_base = tk.Button(self.root, text="Fix block1 to base", command=lambda: self.controller_node.fix_1(gui=self))
+        self.btn_fix2_base = tk.Button(self.root, text="Fix block2 to base", command=lambda: self.controller_node.fix_2(gui=self))
 
-        self.btn_fix1_obj = tk.Button(self.root, text="Fix object to block 1", command=lambda: self.node.fix_obj1(gui=self))
-        self.btn_fix2_obj = tk.Button(self.root, text="Fix object to block 2", command=lambda: self.node.fix_obj2(gui=self))
-        self.btn_free1_obj = tk.Button(self.root, text="Free object from block 1", command=lambda: self.node.free_obj1(gui=self))
-        self.btn_free2_obj = tk.Button(self.root, text="Free object from block 2", command=lambda: self.node.free_obj2(gui=self))
+        self.btn_fix1_obj = tk.Button(self.root, text="Fix object to block 1", command=lambda: self.controller_node.fix_obj1(gui=self))
+        self.btn_fix2_obj = tk.Button(self.root, text="Fix object to block 2", command=lambda: self.controller_node.fix_obj2(gui=self))
+        self.btn_free1_obj = tk.Button(self.root, text="Free object from block 1", command=lambda: self.controller_node.free_obj1(gui=self))
+        self.btn_free2_obj = tk.Button(self.root, text="Free object from block 2", command=lambda: self.controller_node.free_obj2(gui=self))
 
-        self.fixed_block_var = tk.StringVar(value = self.node.get_fixed_end())
+        self.fixed_block_var = tk.StringVar(value = self.controller_node.get_fixed_end())
         label_fixed_block = tk.Label(self.root, textvariable=self.fixed_block_var)
         self.label_fix_block1= tk.Label(self.root,text="Block1 fixed - initially lower", bg="red")
         self.label_fix_block2= tk.Label(self.root,text="Block2 fixed - initially upper", bg="yellow")
@@ -73,12 +74,12 @@ class GUI:
         joint5_angle.insert(tk.END, "0")
 
         label_angle = tk.Label(self.root,text="Angles in deg")
-        btn_joint1 = tk.Button(self.root, text="Set Joint 1", command=lambda: self.node.rotate_joint(0,joint1_angle.get('1.0', tk.END)))
-        btn_joint2 = tk.Button(self.root, text="Set Joint 2", command=lambda: self.node.rotate_joint(1,joint2_angle.get('1.0', tk.END)))
-        btn_joint3 = tk.Button(self.root, text="Set Joint 3", command=lambda: self.node.rotate_joint(2,joint3_angle.get('1.0', tk.END)))
-        btn_joint4 = tk.Button(self.root, text="Set Joint 4", command=lambda: self.node.rotate_joint(3,joint4_angle.get('1.0', tk.END)))
-        btn_joint5 = tk.Button(self.root, text="Set Joint 5", command=lambda: self.node.rotate_joint(4,joint5_angle.get('1.0', tk.END)))
-        btn_joints = tk.Button(self.root, text="Set all", command=lambda: self.node.rotate_joints([joint1_angle.get('1.0', tk.END),
+        btn_joint1 = tk.Button(self.root, text="Set Joint 1", command=lambda: self.controller_node.rotate_joint(0,joint1_angle.get('1.0', tk.END)))
+        btn_joint2 = tk.Button(self.root, text="Set Joint 2", command=lambda: self.controller_node.rotate_joint(1,joint2_angle.get('1.0', tk.END)))
+        btn_joint3 = tk.Button(self.root, text="Set Joint 3", command=lambda: self.controller_node.rotate_joint(2,joint3_angle.get('1.0', tk.END)))
+        btn_joint4 = tk.Button(self.root, text="Set Joint 4", command=lambda: self.controller_node.rotate_joint(3,joint4_angle.get('1.0', tk.END)))
+        btn_joint5 = tk.Button(self.root, text="Set Joint 5", command=lambda: self.controller_node.rotate_joint(4,joint5_angle.get('1.0', tk.END)))
+        btn_joints = tk.Button(self.root, text="Set all", command=lambda: self.controller_node.rotate_joints([joint1_angle.get('1.0', tk.END),
                                                                                                    joint2_angle.get('1.0', tk.END),
                                                                                                    joint3_angle.get('1.0', tk.END),
                                                                                                    joint4_angle.get('1.0', tk.END),
@@ -106,15 +107,22 @@ class GUI:
 
 def main():
     rclpy.init()
-    node = SRRSController.SRRSController()
+    controller_node = SRRScontrollerNode.SRRSController()
+    sensors_node = SRRSsensorsNode.SRRSsensorsNode()
 
-    # Run ROS spin in a separate thread
-    threading.Thread(target=rclpy.spin, args=(node,), daemon=True).start()
+    executor = MultiThreadedExecutor()
+    executor.add_node(controller_node)
+    executor.add_node(sensors_node)
 
-    gui = GUI(node)
+    # Run 2 ROS nodes spin in a separate threads
+    threading.Thread(target=executor.spin, daemon=True).start()
+
+    gui = GUI(controller_node,sensors_node)
     gui.run()
 
-    node.destroy_node()
+    executor.shutdown()
+    controller_node.destroy_node()
+    sensors_node.destroy_node()
     rclpy.shutdown()
 
 if __name__ == '__main__':

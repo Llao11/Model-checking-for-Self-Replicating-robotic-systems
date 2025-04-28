@@ -1,13 +1,18 @@
 
 from rclpy.node import Node
-from std_msgs.msg import Float64MultiArray,Empty
+from std_msgs.msg import Float64MultiArray,Empty,String
+from ros_gz_interfaces.msg import Contacts
 from ament_index_python.packages import get_package_share_directory
 import math
 import time
+from rclpy.duration import Duration
+
+# TODO: Change timer.sleep() in goto_XYZ() to checking with contact sensor
+# TODO: Write separate class to search for parts around with camera
 
 class SRRSController(Node):
     def __init__(self):
-        super().__init__('robot_controller_gui')
+        super().__init__('robot_controller')
         self.create_publishers()
         self.fixed_end=1
 
@@ -124,6 +129,7 @@ class SRRSController(Node):
                 stepY = 0
             self.get_logger().info(f"\nX: {x}\n Y:{y}\n Z:{z}")
             self.goto_XYZ(stepX,stepY,1)
+            self.wait_contact()
             time.sleep(4)
             self.goto_XYZ(stepX,stepY,0)
             time.sleep(1)
@@ -153,8 +159,6 @@ class SRRSController(Node):
                 # change the basic direction if 
                 joint1 = joint1
                 joint5 = joint5
-                # self.get_logger().info(f"joint1: {joint1}")
-                # self.get_logger().info(f"joint1: {joint1}")
                 # self.get_logger().info(f"ANGLES fix1: {joint1}  {joint2}  {joint3}  {joint4}  {joint5}" )
                 command_sequences = [joint1, joint2, joint3, joint4, joint5]
 
@@ -207,6 +211,30 @@ class SRRSController(Node):
         self.command_publisher5 = self.create_publisher(Float64MultiArray,'/position_controller5/commands',10)
         self.command_publishers = [self.command_publisher1,self.command_publisher2,self.command_publisher3,
                                    self.command_publisher4,self.command_publisher5]
+    
+    def create_subscribers(self):
+        self.contact1_subscriber = self.create_subscription(String, '/contact1/change_state', self.contact1_changed ,10)
         
+        
+
     def get_fixed_end(self):
         return self.fixed_end
+    
+    def wait_contact(self):
+        while self.waiting_contact1 == True:
+            self.get_logger().info(f"Waiting_contact1: {self.waiting_contact1}")
+            time.sleep(0.01)
+            
+            
+
+    def contact1_changed(self,msg):
+        if self.waiting_contact1 == True:
+            self.get_logger().info(f"Contact1_changed: {msg.data}")
+            if msg.data == "None":
+                self.contact1_old_object = "None"
+            elif msg.data != "None" and self.contact1_old_object == "None":
+                self.waiting_contact1 == False
+        else: 
+            return
+            
+
