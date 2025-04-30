@@ -1,6 +1,8 @@
 
+import rclpy
 from rclpy.node import Node
 from std_msgs.msg import Float64MultiArray,Empty, String
+from sensor_msgs.msg import Imu
 from ros_gz_interfaces.msg import Contacts
 from ament_index_python.packages import get_package_share_directory
 import math
@@ -34,7 +36,13 @@ class SRRSsensorsNode(Node):
         self.create_timer(0.1, self.timer_callback)
         self.contact1_subscriber = self.create_subscription(Contacts,"/robot/contact1", self.set_contact1_state ,10)
         self.contact2_subscriber = self.create_subscription(Contacts,"/robot/contact2", self.set_contact2_state ,10)
-    
+
+        self.prev_time = None
+        self.velocity = [0.0, 0.0, 0.0]  # x, y, z
+        self.imu1_subscriber = self.create_subscription(Imu,"/robot/imu1", self.get_imu1 ,10)
+        # self.imu2_subscriber = self.create_subscription(Imu,"/robot/imu2", self.get_imu2 ,10)
+
+    # CONTACT Sensors
 
     def set_contact1_state(self, msg: Contacts):
         contact_msg = msg.contacts[0]
@@ -91,3 +99,14 @@ class SRRSsensorsNode(Node):
         msg.data = str(object2)
         self.contact2_publisher.publish(msg)
 
+
+    # IMU Sensor
+
+    def get_imu1(self, msg):
+        pass
+    #     if msg.linear_acceleration.x > 0.01 or msg.linear_acceleration.y > 0.01 or msg.linear_acceleration.z-9.81 > 0.01 :
+    #         self.get_logger().info(f"Velocity: {msg.linear_acceleration.x} \t {msg.linear_acceleration.y} \t {msg.linear_acceleration.z-9.81}")
+
+
+    def calculate_velosity(self):
+        pass

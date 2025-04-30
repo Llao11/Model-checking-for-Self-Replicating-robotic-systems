@@ -94,3 +94,17 @@
   ros_type_name: "ros_gz_interfaces/msg/Contacts"
   gz_type_name: "gz.msgs.Contacts"
   direction: BIDIRECTIONAL  
+
+- ros_topic_name: "/robot/imu1"
+  gz_topic_name: "/robot/imu1"
+  ros_type_name: "sensor_msgs/msg/Imu"
+  gz_type_name: "gz.msgs.IMU"
+  direction: BIDIRECTIONAL  
+
+- ros_topic_name: "/robot/imu2"
+  gz_topic_name: "/robot/imu2"
+  ros_type_name: "sensor_msgs/msg/Imu"
+  gz_type_name: "gz.msgs.IMU"
+  direction: BIDIRECTIONAL  
+
+  

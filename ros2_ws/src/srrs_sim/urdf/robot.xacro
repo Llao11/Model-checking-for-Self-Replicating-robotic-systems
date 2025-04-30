@@ -71,13 +71,13 @@
     <link name="${name}">
       <visual>
         <geometry>
-            <cylinder radius="0.03" length="0.001"/>
+            <cylinder radius="0.05" length="0.002"/>
         </geometry>
         <!-- <origin xyz="${origin}"/> -->
       </visual>
       <collision name="${name}_collision">
         <geometry>
-          <cylinder radius="0.03" length="0.001"/>
+          <cylinder radius="0.05" length="0.002"/>
         </geometry>
       </collision>
     </link>
@@ -151,6 +151,17 @@
     </gazebo>
   </xacro:macro>
 
+  <xacro:macro name="imu_sensor" params="name parent">
+    <gazebo reference="${parent}">
+      <sensor name="imu_sensor" type="imu">
+          <always_on>1</always_on>
+          <update_rate>50</update_rate>
+          <visualize>true</visualize>
+          <topic>/robot/${name}</topic>
+      </sensor>
+    </gazebo>
+  </xacro:macro>
+
 <!-- MAIN STRUCTURE -->
 
   <xacro:voxel name="block0_fix" origin="0 0 0" color="${red}"/>
@@ -190,18 +201,19 @@
  
 
   <!-- CAMERA PART -->
-
   <xacro:camera_sensor name="camera1" parent="block0_fix" origin_xyz="0 0 0" origin_rpy="0 ${pi/2} 0"/>
   <xacro:camera_sensor name="camera2" parent="block14fix" origin_xyz="0 0 ${1*cell_step}" origin_rpy="0 ${-pi/2} 0"/>
 
   <!--  CONTACT sensors -->
-
    <xacro:contact_plate name="contact1" parent="block0_fix" origin="0 0 0"/>
-   <xacro:contact_plate name="contact2" parent="block14fix" origin="0 0 0.137"/>
+   <xacro:contact_plate name="contact2" parent="block14fix" origin="0 0 ${1*cell_step}"/>
+
+<!-- IMU sensors -->
+    <xacro:imu_sensor name="imu1" parent="block0_fix"/> 
+    <xacro:imu_sensor name="imu2" parent="block14fix"/> 
 
 
 <!-- JOINTS CONTROL -->
-
   <ros2_control name="GazeboSimSystem" type="system">
     <hardware>
       <plugin>gz_ros2_control/GazeboSimSystem</plugin>

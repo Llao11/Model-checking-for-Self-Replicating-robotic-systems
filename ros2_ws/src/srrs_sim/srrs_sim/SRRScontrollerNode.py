@@ -1,10 +1,12 @@
 
 from rclpy.node import Node
 from std_msgs.msg import Float64MultiArray,Empty,String
+from sensor_msgs.msg import JointState
 from ros_gz_interfaces.msg import Contacts
 from ament_index_python.packages import get_package_share_directory
 import math
 import time
+import numpy as np
 from rclpy.duration import Duration
 
 # TODO: Change timer.sleep() in goto_XYZ() to checking with contact sensor
@@ -14,8 +16,11 @@ class SRRSController(Node):
     def __init__(self):
         super().__init__('robot_controller')
         self.create_publishers()
+        self.create_subscribers()
         self.fixed_end=1
-
+        # threshold difference between target and achivable angles of joint - for waiting while moving in target position
+        self.joint_diff_threshold = 2 # [degrees] 
+        
     # Fix to base
     def swap_fix_block(self):
         if self.get_fixed_end() == 1:
@@ -129,52 +134,53 @@ class SRRSController(Node):
                 stepY = 0
             self.get_logger().info(f"\nX: {x}\n Y:{y}\n Z:{z}")
             self.goto_XYZ(stepX,stepY,1)
-            self.wait_contact()
-            time.sleep(4)
+            time.sleep(0.3)
             self.goto_XYZ(stepX,stepY,0)
-            time.sleep(1)
+            time.sleep(0.3)
             self.swap_fix_block()
-            time.sleep(1)
+            time.sleep(0.5)
             self.goto_XYZ( x, y, z, step_size)
-        
         # near pose calculation
         else:
-            # in XY plane:
-            r = math.sqrt(x*x + y*y)
-            r_0 = math.sqrt(x*x + y*y - 1)
+            command_sequences = self.calculate_angles(x,y,z)
+            self.rotate_joints(command_sequences)
 
-            beta  = math.degrees(math.atan2(y,x))
-            beta_0 = beta - math.degrees(math.asin(1/r))
 
-            alpha = math.degrees(math.asin( math.sqrt(r_0*r_0+z*z)/4 ))
-            gamma = math.degrees(math.atan2( z,abs(r_0) ))
+    def calculate_angles( self, x, y, z ):
+        # in XY plane:
+        r = math.sqrt(x*x + y*y)
+        r_0 = math.sqrt(x*x + y*y - 1)
+        beta  = math.degrees(math.atan2(y,x))
+        beta_0 = beta - math.degrees(math.asin(1/r))
+        alpha = math.degrees(math.asin( math.sqrt(r_0*r_0+z*z)/4 ))
+        gamma = math.degrees(math.atan2( z,abs(r_0) ))
+        joint1 = beta_0
+        joint2 = alpha-gamma
+        joint3 = 180-2*alpha
+        joint4 = alpha+gamma
+        joint5 = beta_0
+        if self.fixed_end==1:
+            # change the basic direction if 
+            joint1 = joint1
+            joint5 = joint5
+            # self.get_logger().info(f"ANGLES fix1: {joint1}  {joint2}  {joint3}  {joint4}  {joint5}" )
+            command_sequences = [joint1, joint2, joint3, joint4, joint5]
 
-            joint1 = beta_0
-            joint2 = alpha-gamma
-            joint3 = 180-2*alpha
-            joint4 = alpha+gamma
-            joint5 = beta_0
-            
-            if self.fixed_end==1:
-                # change the basic direction if 
-                joint1 = joint1
-                joint5 = joint5
-                # self.get_logger().info(f"ANGLES fix1: {joint1}  {joint2}  {joint3}  {joint4}  {joint5}" )
-                command_sequences = [joint1, joint2, joint3, joint4, joint5]
-
-            elif self.fixed_end==2:
-                joint1 = joint1+180
-                joint5 = joint5+180
-                # self.get_logger().info(f"ANGLES fix2:  {joint1} {joint2}  {joint3}  {joint4}  {joint5}")
-                command_sequences = [joint5, joint4, joint3, joint2, joint1]
-            
-            for joint_index in range(len(command_sequences)):
-                self.rotate_joint(joint_index,command_sequences[joint_index])
-
+        elif self.fixed_end==2:
+            joint1 = joint1+180
+            joint5 = joint5+180
+            # self.get_logger().info(f"ANGLES fix2:  {joint1} {joint2}  {joint3}  {joint4}  {joint5}")
+            command_sequences = [joint5, joint4, joint3, joint2, joint1]
+        else: 
+            self.get_logger().info(f"End block not fixed")
+        return command_sequences
     
-    def rotate_joints(self,command_sequences):
+    
+    def rotate_joints(self,command_sequences): 
         for joint_index in range(len(command_sequences)):
-            self.rotate_joint(joint_index,command_sequences[joint_index])
+            self.rotate_joint(joint_index,float(command_sequences[joint_index]))
+        self.wait_movement_finish(command_sequences)
+        
 
     def rotate_joint(self,joint_index,angle):
         command = Float64MultiArray()
@@ -186,7 +192,6 @@ class SRRSController(Node):
         except:
             pass
             # self.get_logger().info(f"No data for joint {joint_index}: {command.data}")
-
 
 
     def create_publishers(self):
@@ -213,28 +218,45 @@ class SRRSController(Node):
                                    self.command_publisher4,self.command_publisher5]
     
     def create_subscribers(self):
-        self.contact1_subscriber = self.create_subscription(String, '/contact1/change_state', self.contact1_changed ,10)
-        
+        # self.contact1_subscriber = self.create_subscription(String, '/contact1/change_state', self.contact1_changed ,10)
+        self.joints_angles_subscriber = self.create_subscription(JointState, '/joint_states', self.joint_state_changed ,10)
         
 
     def get_fixed_end(self):
         return self.fixed_end
     
-    def wait_contact(self):
-        while self.waiting_contact1 == True:
-            self.get_logger().info(f"Waiting_contact1: {self.waiting_contact1}")
-            time.sleep(0.01)
-            
-            
+    # def wait_movement_finish(self, x, y, z):
+    #     joints_angles_target = self.calculate_angles(x, y, z) # in degrees
+    #     self.get_logger().info(f"joints_angles_target: {type(joints_angles_target)}")
 
-    def contact1_changed(self,msg):
-        if self.waiting_contact1 == True:
-            self.get_logger().info(f"Contact1_changed: {msg.data}")
-            if msg.data == "None":
-                self.contact1_old_object = "None"
-            elif msg.data != "None" and self.contact1_old_object == "None":
-                self.waiting_contact1 == False
-        else: 
-            return
+    #     joint_angles_current_deg = [angle*180.0/math.pi for angle in self.joint_angles_current]  # rad to deg
+    #     self.get_logger().info(f"joint_angles_current_deg: {type(joint_angles_current_deg)}")
+    #     diff = [abs(a-b) for a,b in zip(joints_angles_target, joint_angles_current_deg)] # calculate difference in deg
+        
+    #     self.get_logger().info(f"Waiting for target position: {diff}")
+    #     while diff > self.joint_diff_threshold:
+    #         time.sleep(0.1)
+
+    def wait_movement_finish(self, joints_angles_target: list[float]): # joint target angles in degrees
+        
+        joints_angles_target = [float(a) for a in joints_angles_target] # str to float
+        joint_angles_current_deg = [float(angle)*180.0/math.pi for angle in self.joint_angles_current]  # rad to deg
+        
+        diff = [abs(a-b) for a,b in zip(joints_angles_target, joint_angles_current_deg)] # calculate difference in deg
+
+        # self.get_logger().info(f"max(diff): {max(diff)} ")
+        while max(diff) > self.joint_diff_threshold:
+            joint_angles_current_deg = [float(angle)*180.0/math.pi for angle in self.joint_angles_current]  # rad to deg
+            self.get_logger().info(f"joints_angles_target \t: {joints_angles_target} ")
+            self.get_logger().info(f"joint_angles_current \t: {[int(i) for i in joint_angles_current_deg]} \n")
+            diff = [abs(a-b) for a,b in zip(joints_angles_target, joint_angles_current_deg)] # calculate difference in deg
+            # self.get_logger().info(f"max(diff): {max(diff)} ")
             
+            
+    def joint_state_changed(self, msg):
+        joint_angles_current_dict = dict(zip( msg.name, msg.position ))
+        sorted_names = ['rev0_1', 'rev2_3', 'rev5_6', 'rev8_9', 'rev13_14']
+        # self.get_logger().info(f"sorted: {sorted_names}")
+        self.joint_angles_current = [joint_angles_current_dict[i] for i in sorted_names]
+        # self.get_logger().info(f"joint_angles_current: {self.joint_angles_current}")
 

@@ -42,7 +42,9 @@
       name="gz::sim::systems::Contact">
     </plugin>
 
-
+    <plugin filename="gz-sim-imu-system"
+        name="gz::sim::systems::Imu">
+    </plugin>
 
     
 
