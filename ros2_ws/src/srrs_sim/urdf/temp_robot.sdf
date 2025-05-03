@@ -34,8 +34,8 @@
         <pose>0 0 0 0 0 0</pose>
         <geometry>
           <cylinder>
-            <length>0.001</length>
-            <radius>0.070000000000000007</radius>
+            <length>0.002</length>
+            <radius>0.050000000000000003</radius>
           </cylinder>
         </geometry>
         <surface>
@@ -60,16 +60,24 @@
           <diffuse>0.800000012 0 0 1</diffuse>
         </material>
       </visual>
-      <visual name='block0_fix_fixed_joint_lump__contact1_visual_1'>
+      <visual name='block0_fix_fixed_joint_lump__camera1_visual_visual_1'>
+        <pose>0 0 0 0 1.5707963267948966 0</pose>
+        <geometry>
+          <box>
+            <size>0.01 0.01 0.01</size>
+          </box>
+        </geometry>
+      </visual>
+      <visual name='block0_fix_fixed_joint_lump__contact1_visual_2'>
         <pose>0 0 0 0 0 0</pose>
         <geometry>
           <cylinder>
-            <length>0.001</length>
-            <radius>0.070000000000000007</radius>
+            <length>0.002</length>
+            <radius>0.050000000000000003</radius>
           </cylinder>
         </geometry>
       </visual>
-      <visual name='block0_fix_fixed_joint_lump__rev0_1visual_visual_2'>
+      <visual name='block0_fix_fixed_joint_lump__rev0_1visual_visual_3'>
         <pose>0 0 0.13400000000000001 0 0 0</pose>
         <geometry>
           <cylinder>
@@ -78,6 +86,35 @@
           </cylinder>
         </geometry>
       </visual>
+      <sensor name='imu_sensor' type='imu'>
+        <always_on>true</always_on>
+        <update_rate>50</update_rate>
+        <visualize>true</visualize>
+        <topic>/robot/imu1</topic>
+        <imu/>
+      </sensor>
+      <sensor name='camera1_sensor' type='camera'>
+        <visualize>true</visualize>
+        <camera>
+          <horizontal_fov>1.3962634</horizontal_fov>
+          <image>
+            <width>640</width>
+            <height>480</height>
+            <format>R8G8B8</format>
+          </image>
+          <clip>
+            <near>0.10000000000000001</near>
+            <far>15</far>
+          </clip>
+          <optical_frame_id>camera1_optical</optical_frame_id>
+          <camera_info_topic>/camera1/camera_info</camera_info_topic>
+        </camera>
+        <always_on>true</always_on>
+        <update_rate>20</update_rate>
+        <visualize>true</visualize>
+        <topic>/camera1/image</topic>
+        <pose>0 0 0 3.1415926535897931 1.5707926536359933 3.1415926535897931</pose>
+      </sensor>
       <sensor name='contact1_sensor' type='contact'>
         <contact>
           <collision>block0_fix_fixed_joint_lump__contact1_collision_collision_1</collision>
@@ -616,11 +653,11 @@
         </surface>
       </collision>
       <collision name='block14fix_fixed_joint_lump__contact2_collision_collision_1'>
-        <pose>0 0 0.13700000000000001 0 0 0</pose>
+        <pose>0 0 0.13400000000000001 0 0 0</pose>
         <geometry>
           <cylinder>
-            <length>0.001</length>
-            <radius>0.070000000000000007</radius>
+            <length>0.002</length>
+            <radius>0.050000000000000003</radius>
           </cylinder>
         </geometry>
         <surface>
@@ -645,24 +682,31 @@
           <diffuse>1 1 0 1</diffuse>
         </material>
       </visual>
-      <visual name='block14fix_fixed_joint_lump__camera_link_visual_visual_1'>
-        <pose>0 0 0 0 0 0</pose>
+      <visual name='block14fix_fixed_joint_lump__camera2_visual_visual_1'>
+        <pose>0 0 0.13400000000000001 0 -1.5707963267948966 0</pose>
         <geometry>
           <box>
-            <size>0.050000000000000003 0.050000000000000003 0.050000000000000003</size>
+            <size>0.01 0.01 0.01</size>
           </box>
         </geometry>
       </visual>
       <visual name='block14fix_fixed_joint_lump__contact2_visual_2'>
-        <pose>0 0 0.13700000000000001 0 0 0</pose>
+        <pose>0 0 0.13400000000000001 0 0 0</pose>
         <geometry>
           <cylinder>
-            <length>0.001</length>
-            <radius>0.070000000000000007</radius>
+            <length>0.002</length>
+            <radius>0.050000000000000003</radius>
           </cylinder>
         </geometry>
       </visual>
-      <sensor name='camera_sensor' type='camera'>
+      <sensor name='imu_sensor' type='imu'>
+        <always_on>true</always_on>
+        <update_rate>50</update_rate>
+        <visualize>true</visualize>
+        <topic>/robot/imu2</topic>
+        <imu/>
+      </sensor>
+      <sensor name='camera2_sensor' type='camera'>
         <visualize>true</visualize>
         <camera>
           <horizontal_fov>1.3962634</horizontal_fov>
@@ -675,14 +719,14 @@
             <near>0.10000000000000001</near>
             <far>15</far>
           </clip>
-          <optical_frame_id>camera_link_optical</optical_frame_id>
-          <camera_info_topic>camera/camera_info</camera_info_topic>
+          <optical_frame_id>camera2_optical</optical_frame_id>
+          <camera_info_topic>/camera2/camera_info</camera_info_topic>
         </camera>
         <always_on>true</always_on>
         <update_rate>20</update_rate>
         <visualize>true</visualize>
-        <topic>camera/image</topic>
-        <pose>0 0 0 0 0 0</pose>
+        <topic>/camera2/image</topic>
+        <pose>0 0 0.13400000000000001 3.1415926535897931 -1.5707926536359933 3.1415926535897931</pose>
       </sensor>
       <sensor name='contact2_sensor' type='contact'>
         <contact>
@@ -691,7 +735,7 @@
         </contact>
         <always_on>true</always_on>
         <update_rate>50</update_rate>
-        <pose>0 0 0.13700000000000001 0 0 0</pose>
+        <pose>0 0 0.13400000000000001 0 0 0</pose>
       </sensor>
     </link>
     <plugin name='gz_ros2_control::GazeboSimROS2ControlPlugin' filename='gz_ros2_control-system'>
@@ -713,23 +757,19 @@
       <detach_topic>detach_link2</detach_topic>
       <output_topic>detachable_link_state2</output_topic>
     </plugin>
-    <plugin name='gz::sim::systems::DetachableJoint' filename='libgz-sim8-detachable-joint-system.so'>
-      <parent_link>block0_fix</parent_link>
-      <child_model>voxel</child_model>
-      <child_link>voxel</child_link>
-      <attach_topic>attach_obj_link1</attach_topic>
-      <detach_topic>detach_obj_link1</detach_topic>
-      <output_topic>detachable_obj_link_state1</output_topic>
-    </plugin>
-    <plugin name='gz::sim::systems::DetachableJoint' filename='libgz-sim8-detachable-joint-system.so'>
-      <parent_link>block14fix</parent_link>
-      <child_model>voxel</child_model>
-      <child_link>voxel</child_link>
-      <attach_topic>attach_obj_link2</attach_topic>
-      <detach_topic>detach_obj_link2</detach_topic>
-      <output_topic>detachable_obj_link_state2</output_topic>
-    </plugin>
     <plugin name='gz::sim::systems::Contact' filename='gz-sim-contact-system'/>
+    <frame name='camera1_optical_joint' attached_to='camera1'>
+      <pose>0 0 0 -1.5707963267948959 -5.5511151231257827e-17 -1.5707963267948959</pose>
+    </frame>
+    <frame name='camera1_optical' attached_to='camera1_optical_joint'>
+      <pose>0 0 0 0 0 0</pose>
+    </frame>
+    <frame name='camera1_joint' attached_to='block0_fix'>
+      <pose>0 0 0 0 1.5707963267948966 0</pose>
+    </frame>
+    <frame name='camera1' attached_to='camera1_joint'>
+      <pose>0 0 0 0 0 0</pose>
+    </frame>
     <frame name='contact1_joint' attached_to='block0_fix'>
       <pose>0 0 0 0 0 0</pose>
     </frame>
@@ -790,20 +830,20 @@
     <frame name='block10' attached_to='fixed9_10'>
       <pose>0 0 0 0 0 0</pose>
     </frame>
-    <frame name='camera_optical_joint' attached_to='camera_link'>
+    <frame name='camera2_optical_joint' attached_to='camera2'>
       <pose>0 0 0 -1.5707963267948959 -5.5511151231257827e-17 -1.5707963267948959</pose>
     </frame>
-    <frame name='camera_link_optical' attached_to='camera_optical_joint'>
+    <frame name='camera2_optical' attached_to='camera2_optical_joint'>
       <pose>0 0 0 0 0 0</pose>
     </frame>
-    <frame name='camera_joint' attached_to='block14fix'>
-      <pose>0 0 0 0 0 0</pose>
+    <frame name='camera2_joint' attached_to='block14fix'>
+      <pose>0 0 0.13400000000000001 0 -1.5707963267948966 0</pose>
     </frame>
-    <frame name='camera_link' attached_to='camera_joint'>
+    <frame name='camera2' attached_to='camera2_joint'>
       <pose>0 0 0 0 0 0</pose>
     </frame>
     <frame name='contact2_joint' attached_to='block14fix'>
-      <pose>0 0 0.13700000000000001 0 0 0</pose>
+      <pose>0 0 0.13400000000000001 0 0 0</pose>
     </frame>
     <frame name='contact2' attached_to='contact2_joint'>
       <pose>0 0 0 0 0 0</pose>

@@ -465,26 +465,26 @@
     <parent link="block10"/>
     <child link="rev13_14visual"/>
   </joint>
-  <!-- CAMERA PART -->
-  <link name="camera_link">
-    <visual name="camera_link_visual">
+  <link name="camera1">
+    <visual name="camera1_visual">
       <geometry>
-        <box size="0.05 0.05 0.05"/>
+        <box size="0.01 0.01 0.01"/>
       </geometry>
     </visual>
   </link>
-  <joint name="camera_joint" type="fixed">
-    <parent link="block14fix"/>
-    <child link="camera_link"/>
+  <joint name="camera1_joint" type="fixed">
+    <parent link="block0_fix"/>
+    <child link="camera1"/>
+    <origin rpy="0 1.5707963267948966 0" xyz="0 0 0"/>
   </joint>
-  <link name="camera_link_optical"/>
-  <joint name="camera_optical_joint" type="fixed">
-    <parent link="camera_link"/>
-    <child link="camera_link_optical"/>
+  <link name="camera1_optical"/>
+  <joint name="camera1_optical_joint" type="fixed">
+    <parent link="camera1"/>
+    <child link="camera1_optical"/>
     <origin rpy="-1.5707963267948966 0 -1.5707963267948966" xyz="0 0 0"/>
   </joint>
-  <gazebo reference="camera_link">
-    <sensor name="camera_sensor" type="camera">
+  <gazebo reference="camera1">
+    <sensor name="camera1_sensor" type="camera">
       <visualize>true</visualize>
       <camera>
         <horizontal_fov>1.3962634</horizontal_fov>
@@ -497,26 +497,66 @@
           <near>0.1</near>
           <far>15</far>
         </clip>
-        <optical_frame_id>camera_link_optical</optical_frame_id>
-        <camera_info_topic>camera/camera_info</camera_info_topic>
+        <optical_frame_id>camera1_optical</optical_frame_id>
+        <camera_info_topic>/camera1/camera_info</camera_info_topic>
       </camera>
       <always_on>1</always_on>
       <update_rate>20</update_rate>
       <visualize>true</visualize>
-      <topic>camera/image</topic>
+      <topic>/camera1/image</topic>
     </sensor>
   </gazebo>
-  <!--  CONTACT sensors -->
+  <link name="camera2">
+    <visual name="camera2_visual">
+      <geometry>
+        <box size="0.01 0.01 0.01"/>
+      </geometry>
+    </visual>
+  </link>
+  <joint name="camera2_joint" type="fixed">
+    <parent link="block14fix"/>
+    <child link="camera2"/>
+    <origin rpy="0 -1.5707963267948966 0" xyz="0 0 0.134"/>
+  </joint>
+  <link name="camera2_optical"/>
+  <joint name="camera2_optical_joint" type="fixed">
+    <parent link="camera2"/>
+    <child link="camera2_optical"/>
+    <origin rpy="-1.5707963267948966 0 -1.5707963267948966" xyz="0 0 0"/>
+  </joint>
+  <gazebo reference="camera2">
+    <sensor name="camera2_sensor" type="camera">
+      <visualize>true</visualize>
+      <camera>
+        <horizontal_fov>1.3962634</horizontal_fov>
+        <image>
+          <width>640</width>
+          <height>480</height>
+          <format>R8G8B8</format>
+        </image>
+        <clip>
+          <near>0.1</near>
+          <far>15</far>
+        </clip>
+        <optical_frame_id>camera2_optical</optical_frame_id>
+        <camera_info_topic>/camera2/camera_info</camera_info_topic>
+      </camera>
+      <always_on>1</always_on>
+      <update_rate>20</update_rate>
+      <visualize>true</visualize>
+      <topic>/camera2/image</topic>
+    </sensor>
+  </gazebo>
   <link name="contact1">
     <visual>
       <geometry>
-        <cylinder length="0.001" radius="0.07"/>
+        <cylinder length="0.002" radius="0.05"/>
       </geometry>
       <!-- <origin xyz="${origin}"/> -->
     </visual>
     <collision name="contact1_collision">
       <geometry>
-        <cylinder length="0.001" radius="0.07"/>
+        <cylinder length="0.002" radius="0.05"/>
       </geometry>
     </collision>
   </link>
@@ -539,18 +579,18 @@
   <link name="contact2">
     <visual>
       <geometry>
-        <cylinder length="0.001" radius="0.07"/>
+        <cylinder length="0.002" radius="0.05"/>
       </geometry>
       <!-- <origin xyz="${origin}"/> -->
     </visual>
     <collision name="contact2_collision">
       <geometry>
-        <cylinder length="0.001" radius="0.07"/>
+        <cylinder length="0.002" radius="0.05"/>
       </geometry>
     </collision>
   </link>
   <joint name="contact2_joint" type="fixed">
-    <origin xyz="0 0 0.137"/>
+    <origin xyz="0 0 0.134"/>
     <parent link="block14fix"/>
     <child link="contact2"/>
   </joint>
@@ -565,65 +605,22 @@
       <update_rate>50</update_rate>
     </sensor>
   </gazebo>
-  <!-- <link name="{name}">
-    <visual>
-      <geometry>
-          <cylinder radius="0.07" length="0.001"/>
-      </geometry>
-    </visual>
-    <collision name="{name}_collision">
-      <geometry>
-        <cylinder radius="0.07" length="0.001"/>
-      </geometry>
-    </collision>
-  </link>
-
-  <joint name="contact_link1_joint" type="fixed">
-    <origin xyz="0 0 0"/>
-    <parent link="block0_fix"/>
-    <child link="{name}"/>
-  </joint>
-
-  <gazebo reference="{name}">
-    <sensor name="contact_sensor" type="contact">
-      <contact>
-        <collision>block0_fix_fixed_joint_lump__{name}_collision_collision_1</collision>
-        <topic>/robot/{name}</topic>
-      </contact>
-      <always_on>true</always_on>
+  <gazebo reference="block0_fix">
+    <sensor name="imu_sensor" type="imu">
+      <always_on>1</always_on>
       <update_rate>50</update_rate>
+      <visualize>true</visualize>
+      <topic>/robot/imu1</topic>
     </sensor>
   </gazebo>
-
-    <link name="contact2">
-    <visual>
-      <geometry>
-          <cylinder radius="0.07" length="0.001"/>
-      </geometry>
-    </visual>
-    <collision name="contact2_collision">
-      <geometry>
-        <cylinder radius="0.07" length="0.001"/>
-      </geometry>
-    </collision>
-  </link>
-
-  <joint name="contact2_joint" type="fixed">
-    <origin xyz="0 0 0.137"/>
-    <parent link="block14fix"/>
-    <child link="contact2"/>
-  </joint>
-
-  <gazebo reference="contact2">
-    <sensor name="contact_sensor" type="contact">
-      <contact>
-        <collision>block14fix_fixed_joint_lump__contact2_collision_collision_1</collision>
-        <topic>/robot/contact2</topic>
-      </contact>
-      <always_on>true</always_on>
+  <gazebo reference="block14fix">
+    <sensor name="imu_sensor" type="imu">
+      <always_on>1</always_on>
       <update_rate>50</update_rate>
+      <visualize>true</visualize>
+      <topic>/robot/imu2</topic>
     </sensor>
-  </gazebo> -->
+  </gazebo>
   <!-- JOINTS CONTROL -->
   <ros2_control name="GazeboSimSystem" type="system">
     <hardware>
@@ -671,7 +668,9 @@
       <detach_topic>detach_link2</detach_topic>
       <output_topic>detachable_link_state2</output_topic>
     </plugin>
-    <plugin filename="libgz-sim8-detachable-joint-system.so" name="gz::sim::systems::DetachableJoint">
+    <!-- <plugin
+      filename="libgz-sim8-detachable-joint-system.so"
+      name="gz::sim::systems::DetachableJoint">
       <parent_link>block0_fix</parent_link>
       <child_model>voxel</child_model>
       <child_link>voxel</child_link>
@@ -679,14 +678,17 @@
       <detach_topic>detach_obj_link1</detach_topic>
       <output_topic>detachable_obj_link_state1</output_topic>
     </plugin>
-    <plugin filename="libgz-sim8-detachable-joint-system.so" name="gz::sim::systems::DetachableJoint">
+
+    <plugin
+      filename="libgz-sim8-detachable-joint-system.so"
+      name="gz::sim::systems::DetachableJoint">
       <parent_link>block14fix</parent_link>
       <child_model>voxel</child_model>
       <child_link>voxel</child_link>
       <attach_topic>attach_obj_link2</attach_topic>
       <detach_topic>detach_obj_link2</detach_topic>
       <output_topic>detachable_obj_link_state2</output_topic>
-    </plugin>
+    </plugin> -->
     <plugin filename="gz-sim-contact-system" name="gz::sim::systems::Contact">
     </plugin>
   </gazebo>

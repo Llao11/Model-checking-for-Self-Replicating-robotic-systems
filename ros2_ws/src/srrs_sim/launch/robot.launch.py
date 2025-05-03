@@ -5,9 +5,10 @@ from launch.event_handlers import OnProcessExit
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.substitutions import Command, FindExecutable, LaunchConfiguration, PathJoinSubstitution
 
+
 from launch_ros.actions import Node
 from launch_ros.substitutions import FindPackageShare
-from launch.actions import LogInfo
+from launch.actions import LogInfo, ExecuteProcess
 from launch.launch_context import LaunchContext
 
 def generate_launch_description():
@@ -17,6 +18,7 @@ def generate_launch_description():
     # path to share sdf folder
     context = LaunchContext()
     sdf_path = PathJoinSubstitution([FindPackageShare("srrs_sim"), "sdf" ]).perform(context)
+    urdf_path = PathJoinSubstitution([FindPackageShare("srrs_sim"), "urdf" ]).perform(context)
 
     # spawn parts locations:
     step = 0.134
@@ -33,7 +35,37 @@ def generate_launch_description():
     part_coordinates= [[elem*step for elem in row] for row in part_coordinates_int]
 
 
-    # Get URDF via xacro
+    
+
+    # BRIDGE creation ==============================================================================================================
+
+    bridge_config_path = PathJoinSubstitution(
+        [
+            FindPackageShare('srrs_sim'),
+            'config',
+            'bridge_config.yaml',   
+        ]
+    )   # ros2 run ros_gz_bridge parameter_bridge   /attach_link@std_msgs/msg/Empty@gz.msgs.Empty   /detach_link@std_msgs/msg/Empty@gz.msgs.Empty 
+
+
+    bridge_node = Node(
+        package='ros_gz_bridge',
+        executable='parameter_bridge',
+        parameters=[{'config_file': bridge_config_path}],
+        output='screen'
+    )
+
+    bridge_clock = Node(
+        package='ros_gz_bridge',
+        executable='parameter_bridge',
+        arguments=['/clock@rosgraph_msgs/msg/Clock[gz.msgs.Clock'],
+        output='screen'
+    )
+
+
+    # ROBOT spawn ==============================================================================================================
+
+    # Generate URDF via xacro
     robot_description_content = Command(
         [
             PathJoinSubstitution([FindExecutable(name='xacro')]),
@@ -54,23 +86,6 @@ def generate_launch_description():
             'robot_controller.yaml',   
         ]
     )
-
-    bridge_config_path = PathJoinSubstitution(
-        [
-            FindPackageShare('srrs_sim'),
-            'config',
-            'bridge_config.yaml',   
-        ]
-    )   # ros2 run ros_gz_bridge parameter_bridge   /attach_link@std_msgs/msg/Empty@gz.msgs.Empty   /detach_link@std_msgs/msg/Empty@gz.msgs.Empty 
-
-
-    bridge_node = Node(
-        package='ros_gz_bridge',
-        executable='parameter_bridge',
-        parameters=[{'config_file': bridge_config_path}],
-        output='screen'
-    )
-
     node_robot_state_publisher = Node(
         package='robot_state_publisher',
         executable='robot_state_publisher',
@@ -87,27 +102,8 @@ def generate_launch_description():
             '-name', 'robot',
             '-x', '0.0', '-y', '0.0', '-z', '0.134',  # Set X, Y, Z coordinates
             '-X', '0.0','-Y', '0.0','-Z', '0.0',  # Set Yaw (rotation in radians)
-            '-allow_renaming', 'true'
+            '-allow_renaming', 'false'
         ],
-    )
-
-
-
-    gz_spawn_base = Node(
-        package='ros_gz_sim',
-        executable='create',
-        output='screen',
-        arguments=[
-            '-name', 'base',
-            # simple base plate:
-            '-file', f'{sdf_path}/base.sdf',
-            # 
-            # big base plate:
-            # '-file', '/home/lao/Documents/Masterarbeit/git/SRRS_gazebo_sim/ros2_ws/install/srrs_sim/share/srrs_sim/sdf/base10x10.sdf',
-            '-x', '0.0', '-y', '0.0', '-z', '0.0',  # Set X, Y, Z coordinates
-            '-X', '0.0','-Y', '0.0','-Z', '0.0',  # Set Yaw (rotation in radians)
-            '-allow_renaming', 'true'
-        ]
     )
 
     joint_state_broadcaster_spawner = Node(
@@ -161,15 +157,27 @@ def generate_launch_description():
             ],
     )
 
-    # Bridge
-    bridge_clock = Node(
-        package='ros_gz_bridge',
-        executable='parameter_bridge',
-        arguments=['/clock@rosgraph_msgs/msg/Clock[gz.msgs.Clock'],
-        output='screen'
+    # BASE spawn ==============================================================================================================
+
+    gz_spawn_base = Node(
+        package='ros_gz_sim',
+        executable='create',
+        output='screen',
+        arguments=[
+            '-name', 'base',
+            # simple base plate:
+            '-file', f'{sdf_path}/base.sdf',
+            # 
+            # big base plate:
+            # '-file', '/home/lao/Documents/Masterarbeit/git/SRRS_gazebo_sim/ros2_ws/install/srrs_sim/share/srrs_sim/sdf/base10x10.sdf',
+            '-x', '0.0', '-y', '0.0', '-z', '0.0',  # Set X, Y, Z coordinates
+            '-X', '0.0','-Y', '0.0','-Z', '0.0',  # Set Yaw (rotation in radians)
+            '-allow_renaming', 'true'
+        ]
     )
 
     
+    # LAUNCH description create ==============================================================================================================
 
     LaunchDescriptionMain =  LaunchDescription(
         [
@@ -227,12 +235,40 @@ def generate_launch_description():
         LogInfo(msg="some info"),
 
         # print robot sdf in Log output
-        # LogInfo(msg=robot_description_content),
+        LogInfo(msg=robot_description_content),
     ])
 
+    # PARTS SPAWN ============================================================================================================== 
+    bridge_topics=[]
 
+    
+    
+    
+    # gz_spawn_part = Node(
+    #     package='ros_gz_sim',
+    #     executable='create',
+    #     output='screen',
+    #     arguments=[
+    #         '-topic', 'part_description',
+    #         '-name', 'robot',
+    #         '-x', '0.0', '-y', '0.0', '-z', '0.134',  # Set X, Y, Z coordinates
+    #         '-X', '0.0','-Y', '0.0','-Z', '0.0',  # Set Yaw (rotation in radians)
+    #         '-allow_renaming', 'false'
+    #     ],
+    # )
+
+    part_xacro_path = PathJoinSubstitution(
+                    [FindPackageShare('srrs_sim'),
+                    'urdf', 'part.xacro']
+                )
+    
     for i, (x, y, z) in enumerate(part_coordinates):
-        part_name = f'voxel_{i}'
+        part_name = f'part{i+1}'
+        processed_urdf_path = f'temp_part{i+1}.urdf'
+        generate_part_urdf = ExecuteProcess(
+            cmd=['xacro', part_xacro_path, f'part_num:={i+1}', '-o', processed_urdf_path],
+            shell=True
+        )
         gz_spawn_parts = Node(
             package='ros_gz_sim',
             executable='create',
@@ -243,12 +279,43 @@ def generate_launch_description():
                 # '-file', '/home/lao/Documents/Masterarbeit/git/SRRS_gazebo_sim/ros2_ws/install/srrs_sim/share/srrs_sim/sdf/base1x1.sdf',
                 # 
                 # big base:
-                '-file', f'{sdf_path}/voxel.sdf',
+                '-file', processed_urdf_path,
                 '-x', str(x), '-y', str(y), '-z', str(z),  # Set X, Y, Z coordinates
                 '-X', '0.0','-Y', '0.0','-Z', '0.0',  # Set Yaw (rotation in radians)
                 '-allow_renaming', 'true'
             ]
-        )    
-        LaunchDescriptionMain.add_action(gz_spawn_parts)
+        )
+        bridge_topics.append(f"/attach_obj_link{i+1}@std_msgs/msg/Empty@gz.msgs.Empty")
+        bridge_topics.append(f"/detach_obj_link{i+1}@std_msgs/msg/Empty@gz.msgs.Empty")
+        LaunchDescriptionMain.add_action(generate_part_urdf)
+        LaunchDescriptionMain.add_action(
+            RegisterEventHandler(
+                event_handler=OnProcessExit(
+                    target_action=generate_part_urdf,
+                    on_exit=[TimerAction(
+                        period=0.5,
+                        actions=[
+                            gz_spawn_parts,
+                            ]
+                    )],
+                )
+            ),
+        )
 
+    gz_create__bridges = Node(
+            package='ros_gz_bridge',
+            executable='parameter_bridge',
+            name='gz_ros_bridge',
+            arguments=bridge_topics,
+            # [
+                # topic@ros_msg_type@gz_msg_type
+                # bridge_topics,
+                # Add more topic bridges as needed:
+                # '/my_topic@std_msgs/msg/String@gz.msgs.StringMsg',
+            # ],
+            output='screen'
+        )
+    LaunchDescriptionMain.add_action(gz_create__bridges)
+
+    # RETURN LaunchDescriptionMain ============================================================================================================== 
     return LaunchDescriptionMain

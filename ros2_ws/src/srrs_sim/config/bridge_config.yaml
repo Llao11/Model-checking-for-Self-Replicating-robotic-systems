@@ -35,29 +35,29 @@
   direction: BIDIRECTIONAL
 
 
-- ros_topic_name: "/attach_obj_link1"
-  gz_topic_name: "/attach_obj_link1"
-  ros_type_name: "std_msgs/msg/Empty"
-  gz_type_name: "gz.msgs.Empty"
-  direction: BIDIRECTIONAL
+# - ros_topic_name: "/attach_obj_link1"
+#   gz_topic_name: "/attach_obj_link1"
+#   ros_type_name: "std_msgs/msg/Empty"
+#   gz_type_name: "gz.msgs.Empty"
+#   direction: BIDIRECTIONAL
 
-- ros_topic_name: "/attach_obj_link2"
-  gz_topic_name: "/attach_obj_link2"
-  ros_type_name: "std_msgs/msg/Empty"
-  gz_type_name: "gz.msgs.Empty"
-  direction: BIDIRECTIONAL
+# - ros_topic_name: "/attach_obj_link2"
+#   gz_topic_name: "/attach_obj_link2"
+#   ros_type_name: "std_msgs/msg/Empty"
+#   gz_type_name: "gz.msgs.Empty"
+#   direction: BIDIRECTIONAL
 
-- ros_topic_name: "/detach_obj_link1"
-  gz_topic_name: "/detach_obj_link1"
-  ros_type_name: "std_msgs/msg/Empty"
-  gz_type_name: "gz.msgs.Empty"
-  direction: BIDIRECTIONAL
+# - ros_topic_name: "/detach_obj_link1"
+#   gz_topic_name: "/detach_obj_link1"
+#   ros_type_name: "std_msgs/msg/Empty"
+#   gz_type_name: "gz.msgs.Empty"
+#   direction: BIDIRECTIONAL
 
-- ros_topic_name: "/detach_obj_link2"
-  gz_topic_name: "/detach_obj_link2"
-  ros_type_name: "std_msgs/msg/Empty"
-  gz_type_name: "gz.msgs.Empty"
-  direction: BIDIRECTIONAL
+# - ros_topic_name: "/detach_obj_link2"
+#   gz_topic_name: "/detach_obj_link2"
+#   ros_type_name: "std_msgs/msg/Empty"
+#   gz_type_name: "gz.msgs.Empty"
+#   direction: BIDIRECTIONAL
 
 - ros_topic_name: "/camera1/image"
   gz_topic_name: "/camera1/image"
