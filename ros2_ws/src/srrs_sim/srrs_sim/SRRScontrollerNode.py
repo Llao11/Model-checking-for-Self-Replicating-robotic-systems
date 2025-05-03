@@ -32,12 +32,15 @@ class SRRSController(Node):
         self.attach_publisher2 = self.create_publisher(Empty, '/attach_link2', 10)
         self.detach_publisher2 = self.create_publisher(Empty, '/detach_link2', 10)
 
-        self.attach_publisher_obj1 = self.create_publisher(Empty, '/attach_obj_link1', 10)
-        self.attach_publisher_obj2 = self.create_publisher(Empty, '/attach_obj_link2', 10)
-        self.attach_publisher_obj3 = self.create_publisher(Empty, '/attach_obj_link3', 10)
-        self.detach_publisher_obj1 = self.create_publisher(Empty, '/detach_obj_link1', 10)
-        self.detach_publisher_obj2 = self.create_publisher(Empty, '/detach_obj_link2', 10)
-        self.detach_publisher_obj3 = self.create_publisher(Empty, '/detach_obj_link3', 10)
+        self.attach1_publisher_obj1 = self.create_publisher(Empty, '/attach_link1_obj_1', 10)
+        self.attach1_publisher_obj2 = self.create_publisher(Empty, '/attach_link1_obj_2', 10)
+        self.attach1_publisher_obj3 = self.create_publisher(Empty, '/attach_link1_obj_3', 10)
+        self.attach2_publisher_obj1 = self.create_publisher(Empty, '/attach_link2_obj_1', 10)
+        self.attach2_publisher_obj2 = self.create_publisher(Empty, '/attach_link2_obj_2', 10)
+        self.attach2_publisher_obj3 = self.create_publisher(Empty, '/attach_link2_obj_3', 10)
+
+        self.detach1_publisher_objects = self.create_publisher(Empty, '/detach1_objects', 10)
+        self.detach2_publisher_objects = self.create_publisher(Empty, '/detach2_objects', 10)
 
         # Separate publishers for each joint controller
         self.command_publisher1 = self.create_publisher(Float64MultiArray,'/position_controller1/commands',10)
@@ -228,29 +231,39 @@ class SRRSController(Node):
 
     
     # Fix objects  ===========================================================================================================================
-    def fix_obj1(self,**kwargs):
+    def fix_obj_to_block1(self,obj_num,**kwargs):
         msg = Empty()
-        self.attach_publisher_obj1.publish(msg)
-        self.get_logger().info("Attached object to block 1")
-        self.free_obj2()
+        match obj_num :
+            case 1:self.attach1_publisher_obj1.publish(msg)
+            case 2:self.attach1_publisher_obj2.publish(msg)
+            case 3:self.attach1_publisher_obj3.publish(msg)
+        self.get_logger().info(f"Attach object {obj_num} to block 1")
+        # self.free_obj2()
+        if "gui" in kwargs:
+            gui= kwargs.get('gui', None)
+            gui.btn_fix1_obj.config(bg="red")
+            gui.btn_free1_obj.config(bg="white")
+        
+    def fix_obj_to_block2(self,obj_num,**kwargs):
+        msg = Empty()
+        match obj_num :
+            case 1:self.attach2_publisher_obj1.publish(msg)
+            case 2:self.attach2_publisher_obj2.publish(msg)
+            case 3:self.attach2_publisher_obj3.publish(msg)
+        self.get_logger().info(f"Attach object {obj_num} to block 1")
+        # self.free_obj2()
         if "gui" in kwargs:
             gui= kwargs.get('gui', None)
             gui.btn_fix1_obj.config(bg="red")
             gui.btn_free1_obj.config(bg="white")
 
-    def fix_obj2(self,**kwargs):
-        msg = Empty()
-        self.attach_publisher_obj2.publish(msg)
-        self.get_logger().info("Attached object to block 2")
-        self.free_obj1()
-        if "gui" in kwargs:
-            gui= kwargs.get('gui', None)
-            gui.btn_fix2_obj.config(bg="red")
-            gui.btn_free2_obj.config(bg="white")
+    
+
+    # FREE objects  ===========================================================================================================================
 
     def free_obj1(self,**kwargs):
         msg = Empty()
-        self.detach_publisher_obj1.publish(msg)
+        self.detach1_publisher_objects.publish(msg)
         self.get_logger().info("Detached object to block 1")
         if "gui" in kwargs:
             gui= kwargs.get('gui', None)
@@ -259,9 +272,8 @@ class SRRSController(Node):
 
     def free_obj2(self,**kwargs):
         msg = Empty()
-        self.detach_publisher_obj2.publish(msg)
-        self.detach_publisher_obj3.publish(msg)
-        self.get_logger().info("Detached object to block 2 and 3")
+        self.detach2_publisher_objects.publish(msg)
+        self.get_logger().info("Detached object from block 2")
         if "gui" in kwargs:
             gui= kwargs.get('gui', None)
             gui.btn_fix2_obj.config(bg="white")

@@ -38,10 +38,13 @@ class GUI:
         self.btn_fix1_base = tk.Button(self.root, text="Fix block1 to base", command=lambda: self.controller_node.fix_1(gui=self))
         self.btn_fix2_base = tk.Button(self.root, text="Fix block2 to base", command=lambda: self.controller_node.fix_2(gui=self))
 
-        self.btn_fix1_obj = tk.Button(self.root, text="Fix object to block 1", command=lambda: self.controller_node.fix_obj1(gui=self))
-        self.btn_fix2_obj = tk.Button(self.root, text="Fix object to block 2", command=lambda: self.controller_node.fix_obj2(gui=self))
-        self.btn_free1_obj = tk.Button(self.root, text="Free object from block 1", command=lambda: self.controller_node.free_obj1(gui=self))
-        self.btn_free2_obj = tk.Button(self.root, text="Free object from block 2", command=lambda: self.controller_node.free_obj2(gui=self))
+        self.btn_fix1_obj = tk.Button(self.root, text="Fix object 1 to block 1", command=lambda: self.controller_node.fix_obj_to_block1(1,gui=self))
+        self.btn_fix2_obj = tk.Button(self.root, text="Fix object 1 to block 2", command=lambda: self.controller_node.fix_obj_to_block2(1,gui=self))
+        
+        # TODO change buttons/elements to fix only connected objects(not only 1 as in line 42) 
+
+        self.btn_free1_obj = tk.Button(self.root, text="Free objects from block 1", command=lambda: self.controller_node.free_obj1(gui=self))
+        self.btn_free2_obj = tk.Button(self.root, text="Free objects from block 2", command=lambda: self.controller_node.free_obj2(gui=self))
 
         self.fixed_block_var = tk.StringVar(value = self.controller_node.get_fixed_end())
         self.label_fixed_block = tk.Label(self.root, textvariable=self.fixed_block_var)
