@@ -2,7 +2,7 @@
 import rclpy
 from rclpy.node import Node
 from std_msgs.msg import Float64MultiArray,Empty, String
-from sensor_msgs.msg import Imu
+from sensor_msgs.msg import Imu, JointState
 from ros_gz_interfaces.msg import Contacts
 from ament_index_python.packages import get_package_share_directory
 import math
@@ -17,6 +17,7 @@ class SRRSsensorsNode(Node):
         super().__init__('robot_sensor')
         self.create_publishers()
         self.create_subscribers()
+        self.joint_angles_current=[0,0,0,0,0]
         
 
     def create_publishers(self):
@@ -42,7 +43,21 @@ class SRRSsensorsNode(Node):
         self.imu1_subscriber = self.create_subscription(Imu,"/robot/imu1", self.get_imu1 ,10)
         # self.imu2_subscriber = self.create_subscription(Imu,"/robot/imu2", self.get_imu2 ,10)
 
-    # CONTACT Sensors
+        self.joints_angles_subscriber = self.create_subscription(JointState, '/joint_states', self.joint_state_changed ,10)
+
+    # JOINTS angles =========================================================================================================================
+
+    def joint_state_changed(self, msg):
+        joint_angles_current_dict = dict(zip( msg.name, msg.position ))
+        sorted_names = ['rev0_1', 'rev2_3', 'rev5_6', 'rev8_9', 'rev13_14']
+        self.joint_angles_current = [joint_angles_current_dict[i] for i in sorted_names]
+        # self.get_logger().info(f"joint_angles_current: {self.joint_angles_current}")
+    
+    def get_joint_angle(self, joint_num):
+        joint=float(self.joint_angles_current[joint_num])*180.0/math.pi
+        return joint    
+
+    # CONTACT Sensors ===========================================================================================================================
 
     def set_contact1_state(self, msg: Contacts):
         contact_msg = msg.contacts[0]
@@ -100,7 +115,7 @@ class SRRSsensorsNode(Node):
         self.contact2_publisher.publish(msg)
 
 
-    # IMU Sensor
+    # IMU Sensor ===========================================================================================================================
 
     def get_imu1(self, msg):
         pass
@@ -110,3 +125,7 @@ class SRRSsensorsNode(Node):
 
     def calculate_velosity(self):
         pass
+
+    # Camera Sensor ===========================================================================================================================
+
+

@@ -271,7 +271,7 @@
     </plugin>
 
 
-    <plugin
+    <!-- <plugin
       filename="libgz-sim8-detachable-joint-system.so"
       name="gz::sim::systems::DetachableJoint">
       <parent_link>block0_fix</parent_link>
@@ -291,7 +291,7 @@
       <attach_topic>attach_obj_link2</attach_topic>
       <detach_topic>detach_obj_link2</detach_topic>
       <output_topic>detachable_obj_link_state2</output_topic>
-    </plugin>
+    </plugin> -->
 
 
     <plugin 

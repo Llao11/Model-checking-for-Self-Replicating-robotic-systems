@@ -1,0 +1,75 @@
+<?xml version="1.0" ?>
+<robot name="voxel" >
+
+  <link name="${name}">
+    <visual>
+      <geometry>
+          <mesh filename="/home/lao/Documents/Masterarbeit/git/SRRS_gazebo_sim/ros2_ws/src/srrs_sim/meshes/Voxel.stl" scale="0.001 0.001 0.001"/>
+          <!-- <box size="0.1 0.1 0.1"/> -->
+      </geometry>
+      <origin xyz="${origin}"/>
+    </visual>
+    <collision name="${name}_collision">
+        <geometry>
+        <mesh filename="/home/lao/Documents/Masterarbeit/git/SRRS_gazebo_sim/ros2_ws/src/srrs_sim/meshes/Voxel.stl" scale="0.001 0.001 0.001"/>
+          <!-- <box size="0.1 0.1 0.1"/> -->
+        </geometry>
+    </collision>
+    <inertial>
+      <mass value="0.1"/>
+      <inertia ixx="1.0" ixy="0.0" ixz="0.0" iyy="1.0" iyz="0.0" izz="1.0"/>
+    </inertial>
+  </link>
+  <gazebo reference="${name}">
+    <visual>
+      <material>
+        <ambient>${color}</ambient>
+        <diffuse>${color}</diffuse>
+      </material>
+    </visual>
+  </gazebo>
+  
+
+  <gazebo>
+    <plugin filename="gz_ros2_control-system" name="gz_ros2_control::GazeboSimROS2ControlPlugin">
+      <!-- <parameters>$(find srrs_sim)/config/two_blocks_controller.yaml</parameters> -->
+      <parameters>$(find srrs_sim)/config/robot_controller.yaml</parameters>
+    </plugin>
+
+    <plugin
+      filename="libgz-sim8-detachable-joint-system.so"
+      name="gz::sim::systems::DetachableJoint">
+      <parent_link>block0_fix</parent_link>
+      <child_model>base</child_model>
+      <child_link>base_link</child_link>
+      <attach_topic>attach_link1</attach_topic>
+      <detach_topic>detach_link1</detach_topic>
+      <output_topic>detachable_link_state1</output_topic>
+    </plugin>
+
+    <plugin
+      filename="libgz-sim8-detachable-joint-system.so"
+      name="gz::sim::systems::DetachableJoint">
+      <parent_link>block14fix</parent_link>
+      <child_model>base</child_model>
+      <child_link>base_link</child_link>
+      <attach_topic>attach_link2</attach_topic>
+      <detach_topic>detach_link2</detach_topic>
+      <output_topic>detachable_link_state2</output_topic>
+    </plugin>
+
+
+
+    <plugin 
+      filename="gz-sim-contact-system" 
+      name="gz::sim::systems::Contact">
+    </plugin>
+
+
+
+  </gazebo>
+
+
+
+
+</robot>

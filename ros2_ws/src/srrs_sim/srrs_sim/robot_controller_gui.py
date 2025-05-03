@@ -10,6 +10,7 @@ from . import SRRSsensorsNode
 class GUI:
     def __init__(self, controller_node: SRRScontrollerNode, sensor_node: SRRSsensorsNode):
         self.controller_node = controller_node
+        self.sensor_node = sensor_node
         self.root = tk.Tk()
         self.root.title("Robot Controller")
 
@@ -43,14 +44,15 @@ class GUI:
         self.btn_free2_obj = tk.Button(self.root, text="Free object from block 2", command=lambda: self.controller_node.free_obj2(gui=self))
 
         self.fixed_block_var = tk.StringVar(value = self.controller_node.get_fixed_end())
-        label_fixed_block = tk.Label(self.root, textvariable=self.fixed_block_var)
+        self.label_fixed_block = tk.Label(self.root, textvariable=self.fixed_block_var)
+        
         self.label_fix_block1= tk.Label(self.root,text="Block1 fixed - initially lower", bg="red")
         self.label_fix_block2= tk.Label(self.root,text="Block2 fixed - initially upper", bg="yellow")
 
         self.btn_fix2_base.grid(row=5, column=0)
         self.btn_fix1_base.grid(row=6, column=0)
         
-        label_fixed_block.grid(row=4, column=1)
+        self.label_fixed_block.grid(row=4, column=1)
         self.label_fix_block2.grid(row=5, column=1)
         self.label_fix_block1.grid(row=6, column=1)
         
@@ -72,6 +74,11 @@ class GUI:
         joint3_angle.insert(tk.END, "0")
         joint4_angle.insert(tk.END, "0")
         joint5_angle.insert(tk.END, "0")
+        self.label_joint1_angle = tk.Label(self.root,text=0)
+        self.label_joint2_angle = tk.Label(self.root,text=0)
+        self.label_joint3_angle = tk.Label(self.root,text=0)
+        self.label_joint4_angle = tk.Label(self.root,text=0)
+        self.label_joint5_angle = tk.Label(self.root,text=0)
 
         label_angle = tk.Label(self.root,text="Angles in deg")
         btn_joint1 = tk.Button(self.root, text="Set Joint 1", command=lambda: self.controller_node.rotate_joint(0,joint1_angle.get('1.0', tk.END)))
@@ -90,6 +97,11 @@ class GUI:
         joint3_angle.grid(row=3, column=5)
         joint4_angle.grid(row=4, column=5)
         joint5_angle.grid(row=5, column=5)
+        self.label_joint1_angle.grid(row=1, column=6)
+        self.label_joint2_angle.grid(row=2, column=6)
+        self.label_joint3_angle.grid(row=3, column=6)
+        self.label_joint4_angle.grid(row=4, column=6)
+        self.label_joint5_angle.grid(row=5, column=6)
 
         label_angle.grid(row=0, column=5)
 
@@ -100,7 +112,27 @@ class GUI:
         btn_joint5.grid(row=5, column=4)
         btn_joints.grid(row=6, column=4)
 
+        self.lock = threading.Lock()
+        self.update_labels()
 
+
+    def update_labels(self):
+            # update fixed block label
+            self.fixed_block_var = tk.StringVar(value = "Fixed block: "+str(self.controller_node.get_fixed_end()))
+            self.label_fixed_block.config(textvariable=self.fixed_block_var)
+            # update joints labels
+            joint1 = tk.StringVar(value =int(self.sensor_node.get_joint_angle(0)))
+            joint2 = tk.StringVar(value =int(self.sensor_node.get_joint_angle(1)))
+            joint3 = tk.StringVar(value =int(self.sensor_node.get_joint_angle(2)))
+            joint4 = tk.StringVar(value =int(self.sensor_node.get_joint_angle(3)))
+            joint5 = tk.StringVar(value =int(self.sensor_node.get_joint_angle(4)))
+            self.label_joint1_angle.config(textvariable = joint1)
+            self.label_joint2_angle.config(textvariable = joint2)
+            self.label_joint3_angle.config(textvariable = joint3)
+            self.label_joint4_angle.config(textvariable = joint4)
+            self.label_joint5_angle.config(textvariable = joint5)
+            self.root.after(30, self.update_labels)  # schedule next update every 30 ms
+    
 
     def run(self):
         self.root.mainloop()

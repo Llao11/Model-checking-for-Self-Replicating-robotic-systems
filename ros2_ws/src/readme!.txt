@@ -1,3 +1,6 @@
+Install:
+sudo apt install ros-jazzy-cv-bridge
+
 TODO:
 
 Начать писать спецификацию сверху-вниз (от абстрактной модели к НюСМВ модели)

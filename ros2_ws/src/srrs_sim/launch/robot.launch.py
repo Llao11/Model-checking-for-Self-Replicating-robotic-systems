@@ -20,9 +20,18 @@ def generate_launch_description():
 
     # spawn parts locations:
     step = 0.134
-    x = str(7 * step)
-    y = str(7 * step)
-    z = str(1 * step)
+    x = [str(7 * step)]
+    y = [str(7 * step)]
+    z = [str(1 * step)]
+
+    part_coordinates_int = [
+        [1, 2, 1],
+        [2, 4, 1],
+        [5, 1, 1]
+    ]
+
+    part_coordinates= [[elem*step for elem in row] for row in part_coordinates_int]
+
 
     # Get URDF via xacro
     robot_description_content = Command(
@@ -83,22 +92,6 @@ def generate_launch_description():
     )
 
 
-    gz_spawn_parts = Node(
-        package='ros_gz_sim',
-        executable='create',
-        output='screen',
-        arguments=[
-            '-name', 'voxel',
-            # small base:
-            # '-file', '/home/lao/Documents/Masterarbeit/git/SRRS_gazebo_sim/ros2_ws/install/srrs_sim/share/srrs_sim/sdf/base1x1.sdf',
-            # 
-            # big base:
-            '-file', f'{sdf_path}/voxel.sdf',
-            '-x', x, '-y', y, '-z', z,  # Set X, Y, Z coordinates
-            '-X', '0.0','-Y', '0.0','-Z', '0.0',  # Set Yaw (rotation in radians)
-            '-allow_renaming', 'true'
-        ]
-    )
 
     gz_spawn_base = Node(
         package='ros_gz_sim',
@@ -178,7 +171,7 @@ def generate_launch_description():
 
     
 
-    return LaunchDescription(
+    LaunchDescriptionMain =  LaunchDescription(
         [
         # Launch gazebo environment
         IncludeLaunchDescription(
@@ -196,7 +189,8 @@ def generate_launch_description():
                             period=5.0,
                             actions=[
                                 gz_spawn_robot,
-                                gz_spawn_parts]
+                                # gz_spawn_parts,
+                                ]
                         )],
                 )
             ),
@@ -235,3 +229,26 @@ def generate_launch_description():
         # print robot sdf in Log output
         # LogInfo(msg=robot_description_content),
     ])
+
+
+    for i, (x, y, z) in enumerate(part_coordinates):
+        part_name = f'voxel_{i}'
+        gz_spawn_parts = Node(
+            package='ros_gz_sim',
+            executable='create',
+            output='screen',
+            arguments=[
+                '-name', part_name, #'voxel',
+                # small base:
+                # '-file', '/home/lao/Documents/Masterarbeit/git/SRRS_gazebo_sim/ros2_ws/install/srrs_sim/share/srrs_sim/sdf/base1x1.sdf',
+                # 
+                # big base:
+                '-file', f'{sdf_path}/voxel.sdf',
+                '-x', str(x), '-y', str(y), '-z', str(z),  # Set X, Y, Z coordinates
+                '-X', '0.0','-Y', '0.0','-Z', '0.0',  # Set Yaw (rotation in radians)
+                '-allow_renaming', 'true'
+            ]
+        )    
+        LaunchDescriptionMain.add_action(gz_spawn_parts)
+
+    return LaunchDescriptionMain
