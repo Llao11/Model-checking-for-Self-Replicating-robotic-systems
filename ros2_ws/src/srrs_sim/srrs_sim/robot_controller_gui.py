@@ -22,9 +22,9 @@ class GUI:
         outputy = tk.Text(self.root, height=1, width=6)
         label_z= tk.Label(self.root,text="Z")
         outputz = tk.Text(self.root, height=1, width=6)
-        btn_run = tk.Button(self.root, text="Go to XYZ", command=lambda: self.controller_node.goto_XYZ(x=outputx.get('1.0', tk.END), 
-                                                                                            y=outputy.get('1.0', tk.END), 
-                                                                                            z=outputz.get('1.0', tk.END)))
+        btn_run = tk.Button(self.root, text="Go to XYZ", command=lambda:self.goto_XYZ(outputx.get('1.0', tk.END),
+                                                                               outputy.get('1.0', tk.END),
+                                                                               outputz.get('1.0', tk.END)))
         label_x.grid(row=0, column=0)
         outputx.grid(row=0, column=1)
         label_y.grid(row=1, column=0)
@@ -46,21 +46,12 @@ class GUI:
         self.btn_free1_obj = tk.Button(self.root, text="Free objects from block 1", command=lambda: self.controller_node.free_obj1(gui=self))
         self.btn_free2_obj = tk.Button(self.root, text="Free objects from block 2", command=lambda: self.controller_node.free_obj2(gui=self))
 
-        self.fixed_block_var = tk.StringVar(value = self.controller_node.get_fixed_end())
-        self.label_fixed_block = tk.Label(self.root, textvariable=self.fixed_block_var)
-        
-        self.label_fix_block1= tk.Label(self.root,text="Block1 fixed - initially lower", bg="red")
-        self.label_fix_block2= tk.Label(self.root,text="Block2 fixed - initially upper", bg="yellow")
-
         self.btn_fix2_base.grid(row=5, column=0)
         self.btn_fix1_base.grid(row=6, column=0)
-        
-        self.label_fixed_block.grid(row=4, column=1)
-        self.label_fix_block2.grid(row=5, column=1)
-        self.label_fix_block1.grid(row=6, column=1)
-        
         self.btn_fix2_obj.grid(row=7, column=0)
         self.btn_fix1_obj.grid(row=8, column=0)
+
+        
         
         self.btn_free2_obj.grid(row=7, column=1)
         self.btn_free1_obj.grid(row=8, column=1)
@@ -77,13 +68,7 @@ class GUI:
         joint3_angle.insert(tk.END, "0")
         joint4_angle.insert(tk.END, "0")
         joint5_angle.insert(tk.END, "0")
-        self.label_joint1_angle = tk.Label(self.root,text=0)
-        self.label_joint2_angle = tk.Label(self.root,text=0)
-        self.label_joint3_angle = tk.Label(self.root,text=0)
-        self.label_joint4_angle = tk.Label(self.root,text=0)
-        self.label_joint5_angle = tk.Label(self.root,text=0)
-
-        label_angle = tk.Label(self.root,text="Angles in deg")
+        
         btn_joint1 = tk.Button(self.root, text="Set Joint 1", command=lambda: self.controller_node.rotate_joint(0,joint1_angle.get('1.0', tk.END)))
         btn_joint2 = tk.Button(self.root, text="Set Joint 2", command=lambda: self.controller_node.rotate_joint(1,joint2_angle.get('1.0', tk.END)))
         btn_joint3 = tk.Button(self.root, text="Set Joint 3", command=lambda: self.controller_node.rotate_joint(2,joint3_angle.get('1.0', tk.END)))
@@ -100,14 +85,7 @@ class GUI:
         joint3_angle.grid(row=3, column=5)
         joint4_angle.grid(row=4, column=5)
         joint5_angle.grid(row=5, column=5)
-        self.label_joint1_angle.grid(row=1, column=6)
-        self.label_joint2_angle.grid(row=2, column=6)
-        self.label_joint3_angle.grid(row=3, column=6)
-        self.label_joint4_angle.grid(row=4, column=6)
-        self.label_joint5_angle.grid(row=5, column=6)
-
-        label_angle.grid(row=0, column=5)
-
+        
         btn_joint1.grid(row=1, column=4)
         btn_joint2.grid(row=2, column=4)
         btn_joint3.grid(row=3, column=4)
@@ -115,26 +93,78 @@ class GUI:
         btn_joint5.grid(row=5, column=4)
         btn_joints.grid(row=6, column=4)
 
+        # Lables fix blocks:
+        self.fixed_block_var = tk.StringVar(value = self.controller_node.get_fixed_end())
+        self.label_fixed_block = tk.Label(self.root, textvariable=self.fixed_block_var)
+        
+        self.label_fix_block1= tk.Label(self.root,text="Block1 fixed - initially lower", bg="red")
+        self.label_fix_block2= tk.Label(self.root,text="Block2 fixed - initially upper", bg="yellow")
+        
+        self.label_fixed_block.grid(row=4, column=1)
+        self.label_fix_block2.grid(row=5, column=1)
+        self.label_fix_block1.grid(row=6, column=1)
+
+        # Lables angles:
+        label_angle = tk.Label(self.root,text="Angles in deg")
+        label_angle.grid(row=0, column=5)
+        self.label_joint1_angle = tk.Label(self.root,text=0)
+        self.label_joint2_angle = tk.Label(self.root,text=0)
+        self.label_joint3_angle = tk.Label(self.root,text=0)
+        self.label_joint4_angle = tk.Label(self.root,text=0)
+        self.label_joint5_angle = tk.Label(self.root,text=0)
+        self.label_joint1_angle.grid(row=1, column=6)
+        self.label_joint2_angle.grid(row=2, column=6)
+        self.label_joint3_angle.grid(row=3, column=6)
+        self.label_joint4_angle.grid(row=4, column=6)
+        self.label_joint5_angle.grid(row=5, column=6)
+
+        # Lables contacts:
+        label_contact1 = tk.Label(self.root, text="Contact1:")
+        label_contact2 = tk.Label(self.root, text="Contact2:")
+        label_contact1.grid(row=8, column=4)
+        label_contact2.grid(row=7, column=4)
+
+        self.update_angles()
+        self.update_fix_end()
+        self.update_contact_objects()
+
         self.lock = threading.Lock()
-        self.update_labels()
 
 
-    def update_labels(self):
-            # update fixed block label
-            self.fixed_block_var = tk.StringVar(value = "Fixed block: "+str(self.controller_node.get_fixed_end()))
-            self.label_fixed_block.config(textvariable=self.fixed_block_var)
-            # update joints labels
-            joint1 = tk.StringVar(value =int(self.sensor_node.get_joint_angle(0)))
-            joint2 = tk.StringVar(value =int(self.sensor_node.get_joint_angle(1)))
-            joint3 = tk.StringVar(value =int(self.sensor_node.get_joint_angle(2)))
-            joint4 = tk.StringVar(value =int(self.sensor_node.get_joint_angle(3)))
-            joint5 = tk.StringVar(value =int(self.sensor_node.get_joint_angle(4)))
-            self.label_joint1_angle.config(textvariable = joint1)
-            self.label_joint2_angle.config(textvariable = joint2)
-            self.label_joint3_angle.config(textvariable = joint3)
-            self.label_joint4_angle.config(textvariable = joint4)
-            self.label_joint5_angle.config(textvariable = joint5)
-            self.root.after(30, self.update_labels)  # schedule next update every 30 ms
+    def update_angles(self):
+        joint1 = tk.StringVar(value =int(self.sensor_node.get_joint_angle(0)))
+        joint2 = tk.StringVar(value =int(self.sensor_node.get_joint_angle(1)))
+        joint3 = tk.StringVar(value =int(self.sensor_node.get_joint_angle(2)))
+        joint4 = tk.StringVar(value =int(self.sensor_node.get_joint_angle(3)))
+        joint5 = tk.StringVar(value =int(self.sensor_node.get_joint_angle(4)))
+        self.label_joint1_angle.config(textvariable = joint1)
+        self.label_joint2_angle.config(textvariable = joint2)
+        self.label_joint3_angle.config(textvariable = joint3)
+        self.label_joint4_angle.config(textvariable = joint4)
+        self.label_joint5_angle.config(textvariable = joint5)
+        self.root.after(30, self.update_angles)  # schedule next update every 30 ms
+
+    def update_fix_end(self):
+        self.fixed_block_var = tk.StringVar(value = "Fixed block: "+str(self.controller_node.get_fixed_end()))
+        self.label_fixed_block.config(textvariable=self.fixed_block_var)
+        self.root.after(30, self.update_fix_end)  # schedule next update every 30 ms
+
+    def update_contact_objects(self):
+        print("update")
+        contact1,contact2=self.sensor_node.get_contact_objects()
+        self.contact_obj1_var = tk.StringVar(value = str(contact1))
+        self.contact_obj2_var = tk.StringVar(value = str(contact2))
+        label_contact1_obj = tk.Label(self.root, textvariable=self.contact_obj1_var)
+        label_contact2_obj = tk.Label(self.root, textvariable=self.contact_obj2_var)
+        label_contact1_obj.grid(row=8, column=5)
+        label_contact2_obj.grid(row=7, column=5)
+        self.root.after(100, self.update_contact_objects)  # schedule next update every 100 ms
+
+
+    def goto_XYZ(self,outputx,outputy,outputz):
+        thread = threading.Thread(target=self.controller_node.goto_XYZ, args=(outputx,outputy,outputz), daemon=True)
+        thread.start()
+        
     
 
     def run(self):

@@ -114,6 +114,9 @@ class SRRSsensorsNode(Node):
         msg.data = str(object2)
         self.contact2_publisher.publish(msg)
 
+    def get_contact_objects(self):
+        return [self.contact1_object, self.contact2_object]
+
 
     # IMU Sensor ===========================================================================================================================
 
