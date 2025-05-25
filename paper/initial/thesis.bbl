@@ -1,0 +1,86 @@
+% $ biblatex auxiliary file $
+% $ biblatex bbl format version 3.2 $
+% Do not modify the above lines!
+%
+% This is an auxiliary file used by the 'biblatex' package.
+% This file may safely be deleted. It will be recreated by
+% biber as required.
+%
+\begingroup
+\makeatletter
+\@ifundefined{ver@biblatex.sty}
+  {\@latex@error
+     {Missing 'biblatex' package}
+     {The bibliography requires the 'biblatex' package.}
+      \aftergroup\endinput}
+  {}
+\endgroup
+
+
+\refsection{0}
+  \datalist[entry]{ynt/global//global/global}
+    \entry{BeckKKF13}{article}{}
+      \name{author}{4}{}{%
+        {{hash=5ed4e49521d41ef705639694dcfd2455}{%
+           family={Beck},
+           familyi={B\bibinitperiod},
+           given={Stephan},
+           giveni={S\bibinitperiod}}}%
+        {{hash=2f6f2c3008ca8cbf5a81a4b14b32eefc}{%
+           family={Kunert},
+           familyi={K\bibinitperiod},
+           given={André},
+           giveni={A\bibinitperiod}}}%
+        {{hash=06aa02d436934d4526e23c258434f0c6}{%
+           family={Kulik},
+           familyi={K\bibinitperiod},
+           given={Alexander},
+           giveni={A\bibinitperiod}}}%
+        {{hash=226cfae3660bc0a2d39e05d41da76465}{%
+           family={Froehlich},
+           familyi={F\bibinitperiod},
+           given={Bernd},
+           giveni={B\bibinitperiod}}}%
+      }
+      \strng{namehash}{b9a9b46c26cf439f5840975fd37c7ea1}
+      \strng{fullhash}{d6f32c7a86029d7a2a7fe9e855e1d913}
+      \strng{bibnamehash}{b9a9b46c26cf439f5840975fd37c7ea1}
+      \strng{authorbibnamehash}{b9a9b46c26cf439f5840975fd37c7ea1}
+      \strng{authornamehash}{b9a9b46c26cf439f5840975fd37c7ea1}
+      \strng{authorfullhash}{d6f32c7a86029d7a2a7fe9e855e1d913}
+      \field{labelalpha}{Bec+13}
+      \field{sortinit}{2}
+      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{{IEEE} Trans. Vis. Comput. Graph.}
+      \field{number}{4}
+      \field{title}{Immersive Group-to-Group Telepresence}
+      \field{volume}{19}
+      \field{year}{2013}
+      \field{pages}{616\bibrangedash 625}
+      \range{pages}{10}
+      \verb{doi}
+      \verb 10.1109/TVCG.2013.33
+      \endverb
+    \endentry
+    \entry{Wik1}{article}{}
+      \field{labelalpha}{13}
+      \field{sortinit}{2}
+      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{{IEEE} Trans. Vis. Comput. Graph.}
+      \field{number}{4}
+      \field{title}{Boolean satisfiability problem}
+      \field{volume}{19}
+      \field{year}{2013}
+      \field{pages}{616\bibrangedash 625}
+      \range{pages}{10}
+      \verb{doi}
+      \verb 10.1109/TVCG.2013.33
+      \endverb
+    \endentry
+  \enddatalist
+\endrefsection
+\endinput
+

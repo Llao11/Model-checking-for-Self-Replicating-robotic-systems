@@ -22,7 +22,7 @@ import json
 #     f.write(nusmv_model)
 
 # Run NuSMV to verify the model
-result = subprocess.run(["./NuSMV-2.7.0-linux64/bin/NuSMV", "-dynamic","Assemble_module_specific.smv"], capture_output=True, text=True)
+result = subprocess.run(["./NuSMV-2.7.0-linux64/bin/NuSMV", "-dynamic","1.smv"], capture_output=True, text=True)
 
 # Print the output
 print(result.stdout)

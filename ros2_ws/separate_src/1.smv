@@ -1,0 +1,118 @@
+MODULE main
+
+  VAR
+    state : {INITIAL, CHECK_ASSEMBLY, GO_TO_FEED, CHECK_BLOCK, GO_TO_ASSEMBLY, ASSEMBLE, ASSEMBLY_FINISHED, ASSEMBLY_FAILED};
+    
+    -- Robot position on a 6x6 grid (coordinates range from 0 to 5)
+    x : 0..5;
+    y : 0..5;
+    
+    -- Index of the next block to assemble (0..N, where N indicates assembly complete)
+    i_n : 0..3;  -- assume 3 parts indexed 0,1,2; i_n = 3 means all parts assembled
+    
+    -- List of expected block types (B[0..2] are part types to assemble in order; B[3] is a dummy 'none' type for completion)
+    B : array 0..3 of {Part1, Part2, Part3, NoneType};
+    
+    -- The block type currently being carried by the robot (NoneType when not carrying a part)
+    carried_block : {Part1, Part2, Part3, NoneType};
+
+  -- Input: the part type available at the feed point F when the robot arrives  IVAR?
+    feed_type : {Part1, Part2, Part3};
+
+  DEFINE
+    -- Coordinates of feed point (F) and assembly point (A)
+    feed_x := 5;    feed_y := 0;
+    assembly_x := 0;  assembly_y := 5;
+    -- Define obstacle locations on the grid
+    obstacle1_x := 2; obstacle1_y := 2;
+    obstacle2_x := 3; obstacle2_y := 4;
+    obstacle_cell := (x = obstacle1_x & y = obstacle1_y) | (x = obstacle2_x & y = obstacle2_y);
+
+  ASSIGN
+    -- Initial conditions
+    init(state) := INITIAL;
+    init(x) := 0;         -- starting position x0 (assumed 0 for example)
+    init(y) := 0;         -- starting position y0 (assumed 0 for example)
+    init(i_n) := 0;       -- start with the first part in the list (index 0)
+    init(carried_block) := NoneType;
+    -- Initialize the expected block list B (the sequence of part types to assemble)
+    init(B[0]) := Part1;
+    init(B[1]) := Part2;
+    init(B[2]) := Part3;
+    init(B[3]) := NoneType;    -- no part needed when assembly is complete
+
+    next(state) := case
+      state = INITIAL : CHECK_ASSEMBLY;               
+      state = CHECK_ASSEMBLY & i_n = 3 : ASSEMBLY_FINISHED;  
+      state = CHECK_ASSEMBLY & i_n < 3 : GO_TO_FEED;   
+      state = GO_TO_FEED & x = feed_x & y = feed_y : CHECK_BLOCK;    
+      state = GO_TO_FEED & !(x = feed_x & y = feed_y) : GO_TO_FEED;  
+      state = CHECK_BLOCK & feed_type = B[i_n] : GO_TO_ASSEMBLY;    
+      state = CHECK_BLOCK & feed_type != B[i_n] : ASSEMBLY_FAILED;   
+      state = GO_TO_ASSEMBLY & x = assembly_x & y = assembly_y : ASSEMBLE;   
+      state = GO_TO_ASSEMBLY & !(x = assembly_x & y = assembly_y) : GO_TO_ASSEMBLY;  
+      state = ASSEMBLE : CHECK_ASSEMBLY;             
+      state = ASSEMBLY_FAILED : ASSEMBLY_FAILED;      
+      state = ASSEMBLY_FINISHED : ASSEMBLY_FINISHED;  
+      TRUE : state;   -- default (no change)
+    esac;
+
+    -- **Robot Movement** (horizontal/vertical step-by-step, no diagonal moves)
+    -- Update X-coordinate (horizontal moves). Moves one step toward target (feed or assembly) if not yet aligned.
+    next(x) := case
+      -- Moving toward feed point F horizontally (increase or decrease x)
+      state = GO_TO_FEED & x < feed_x & !((x + 1 = obstacle1_x & y = obstacle1_y) | (x + 1 = obstacle2_x & y = obstacle2_y))
+        : x + 1;  -- move one step right (east) if not at feed_x and no obstacle to the right
+      state = GO_TO_FEED & x > feed_x & !((x - 1 = obstacle1_x & y = obstacle1_y) | (x - 1 = obstacle2_x & y = obstacle2_y))
+        : x - 1;  -- move one step left (west) if beyond feed_x and no obstacle to the left
+      state = GO_TO_FEED & x = feed_x 
+        : x;      -- if horizontally aligned with F, hold x (no horizontal move)
+      -- Moving toward assembly point A horizontally
+      state = GO_TO_ASSEMBLY & x < assembly_x & !((x + 1 = obstacle1_x & y = obstacle1_y) | (x + 1 = obstacle2_x & y = obstacle2_y))
+        : x + 1;  -- move one step right if needed for A and no obstacle
+      state = GO_TO_ASSEMBLY & x > assembly_x & !((x - 1 = obstacle1_x & y = obstacle1_y) | (x - 1 = obstacle2_x & y = obstacle2_y))
+        : x - 1;  -- move one step left if needed for A and no obstacle
+      state = GO_TO_ASSEMBLY & x = assembly_x 
+        : x;      -- if horizontally aligned with A, hold x
+      TRUE : x;   -- otherwise, x remains the same (no horizontal movement)
+    esac;
+
+    -- Update Y-coordinate (vertical moves). Moves one step toward target when X is aligned.
+    next(y) := case
+      -- Moving toward feed point F vertically (once x is aligned with feed_x)
+      state = GO_TO_FEED & x = feed_x & y < feed_y & !((x = obstacle1_x & y + 1 = obstacle1_y) | (x = obstacle2_x & y + 1 = obstacle2_y))
+        : y + 1;  -- move one step up (north) if not at feed_y and no obstacle above
+      state = GO_TO_FEED & x = feed_x & y > feed_y & !((x = obstacle1_x & y - 1 = obstacle1_y) | (x = obstacle2_x & y - 1 = obstacle2_y))
+        : y - 1;  -- move one step down (south) if beyond feed_y and no obstacle below
+      state = GO_TO_FEED & y = feed_y 
+        : y;      -- if vertically aligned with F (or not yet aligned in X), hold y
+      -- Moving toward assembly point A vertically (once x is aligned with assembly_x)
+      state = GO_TO_ASSEMBLY & x = assembly_x & y < assembly_y & !((x = obstacle1_x & y + 1 = obstacle1_y) | (x = obstacle2_x & y + 1 = obstacle2_y))
+        : y + 1;  -- move one step up if needed for A and no obstacle
+      state = GO_TO_ASSEMBLY & x = assembly_x & y > assembly_y & !((x = obstacle1_x & y - 1 = obstacle1_y) | (x = obstacle2_x & y - 1 = obstacle2_y))
+        : y - 1;  -- move one step down if needed for A and no obstacle
+      state = GO_TO_ASSEMBLY & y = assembly_y 
+        : y;      -- if vertically aligned with A (or not yet aligned in X), hold y
+      TRUE : y;   -- otherwise, y remains the same (no vertical movement)
+    esac;
+
+    -- **Update Part Index and Carried Block**
+    next(i_n) := case
+      state = ASSEMBLE : i_n + 1;   -- once a part is assembled, move to the next index
+      TRUE : i_n;
+    esac;
+
+    next(carried_block) := case
+      state = CHECK_BLOCK & feed_type = B[i_n] : feed_type;  -- pick up the block from feed if it matches the expected type
+      state = ASSEMBLE : NoneType;                           -- after assembling, robot is no longer carrying a part
+      TRUE : carried_block;
+    esac;
+
+    -- Keep the expected parts list B constant (no changes over time)
+    next(B[0]) := B[0];
+    next(B[1]) := B[1];
+    next(B[2]) := B[2];
+    next(B[3]) := B[3];
+
+LTLSPEC
+    F (state = ASSEMBLY_FINISHED);

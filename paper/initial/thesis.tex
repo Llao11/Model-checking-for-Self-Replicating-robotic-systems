@@ -1,0 +1,91 @@
+% \documentclass[german,bachelor]{vrsysthesis}
+\documentclass[english,master]{buwthesis}
+
+%
+% Values
+% ------
+\ThesisSetTitle{Model checking for Self-Replicating Robotic Systems}
+\ThesisSetSubtitle{Initial Research} % optional
+\ThesisSetKeywords{These, Are, My keywords} % only for PDF meta attributes
+
+% list authors with name and matrikel number
+\ThesisSetAuthor{Dmitry Babaytsev (124065)}
+
+\ThesisSetProgramme{Digital Engineering}
+\ThesisSetSupervisors{Prof.\ Dr.\ Jan Oliver Ringert, Prof.\ Dr.\ Unknown Yet}
+
+\ThesisSetSubmissionDate{31}{6}{2025}
+
+
+\usepackage{libertine}
+\usepackage{libertinust1math}
+\usepackage{csquotes}
+\usepackage[
+  backend=biber,
+  bibencoding=utf8,
+  backref=true,
+  hyperref=true,
+  isbn=false,
+  maxcitenames=3,
+  style=alphabetic,
+  citestyle=alphabetic,
+  sorting=ynt,
+]{biblatex}
+\addbibresource{literature.bib}
+\usepackage{booktabs}
+
+\usepackage{lipsum} % only used for blind text, can be removed in production
+
+%
+% Suggested Packages
+% ------------------
+%\usepackage{tabularx}
+%\usepackage[ruled,algochapter]{algorithm2e}
+%\usepackage{amsmath}
+
+% Enumerated hypotheses
+\usepackage{amsthm}
+\newtheoremstyle{hypothesisstyle}
+  {\topsep}
+  {0}
+  {\normalfont}
+  {0pt}
+  {\bfseries}
+  {:}
+  {5pt plus 1pt minus 1pt}
+  {\thmname{#1}\textsubscript{\thmnumber{#2}}}
+\newtheoremstyle{shypothesisstyle}
+  {\topsep}
+  {0}
+  {\small}
+  {5pt}
+  {\itshape\bfseries}
+  {:}
+  {5pt plus 1pt minus 1pt}
+  {\thmname{#1}\textsubscript{\thmnumber{#2}}}
+\theoremstyle{hypothesisstyle}
+\newtheorem{hypothesis}{H}[]
+\theoremstyle{shypothesisstyle}
+\newtheorem{shypothesis}{H}[hypothesis]
+\renewcommand*{\theshypothesis}{\arabic{hypothesis}\alph{shypothesis}}
+
+\usepackage[
+  colorlinks=false,
+  pdfborder={0 0 0},
+  pdfauthor={\the\thesisauthor},
+  pdftitle={\the\thesistitle},
+  pdfkeywords={\the\thesiskeywords},
+  pdfdisplaydoctitle,
+  pdfpagemode={UseNone},
+  pdfstartview={Fit},
+]{hyperref}
+\urlstyle{same}
+
+\usepackage{cleveref} % must be loaded after hyperref
+\crefformat{hypothesis}{\textbf{H\textsubscript{#1}}}
+\crefformat{shypothesis}{\textbf{\textit{H\textsubscript{#1}}}}
+
+\begin{document}
+\input{text/main.tex}
+\end{document}
+
