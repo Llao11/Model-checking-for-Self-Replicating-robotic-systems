@@ -33,7 +33,7 @@
 ]{biblatex}
 \addbibresource{literature.bib}
 \usepackage{booktabs}
-
+\usepackage{subcaption}
 \usepackage{lipsum} % only used for blind text, can be removed in production
 
 %
@@ -68,7 +68,7 @@
 \theoremstyle{shypothesisstyle}
 \newtheorem{shypothesis}{H}[hypothesis]
 \renewcommand*{\theshypothesis}{\arabic{hypothesis}\alph{shypothesis}}
-
+% \usepackage{}
 \usepackage[
   colorlinks=false,
   pdfborder={0 0 0},
@@ -84,6 +84,7 @@
 \usepackage{cleveref} % must be loaded after hyperref
 \crefformat{hypothesis}{\textbf{H\textsubscript{#1}}}
 \crefformat{shypothesis}{\textbf{\textit{H\textsubscript{#1}}}}
+\graphicspath{{./img/}}
 
 \begin{document}
 \input{text/main.tex}
