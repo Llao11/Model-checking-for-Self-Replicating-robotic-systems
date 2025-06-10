@@ -20,17 +20,18 @@
 \contentsline {subsection}{\numberline {2.3.1}Self-replication introduction}{14}{subsection.2.3.1}%
 \contentsline {subsection}{\numberline {2.3.2}Classification of Self-replication systems}{14}{subsection.2.3.2}%
 \contentsline {subsubsection}{\nonumberline Type-related replication}{14}{subsubsection*.20}%
-\contentsline {subsubsection}{\nonumberline Number of robot types involved:}{15}{subsubsection*.24}%
-\contentsline {subsubsection}{\nonumberline Involvement of external system}{15}{subsubsection*.26}%
-\contentsline {subsection}{\numberline {2.3.3}Self-replication models}{17}{subsection.2.3.3}%
-\contentsline {subsection}{\numberline {2.3.4}Degree of replication}{18}{subsection.2.3.4}%
-\contentsline {subsection}{\numberline {2.3.5}Material-robot systems}{19}{subsection.2.3.5}%
-\contentsline {chapter}{\numberline {3}Research Questions}{20}{chapter.3}%
-\contentsline {section}{\numberline {3.1}Approach}{20}{section.3.1}%
-\contentsline {subsubsection}{\nonumberline Experimental platform}{20}{subsubsection*.29}%
-\contentsline {subsubsection}{\nonumberline Generation of a model and specifications for formal-verification}{20}{subsubsection*.31}%
-\contentsline {section}{\numberline {3.2}Analysis of results}{21}{section.3.2}%
-\contentsline {section}{\numberline {3.3}Evaluation}{21}{section.3.3}%
-\contentsline {chapter}{\nonumberline Bibliography}{22}{chapter*.32}%
-\contentsline {chapter}{\numberline {A}My First Appendix}{24}{appendix.A}%
+\contentsline {subsubsection}{\nonumberline Population Composition Classification}{16}{subsubsection*.24}%
+\contentsline {subsubsection}{\nonumberline Interaction with environment or external system}{17}{subsubsection*.26}%
+\contentsline {subsubsection}{\nonumberline Interaction with environment or external system, alternative classification}{18}{subsubsection*.28}%
+\contentsline {subsection}{\numberline {2.3.3}Self-replication models}{20}{subsection.2.3.3}%
+\contentsline {subsection}{\numberline {2.3.4}Degree of replication}{21}{subsection.2.3.4}%
+\contentsline {subsection}{\numberline {2.3.5}Material-robot systems}{22}{subsection.2.3.5}%
+\contentsline {chapter}{\numberline {3}Research Questions}{25}{chapter.3}%
+\contentsline {section}{\numberline {3.1}Approach}{25}{section.3.1}%
+\contentsline {subsubsection}{\nonumberline Experimental platform}{25}{subsubsection*.33}%
+\contentsline {subsubsection}{\nonumberline Generation of a model and specifications for formal-verification}{25}{subsubsection*.35}%
+\contentsline {section}{\numberline {3.2}Analysis of results}{26}{section.3.2}%
+\contentsline {section}{\numberline {3.3}Evaluation}{26}{section.3.3}%
+\contentsline {chapter}{\nonumberline Bibliography}{27}{chapter*.36}%
+\contentsline {chapter}{\numberline {A}My First Appendix}{29}{appendix.A}%
 \providecommand \tocbasic@end@toc@file {}\tocbasic@end@toc@file 

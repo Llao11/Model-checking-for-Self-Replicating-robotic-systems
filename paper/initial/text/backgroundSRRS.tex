@@ -1,84 +1,187 @@
 \section {Self-replicating robotic systems}
 
 \subsection{Self-replication introduction}
-Self-replication is a process of construction of an identical or similar copy of itself by some dynamical system.
 
-A self-replicating machine is a type of autonomous robot that is capable of reproducing 
-itself autonomously using materials found in the environment, thus exhibiting self-replication 
-in a way analogous to that found in nature.
+Self-replication is the process by which a dynamical system constructs an identical—or 
+very similar—copy of itself. According to \citeauthor{Sipper1998SelfReplication}, 
+replication is an ontogenetic, purely developmental phenomenon: it involves 
+no genetic- or code-modifying operators and yields an exact duplicate of the parent organism. 
 
-Self-assembly is the autonomous organization of components into patterns or structures
-without human intervention. 
+Replication must therefore be distinguished from reproduction, a phylogenetic,
+evolutionary process that employs genetic operators (e.g., crossover and mutation in biology) 
+and ultimately generates diversity and evolution \cite{Sipper1998SelfReplication}. 
 
-In robotics, this can either refer to the ability of a kinematic 
-machine to manipulate a series of parts into an assembled copy of itself (kinematic self-replication) or the capability of a
-group of mobile robots to autonomously connect to and disconnect from each other (modular
-robotics).
+This study focuses exclusively on replication and self-replication,
+code-altering and evolutionary processes are beyond its scope.
 
-This differs from self-replication in that the resulting system is not necessarily
-capable of making, catalyzing, or in some way inducing more copies of itself
+Self-assembly refers to the autonomous organization of components into patterns 
+or structures without human intervention. 
+In robotics, this term may describe either 
+(i) a kinematic machine that manipulates discrete parts to build 
+an assembled copy of itself (kinematic self-replication) or 
+(ii) a collective of mobile robots that can autonomously connect, 
+disconnect, and reconfigure themselves 
+(swarm robotics and robotic self-reconfiguration \cite{Tan2020Framework}).
 
-Difference between replicating system (requires an external control elements for replication e.g. virus)
-and Self-replicating system.
+When the replication process is controlled solely by the system being reproduced, 
+it is called a self-replicating system \cite{Lee2007Robotic}.
+In contrast, if the replication process requires external elements that actively control
+and manipulate resources and direct the process, it is simply a replicating system. 
+A biological analogue is a virus, which replicates by exploiting a host cell.
+
+A self-replicating machine or self-replicating robotic system (SRRS) 
+is thus an autonomous robot capable of manufacturing 
+a copy of itself from raw materials, or from minimal possible units related to 
+considered environment, thereby exhibiting self-replication in a manner 
+analogous to that observed in nature.
 
 
 
 
 \subsection{Classification of Self-replication systems}
  
-TODO: add classification from \cite{Tan2020Framework}
-
 \subsubsection{Type-related replication} 
-As it shown in dissertation of \citeauthor{Jones2021Thesis} \cite{Jones2021Thesis} and  
-works of \citeauthor{Lee2007Robotic} \cite{Lee2007Robotic}, 
-self-replicating systems can be classified based on type-related replication into:\\
-Centralized replication, SRRS where robots can produce only robots without replication ability,
+Building upon the foundational work of \citeauthor{Jones2021Thesis} \cite{Jones2021Thesis} and  
+works of \citeauthor{Lee2007Robotic} , 
+self-replicating systems can be 
+systematically classified according to their type-related replication architecture into three primary categories:
 
-Decentralized replication, SRRS where robots with replication ability can produce copies of itself.
+\textbf{Centralized replication system } where robots can produce only robots 
+without replication functionality  as is shown on Figure \ref{fig:class1a}a.\\
+The centralized approach has several distinct advantages: it provides precise control 
+over population growth, ensures quality consistency through standardized 
+manufacturing processes, and reduces resource competition among robots.
+However it also introduces significant vulnerability through single 
+points of failure - if the replicating robots are damaged or destroyed, 
+the entire system's reproductive capacity is compromised. 
+
+Additionally, the concentration of replication resources that have to be located or transported 
+near the replicating robots may create 
+bottlenecks that limit the system's expansion rate and adaptive responsiveness.
+
+\textbf{Decentralized replication} represents a system architecture where every robot within 
+the system possesses full replication capabilities, see Figure \ref{fig:class1a}b. This distributed approach is  
+inspired by cellular division processes, where each entity contains the 
+complete blueprint and machinery necessary for creating identical copies of itself.
+
+The decentralized model excels in resilience, scalability and speed of self-replication. 
+The system can continue expanding even if individual robots are eliminated, 
+as each surviving unit has complete reproductive autonomy. 
+This architecture facilitates rapid colonization of new environments and 
+provides redundancy against catastrophic failures. 
+However, decentralized systems face challenges in coordination and control for some systems, 
+possible uncontrolled exponential growth, and consistent 
+quality across independently operating replication processes.
+
 \begin{figure}[h]
     \centering
-    \subfloat[Centralized replication]{ \includegraphics[width=6cm]{ClassificationCentralized.png}}
-    \subfloat[Decentralized replication]{ \includegraphics[width=7cm]{ClassificationDecentralized.png}}\\
+    \subfloat[]{ \includegraphics[width=6.5cm]{ClassificationCentralized.png}}
+    \subfloat[]{ \includegraphics[width=8.5cm]{ClassificationDecentralized.png}}\\
+    \caption{Centralized and decentralized replication}
+    \label{fig:class1a}
 \end{figure}
 
-Hierarchical replication,  SRRS in which is a combination of centralized and decentralized approaches, 
-where robots with ability to replicate can produce both types of robots.
+\textbf{Hierarchical replication } architectures represent a hybrid approach 
+that combines elements of both centralized and decentralized strategies. 
+In these systems, robots with replication capabilities can produce two 
+distinct categories of offspring: specialized robots lacking replication 
+ability (similar to centralized systems) and fully autonomous robots 
+capable of self-replication (similar to decentralized systems), as is shown on  Figure \ref{fig:class2}. 
 
+This multi-tiered approach enables dynamic adaptation to environmental conditions 
+and mission requirements. The system can produce specialized worker 
+robots for specific tasks while simultaneously maintaining a population 
+of replicator robots to ensure continued expansion and redundancy. 
+
+The hierarchical model allows for optimized resource allocation, 
+where replication-capable robots can focus on expansion while non-replicating robots 
+specialize in operational tasks, environmental sensing, or resource collection.
 
 \begin{figure}[h]
     \centering
-    \includegraphics[width=6cm]{ClassificationHierarchical.png} 
+    \includegraphics[width=9cm]{ClassificationHierarchical.png} 
     \caption{Hierarchical replication}
+    \label{fig:class2}
 \end{figure}
 
-\subsubsection{Number of robot types involved:}
-Homogeneous - all robot in a system have one type\\ 
-Heterogeneous - there are different types of robots\\
+\subsubsection{Population Composition Classification}
  
+The composition of robot types within an SRRS fundamentally influences system 
+behavior, specialization potential, and adaptive capacity. 
+This classification dimension addresses the diversity of robotic types operating within the system.
 
-\subsubsection{Involvement of external system }
-\cite{Lee2007Robotic}:\\
-Passive self-replicating system - is a system that does not have active functionality for self-replication,
-but there exist a replication process associated with that system without
-any external constructor. 
-Penrose block replicators, can be viewed as passive self-replicating systems \cite{Penrose1958Mechanics}.
+\textbf{Homogeneous Systems}
+Homogeneous SRRS consist of robotically identical units, where all entities 
+share the same physical design, computational capabilities, and behavioral programming. 
+This uniformity creates predictable system dynamics and simplifies coordination 
+protocols, as all robots operate with identical sensor suites, 
+actuator capabilities, and decision-making algorithms.
 
-Active self-replicating system has sufficient functionality to replicate itself, possibly with aid of some
-passive environmental structures.\\
+The homogeneous approach offers advantages in replication process consistency,
+simplified communication protocols, and predictable emergent behaviors. 
+Resource allocation becomes straightforward when all units have identical requirements, 
+and system-wide updates or modifications can be uniformly applied. 
+However, homogeneous systems may struggle with task specialization and 
+environmental adaptation, as the lack of diversity limits the 
+system's ability to optimize for varied operational requirements.
 
-Authors \citeauthor{Suthakorn2002SpaceUtilization} proposed more detailed classification \cite{Suthakorn2002SpaceUtilization}, that describes 
-replication behaviour and interaction with external systems. According to this classification all SRRS can be subdivided into:
+\textbf{Heterogeneous Systems}
+Heterogeneous SRRS incorporate multiple distinct robot types, each potentially 
+specialized for specific functions, environmental conditions, or operational roles. 
+This diversity enables flexible division of labor, where different robot 
+types can be optimized for exploration, resource gathering, construction, 
+maintenance, or replication tasks.
 
-Directly replicating SRRS - in which a robot capable of producing an exact replica of itself in one generation 
+The heterogeneous model provides enhanced adaptability and operational efficiency 
+through specialization. Different robot types can be designed with 
+complementary capabilities, creating synergistic effects that exceed the 
+performance of individual units. This approach enables the system to 
+respond more effectively to complex environmental challenges and mission requirements. 
 
-Indirectly replicating SRRS - where robot capable of producing one or more intermediate robots that are in turn
-capable of producing replicas of the original.
+However, heterogeneous systems require sophisticated coordination mechanisms 
+to manage inter-type communication, resource distribution, and 
+collaborative decision-making across diverse robotic platforms.
+
+
+\subsubsection{Interaction with environment or external system }
+Another classification of self-replicating robotic systems can be made based on 
+the degree of autonomy and reliance on external systems, as it described in \cite{Lee2007Robotic}. 
+A fundamental distinction is made between passive and active self-replication:
+
+\textbf{Passive} self-replicating systems do not possess inherent mechanisms to 
+actively reproduce themselves. 
+However, given an appropriate environment and the right configuration 
+of components, replication can still occur. 
+A canonical example of this is the Penrose block replicators, 
+which demonstrate self-replication through mechanical constraints 
+and spatial arrangement without any active control \cite{Penrose1958Mechanics}.
+
+\textbf{Active} self-replicating systems, on the other hand,
+are equipped with the functional capacity to carry out the replication process. 
+These systems may still rely on passive environmental structures 
+(such as fixtures or gravity) to assist in replication, but are 
+actively engaged in constructing replicas of themselves.
+
+\subsubsection{Interaction with environment or external system, alternative classification }
+A more detailed and operationally useful classification is introduced by 
+\citeauthor{Suthakorn2002SpaceUtilization} \cite{Suthakorn2002SpaceUtilization}. 
+This framework emphasizes how SRRS interact with their environments and 
+whether replication is accomplished directly or through intermediate stages. 
+Based on this framework, all SRRS are categorized into two primary classes:
+
+\textbf{Directly replicating} SRRS - in which a robot is capable of constructing 
+an exact copy of itself in a single generational step. 
+These systems can be further divided into the following subcategories, 
+based on their reliance on fixtures and replication strategy:
+
 
 \begin{figure}[h]
     \centering
     \includegraphics[width=14cm]{ClassificationDirect.png} 
     \caption{Directly and indirectly replicating robots classification}
 \end{figure}
+
+
 Directly Replicating Robots can be further classified into following groups:
 \begin{itemize}
     \item Fixture-Based Group
@@ -103,29 +206,51 @@ Directly Replicating Robots can be further classified into following groups:
         are likely to be developed in the subsequent stages of our research in the area of self-replicating robots.
 \end{itemize}
 
-Indirectly Replicating Robots or group of robots works together build a robot-producing factory 
-or some type of intermediate robot which is able to produce replicas of the original robot.
+\textbf{Indirectly replicating }- where replication is achieved through intermediate 
+stages rather than a direct one-to-one duplication. 
+The original robot initiates the creation of other robots or constructs 
+a specialized environment that facilitates replication. Indirect replication strategies include:
+
+\begin{itemize}
+    \item Self-Replicating Robot Factory
+        A robot or group of robots constructs a fabrication environment — a factory, 
+        that can then autonomously produce replicas of the original.
+        This approach encapsulates the replication process into a fixed 
+        infrastructure, enabling high throughput and modular production.
+    \item Intermediate Robot Builders
+        Instead of replicating itself directly, a robot creates new robots 
+        that are not replicas, but are instead specialized for manufacturing. 
+        These intermediate agents then produce replicas of the original robot. 
+        This cascading replication strategy introduces flexibility and specialization 
+        but may involve increased system complexity.
+
+\end{itemize}
 
 
 
 
 \subsection{Self-replication models}
+The concept of self-replicating systems originates from the foundational work of 
+\citeauthor{vonNeumann1962Theory}, who in \citeyear{vonNeumann1962Theory} proposed 
+the first theoretical model of a self-reproducing automaton \cite{vonNeumann1962Theory}. 
+This model, developed in the context of cellular automata, 
+formalized the minimal components necessary for a machine to replicate itself.
 
-
-
-First self-reproducing automation model was proposed by \citeauthor{vonNeumann1962Theory} in \citeyear{vonNeumann1962Theory}  \cite{vonNeumann1962Theory}\\
-According to this model, a self-reproducing automaton consists of four components:\\
-A - an automatic factory (constructor) that collects raw materials and processes them into outputs using a
+According to this model, a self-reproducing automaton consists of four key components:\\
+A (constructor): an automatic factory  that collects raw materials and processes them into outputs using a
 specified written instruction, \\
-B - a copier that takes an instruction and copies it,\\
-C - a controller that controls A and B, actuating them alternatively,\\
-D - a list of written instructions.\\
+B (copier): that takes an instruction and copies it,\\
+C (controller): that controls A and B, actuating them alternatively,\\
+D (instructions) A coded description of the automaton's structure and function, acting as its "genetic" information.\\
 \[ (A + B + C + D) \rightarrow (A + B + C + D), (A + B + C + D) \]
 And the replication process in von Neumann’s model, is when the automaton 
 $ (A + B + C + D) $ produces another $ (A + B + C + D) $.\\
-This model in may be incomplete when applied to physical self-replicating systems since it doesn't describe 
-interaction with environment, resources and possible leftovers.
+However, while von Neumann's model is conceptually complete for information-theoretic 
+or logical systems, it exhibits limitations when applied to physical robotic systems. 
+Specifically, it doesnt describe interaction with a physical environment, resource acquisition,
+resource transformation and management of by-products, energy, and mechanical constraints.
 
+To address these limitations, a more general and physically grounded model was proposed by \citeauthor{Lee2007Robotic} \cite{Lee2007Robotic}. In this extended model, the replication process is formalized as a transformation:
 \citeauthor{Lee2007Robotic} proposed broader model, where a replication process can
 be written as
 \[ (R, M, E) \rightarrow (R' , M' , E' ) \]
@@ -135,15 +260,21 @@ $M$ is a multiset of available parts to be used for building replicas by an init
 $R$ is a multiset of an initial functional system to be reproduced. $R \neq 0$; to be a replicating system. \\ 
 $E$ is a multiset of environmental structures and/or elements involved in the replication process (but not 
 replicated). \\
-Here R describes the whole replicator $ A+B+C+D $  from Von Neumann's model.
+$R', M', E'$, the replicated entities, the remaining or altered material and the possibly changed environment respectively.
 
-Or as a function: 
+In this model $R$ describes the whole replicator $ A+B+C+D $  from Von Neumann's model.
+
+This transformation can also be expressed functionally as:
 \[ (R' , M' , E' ) = \Phi(R, M, E, t) \],
-where t - time.
+Where $\Phi$ denotes the replication function and $t$ is time. 
+This formulation enables modeling dynamic replication scenarios over 
+time and accounts for state changes in materials and environment.
 
-Environmental structures, E, can be divided into three categories \cite{Eno2007ReplicationNoControl}:\\
+The model explicitly incorporates environmental interaction ($E$), 
+which plays a critical role in physical self-replication. 
+As proposed by \citeauthor{Eno2007ReplicationNoControl} \cite{Eno2007ReplicationNoControl}, 
+environments can be categorized based on the level of structure and predictability:
 \begin{itemize}
-
     \item Completely structured environment - in which every environmental structure is fixed at a precise location 
         and there is no modification or change in any environmental
         structures during the self-replication process. 
@@ -154,9 +285,10 @@ Environmental structures, E, can be divided into three categories \cite{Eno2007R
         by a small random error in pose during the self-replication process.
         $ E \neq E \neq \phi $ 
     \item Unstructured environment has no predefined or organized structure and 
-        can dynamically change (with some independent process $\phi$) during the self-replication.
+        can dynamically change during the self-replication.
         Can be formally depicted as:  
         $ E = \phi $ 
+where $\phi$ represents a stochastic or unknown environmental process.
 \end{itemize}
 
 
@@ -206,4 +338,59 @@ measure to evaluate robotic replicating systems.
 
 
 \subsection{Material-robot systems}
-Material-robot systems \cite{AbdelRahman2022Hierarchical}
+
+The material-robotic system proposed by \citeauthor{Jenett2019MaterialRobot} 
+in \cite{Jenett2019MaterialRobot} 
+and further developed by \citeauthor{AbdelRahman2022Hierarchical} in 
+\cite{AbdelRahman2022Hierarchical}
+consist of passive structural lattice voxels
+which form a substrate for the locomotion of purpose-built
+inchworm modular robots build from active voxels, 
+and capable of rearranging and placing additional
+voxels. 
+
+The combination of voxels and robots forms a 
+system, enabling precise assembly of large structures with
+simple robots through localized registration to the underlying
+lattice, and also allows of creation of modular robotic toolkit that 
+utilizes active lattice voxels as the primary
+structural building blocks. 
+
+
+The active voxels which form the basis of the structural-robotic
+system are a cuboctahedral (Cuboct) unit cell which offers superior
+structural properties such as high stiffness at low density with
+geometric characteristics suited for robotic assembly and
+fabrication. Specifically the ﬂlat Cuboct faces enable fully-
+constrained connections between single-voxel pairs with four points
+of contact, as well as a useful decomposition for voxel fabrication.
+
+\begin{figure}[h]
+    \centering
+    \subfloat[Cell]{ \includegraphics[width=6cm]{Material-robot_cell.png}}
+    \subfloat[Modular robot]{ \includegraphics[width=10cm]{Material-robot_robot.png}}\\
+    \caption{Material-robot system}
+\end{figure}
+
+Combining these active voxels with
+actuators, control, and power enables unique behaviors including
+robotic self-replication and hierarchical robot assembly. A single
+robot, tasked with constructing a large structure, can create a
+heterogeneous swarm of constructors tailored to maximize
+material throughput for a given target geometry.
+
+One of possible variations of assembler robots, designed
+to carry voxel cubes, and a process of self-replication 
+from a set of modules is shown in Figure \ref{fig:1}.
+
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=15cm]{Material-robot-assembly.png} 
+    \caption{Self-replication process}
+    \label{fig:1}
+\end{figure}
+
+
+
+

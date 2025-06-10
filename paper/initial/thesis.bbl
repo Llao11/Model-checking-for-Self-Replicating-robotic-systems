@@ -86,6 +86,36 @@
       \field{title}{Theory of Self-Reproducing Automata}
       \field{year}{1962}
     \endentry
+    \entry{Sipper1998SelfReplication}{article}{}
+      \name{author}{1}{}{%
+        {{hash=a6145305940668c078be42c19739a2b8}{%
+           family={Sipper},
+           familyi={S\bibinitperiod},
+           given={Moshe},
+           giveni={M\bibinitperiod}}}%
+      }
+      \strng{namehash}{a6145305940668c078be42c19739a2b8}
+      \strng{fullhash}{a6145305940668c078be42c19739a2b8}
+      \strng{bibnamehash}{a6145305940668c078be42c19739a2b8}
+      \strng{authorbibnamehash}{a6145305940668c078be42c19739a2b8}
+      \strng{authornamehash}{a6145305940668c078be42c19739a2b8}
+      \strng{authorfullhash}{a6145305940668c078be42c19739a2b8}
+      \field{labelalpha}{Sip98}
+      \field{sortinit}{1}
+      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Artificial Life}
+      \field{number}{3}
+      \field{title}{Fifty Years of Research on Self-Replication: An Overview}
+      \field{volume}{4}
+      \field{year}{1998}
+      \field{pages}{237\bibrangedash 257}
+      \range{pages}{21}
+      \verb{doi}
+      \verb 10.1162/106454698568576
+      \endverb
+    \endentry
     \entry{Suthakorn2002SpaceUtilization}{article}{}
       \name{author}{3}{}{%
         {{hash=e8436548521d6bb9aa12ef7653127a30}{%
@@ -298,6 +328,51 @@
       \field{isbn}{978-1-107-02836-4}
       \field{title}{Temporal Logics in Computer Science Finite-State Systems}
       \field{year}{2016}
+    \endentry
+    \entry{Jenett2019MaterialRobot}{article}{}
+      \name{author}{4}{}{%
+        {{hash=adf0762ed660a193284dd64970657a51}{%
+           family={Jenett},
+           familyi={J\bibinitperiod},
+           given={Benjamin},
+           giveni={B\bibinitperiod}}}%
+        {{hash=9fd680d7c46ccc689dc5c22dc80cedf9}{%
+           family={Abdel-Rahman},
+           familyi={A\bibinithyphendelim R\bibinitperiod},
+           given={Amira},
+           giveni={A\bibinitperiod}}}%
+        {{hash=1c5aa26ab8c29ad6e448cb3648e67559}{%
+           family={Cheung},
+           familyi={C\bibinitperiod},
+           given={Kenneth},
+           giveni={K\bibinitperiod}}}%
+        {{hash=113a59d98dd032dc5604a9b82a5700b9}{%
+           family={Gershenfeld},
+           familyi={G\bibinitperiod},
+           given={Neil},
+           giveni={N\bibinitperiod}}}%
+      }
+      \strng{namehash}{a40f2ef59f5e8041746be52219788385}
+      \strng{fullhash}{9be2a0b91957109023a4491a4b464d90}
+      \strng{bibnamehash}{a40f2ef59f5e8041746be52219788385}
+      \strng{authorbibnamehash}{a40f2ef59f5e8041746be52219788385}
+      \strng{authornamehash}{a40f2ef59f5e8041746be52219788385}
+      \strng{authorfullhash}{9be2a0b91957109023a4491a4b464d90}
+      \field{labelalpha}{Jen+19}
+      \field{sortinit}{2}
+      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{IEEE Robotics and Automation Letters}
+      \field{number}{4}
+      \field{title}{Material–Robot System for Assembly of Discrete Cellular Structures}
+      \field{volume}{4}
+      \field{year}{2019}
+      \field{pages}{4019\bibrangedash 4026}
+      \range{pages}{8}
+      \verb{doi}
+      \verb 10.1109/LRA.2019.2930486
+      \endverb
     \endentry
     \entry{Tan2020Framework}{article}{}
       \name{author}{4}{}{%
