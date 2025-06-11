@@ -171,9 +171,9 @@ class SRRSController(Node):
 
     def connect_to_object(self, step=0.01):
            # obj1 = self.sensorNode.get_contact_objects()[0]
-            obj2 = self.sensorNode.get_contact_objects()[1]
-            if self.fixed_end == 1 and obj2 == None:
-                self.
+            # obj2 = self.sensorNode.get_contact_objects()[1]
+            # if self.fixed_end == 1 and obj2 == None:
+            #     self.
 
         pass
 
@@ -270,8 +270,9 @@ class SRRSController(Node):
 
     # Fix objects  ===========================================================================================================================
 
-    def check_connection:
-        self.sensorNode()
+    def check_connection():
+        # self.sensorNode()
+        pass
 
     def fix_obj_to_block1(self, obj_num, **kwargs):
         msg = Empty()

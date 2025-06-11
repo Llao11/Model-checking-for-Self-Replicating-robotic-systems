@@ -44,6 +44,16 @@ def generate_launch_description():
         output='screen'
     )
 
+
+    gui_control_node = Node(
+        package='srrs_sim',
+        executable='robot_controller_gui',
+        # arguments=['/clock@rosgraph_msgs/msg/Clock[gz.msgs.Clock'],
+        output='screen'
+    )
+
+
+
     # ROBOT spawn ==============================================================================================================
 
     # Generate URDF via xacro
@@ -197,6 +207,7 @@ def generate_launch_description():
         bridge_clock,
         node_robot_state_publisher,
         bridge_node, # for attaching and detaching joints
+        gui_control_node,
         
         # Launch Arguments
         DeclareLaunchArgument(

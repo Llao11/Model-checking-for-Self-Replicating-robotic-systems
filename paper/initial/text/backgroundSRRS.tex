@@ -253,8 +253,11 @@ resource transformation and management of by-products, energy, and mechanical co
 To address these limitations, a more general and physically grounded model was proposed by \citeauthor{Lee2007Robotic} \cite{Lee2007Robotic}. In this extended model, the replication process is formalized as a transformation:
 \citeauthor{Lee2007Robotic} proposed broader model, where a replication process can
 be written as
-\[ (R, M, E) \rightarrow (R' , M' , E' ) \]
 
+\begin{equation}
+    \label{eq:1}
+    (R, M, E) \rightarrow (R' , M' , E' ) 
+\end{equation}
 where: \\
 $M$ is a multiset of available parts to be used for building replicas by an initial system \\
 $R$ is a multiset of an initial functional system to be reproduced. $R \neq 0$; to be a replicating system. \\ 
@@ -265,7 +268,15 @@ $R', M', E'$, the replicated entities, the remaining or altered material and the
 In this model $R$ describes the whole replicator $ A+B+C+D $  from Von Neumann's model.
 
 This transformation can also be expressed functionally as:
-\[ (R' , M' , E' ) = \Phi(R, M, E, t) \],
+
+
+
+
+\begin{equation}
+    \label{eq:2}
+    (R' , M' , E' ) = Phi(R, M, E, t) 
+\end{equation}
+
 Where $\Phi$ denotes the replication function and $t$ is time. 
 This formulation enables modeling dynamic replication scenarios over 
 time and accounts for state changes in materials and environment.
@@ -307,7 +318,8 @@ effector), are also viewed as active elements even if they are not moving mechan
 
 For a robotic system (recall that all robotic systems are active by our definition) 
 consisting of n subsystems, we define the degree of replication for the system, $D_s$ , as
-\begin{equation}\label{eq:1}
+\begin{equation}
+    \label{eq:3}
     D_s = \frac{C_{min}}{C_{max}} \cdot \frac{C_{total}}{C_{ave}} \cdot \frac{1}{C_{ave}} 
 \end{equation}
 where
@@ -337,7 +349,107 @@ measure to evaluate robotic replicating systems.
 
 
 
-\subsection{Material-robot systems}
+\subsection{Implementations of kinematic self-replicating robotic systems}
+\subsubsection{Low-complexity 2D assembly systems}
+
+The experimental system developed by \citeauthor{Lee2007Robotic} demonstrates active 
+self-replication using six simple electromechanical subsystems \cite{Lee2007Robotic}. 
+The system operates autonomously within a partially structured environment and 
+constructs a functional replica of itself without external control or manipulation. 
+This prototype serves as a proof-of-concept for scalable robotic 
+self-replication using low-complexity parts and embedded environmental cues.
+
+The system is a physical prototype of a self-replicating robot made up of six 
+simple electromechanical subsystems (called M1 to M6) as it shown on the Figure \ref{fig:ExampleSRRS-2D}. 
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=13cm]{ExampleSRRS-2D.png} 
+    \caption{Modules (left) and complete robot (right)}
+    \label{fig:ExampleSRRS-2D}
+\end{figure}
+
+These modules, when assembled in a specific order, form a complete and 
+functional mobile robot. The purpose of the experiment was to demonstrate that 
+robotic self-replication is possible using relatively low-complexity parts 
+in a partially structured environment—a space that aids replication without 
+directly controlling it.
+Together, these modules allow the robot to: move along predefined paths, 
+detect locations of components, decide what action to perform and carry and assemble parts.
+
+The robot operates within a partially structured environment—one that contains 
+helpful features, but does not actively participate in the replication. It includes:
+outer and inner tracks, crossways (branch paths), bar codes, contact codes, 
+sensors, assembly station and wall,  used to align the robot during reversing, ensuring precise placement.
+
+
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=11cm]{ExampleSRRS-2D-2.png} 
+    \caption{The process of self-replication}
+    \label{fig:class2}
+\end{figure}
+The robot has six states, see Figure \ref{fig:Example2D-diagram2} and three distinctive behaviors
+for each state: forward line-tracking (line-tracking mode),
+reversing (reversing mode), and turning left while the timer is on
+(left-turning mode).
+The replication process begins with the parent robot navigating along a black 
+track using its line-tracking sensors. As it moves, it detects barcodes placed 
+near the modules it needs to collect; each barcode signals the robot 
+to turn and approach a module. Using its passive end-effector, 
+the robot captures the module and transitions to a new state based 
+on contact sensors. It then transports the collected module to a central 
+assembly station marked by a metal line, which triggers the robot to reverse. 
+The robot backs into position and places the module, using a wall as a 
+physical guide for alignment. After delivering the module, it returns to 
+the track and continues this process for the remaining modules. 
+Each time, a new barcode guides it to the next module, and contact 
+codes confirm successful transitions. The modules are assembled in a layered 
+structure, with specific modules forming the base, middle, and top 
+of the robot. Once all six modules are in place and properly connected, 
+the electrical circuit is completed, and the new robot becomes fully functional. 
+The entire process is autonomous and guided solely by the robot’s internal 
+logic and environmental cues successfully constructing a working copy of 
+itself without any external control or assistance.
+
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=10cm]{Example2D-diagram2.png} 
+    \caption{State diagram shows behaviors of the robot according to the sensor inputs}
+    \label{fig:Example2D-diagram2}
+\end{figure}
+
+
+Using formalas \ref{eq:1} and  \ref{eq:2} the system can be represented by 
+\[
+    R = {M_1 +...+M_6}
+\]
+\[
+M = {M_1 +...+M_6}
+\]
+\[
+    E = \{ \text{tracks, bar codes, contact codes, wall, metal line}\} 
+\]
+, the system becomes 
+\[
+    R' = \{(M_1+...+ M_6),\ (M_1+...+ M_6)\} 
+\]
+\[
+    M'=\varnothing
+\]
+\[
+    E' = E.
+\]
+
+
+\subsubsection{Molecubes}
+
+
+
+                    
+\subsubsection{Material-robot systems}
 
 The material-robotic system proposed by \citeauthor{Jenett2019MaterialRobot} 
 in \cite{Jenett2019MaterialRobot} 
@@ -379,9 +491,6 @@ robot, tasked with constructing a large structure, can create a
 heterogeneous swarm of constructors tailored to maximize
 material throughput for a given target geometry.
 
-One of possible variations of assembler robots, designed
-to carry voxel cubes, and a process of self-replication 
-from a set of modules is shown in Figure \ref{fig:1}.
 
 
 \begin{figure}[h]
@@ -391,6 +500,44 @@ from a set of modules is shown in Figure \ref{fig:1}.
     \label{fig:1}
 \end{figure}
 
+One of possible variations of assembler robots, designed
+to carry voxel cubes, and a process of self-replication 
+from a set of modules is shown in Figure \ref{fig:1}.
+
+To perform self-replication, an initial “parent” robot uses its manipulators to pick 
+and place voxels from a nearby pickup station. The parent robot builds a copy 
+of itself—termed a “child” robot—by assembling voxels in a configuration that 
+mirrors its own structure. The replication process is limited to voxels and certain 
+key functional modules, including control units, power supplies, and 
+actuated joints (called elbows). Components like wrists and grippers are 
+added afterward through a procedure called “accessorizing,” where the 
+robot attaches these parts to the pre-assembled structure.
+
+A critical constraint in the replication process is that the newly built robot must 
+be free to move upon completion. Therefore, construction cannot proceed directly 
+on the substrate base; instead, it extends out from an anchored platform, 
+ensuring that once finished, the child robot can undock and function independently. 
+The replication logic is programmed into a centralized control system, 
+which assigns tasks, manages timing, and ensures robots do not collide. 
+The control system guides each robot step-by-step in constructing a new robot, 
+allowing for recursive reproduction over multiple generations.
+
+This system's significance lies in its ability to scale construction tasks 
+by increasing the number of robots through self-replication, 
+rather than requiring the deployment of additional robots externally. 
+As more robots are built, the workload is distributed, theoretically 
+allowing exponential speed-up in large-scale assembly projects. 
+The practical implementation uses inchworm-style locomotion, where robots 
+move stepwise over the voxel lattice using coordinated grippers and joints, 
+making them lightweight, simple, and adaptable to modular construction environments.
+
+While this model is a proof-of-concept, it successfully demonstrates robotic 
+self-replication using standardized parts and relatively low-complexity hardware. 
+The modularity and discrete assembly approach also enhance the system’s 
+potential for error detection, robustness, and reconfiguration. 
+Although scalability is limited by actuator strength and coordination complexity, 
+the framework opens new avenues for autonomous robotic manufacturing systems 
+that can grow their own workforce from a finite resource pool.
 
 
-
+\subsection{Research tools for SRRS}

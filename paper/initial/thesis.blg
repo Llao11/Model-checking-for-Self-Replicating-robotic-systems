@@ -1,17 +1,17 @@
 [0] Config.pm:307> INFO - This is Biber 2.19
 [0] Config.pm:310> INFO - Logfile is 'thesis.blg'
-[59] biber:340> INFO - === Wed Jun 11, 2025, 01:17:06
-[71] Biber.pm:419> INFO - Reading 'thesis.bcf'
-[115] Biber.pm:979> INFO - Found 15 citekeys in bib section 0
-[124] Biber.pm:4419> INFO - Processing section 0
-[132] Biber.pm:4610> INFO - Looking for bibtex file 'literature.bib' for section 0
-[133] bibtex.pm:1713> INFO - LaTeX decoding ...
-[149] bibtex.pm:1519> INFO - Found BibTeX data source 'literature.bib'
-[240] UCollate.pm:68> INFO - Overriding locale 'en-US' defaults 'normalization = NFD' with 'normalization = prenormalized'
-[240] UCollate.pm:68> INFO - Overriding locale 'en-US' defaults 'variable = shifted' with 'variable = non-ignorable'
-[240] Biber.pm:4239> INFO - Sorting list 'ynt/global//global/global' of type 'entry' with template 'ynt' and locale 'en-US'
-[240] Biber.pm:4245> INFO - No sort tailoring available for locale 'en-US'
-[252] bbl.pm:660> INFO - Writing 'thesis.bbl' with encoding 'UTF-8'
-[256] bbl.pm:763> INFO - Output to thesis.bbl
-[256] Biber.pm:131> WARN - I didn't find a database entry for '41' (section 0)
-[256] Biber.pm:133> INFO - WARNINGS: 1
+[55] biber:340> INFO - === Wed Jun 11, 2025, 16:54:18
+[66] Biber.pm:419> INFO - Reading 'thesis.bcf'
+[110] Biber.pm:979> INFO - Found 15 citekeys in bib section 0
+[118] Biber.pm:4419> INFO - Processing section 0
+[125] Biber.pm:4610> INFO - Looking for bibtex file 'literature.bib' for section 0
+[126] bibtex.pm:1713> INFO - LaTeX decoding ...
+[142] bibtex.pm:1519> INFO - Found BibTeX data source 'literature.bib'
+[230] UCollate.pm:68> INFO - Overriding locale 'en-US' defaults 'normalization = NFD' with 'normalization = prenormalized'
+[230] UCollate.pm:68> INFO - Overriding locale 'en-US' defaults 'variable = shifted' with 'variable = non-ignorable'
+[230] Biber.pm:4239> INFO - Sorting list 'ynt/global//global/global' of type 'entry' with template 'ynt' and locale 'en-US'
+[230] Biber.pm:4245> INFO - No sort tailoring available for locale 'en-US'
+[243] bbl.pm:660> INFO - Writing 'thesis.bbl' with encoding 'UTF-8'
+[246] bbl.pm:763> INFO - Output to thesis.bbl
+[246] Biber.pm:131> WARN - I didn't find a database entry for '41' (section 0)
+[246] Biber.pm:133> INFO - WARNINGS: 1

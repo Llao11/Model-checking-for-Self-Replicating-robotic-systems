@@ -25,13 +25,15 @@
 \contentsline {subsubsection}{\nonumberline Interaction with environment or external system, alternative classification}{18}{subsubsection*.28}%
 \contentsline {subsection}{\numberline {2.3.3}Self-replication models}{20}{subsection.2.3.3}%
 \contentsline {subsection}{\numberline {2.3.4}Degree of replication}{21}{subsection.2.3.4}%
-\contentsline {subsection}{\numberline {2.3.5}Material-robot systems}{22}{subsection.2.3.5}%
-\contentsline {chapter}{\numberline {3}Research Questions}{25}{chapter.3}%
-\contentsline {section}{\numberline {3.1}Approach}{25}{section.3.1}%
-\contentsline {subsubsection}{\nonumberline Experimental platform}{25}{subsubsection*.33}%
-\contentsline {subsubsection}{\nonumberline Generation of a model and specifications for formal-verification}{25}{subsubsection*.35}%
-\contentsline {section}{\numberline {3.2}Analysis of results}{26}{section.3.2}%
-\contentsline {section}{\numberline {3.3}Evaluation}{26}{section.3.3}%
-\contentsline {chapter}{\nonumberline Bibliography}{27}{chapter*.36}%
-\contentsline {chapter}{\numberline {A}My First Appendix}{29}{appendix.A}%
+\contentsline {subsection}{\numberline {2.3.5}Implementations of kinematic self-replicating robotic systems}{22}{subsection.2.3.5}%
+\contentsline {subsubsection}{\nonumberline Low-complexity 2D assembly systems}{22}{subsubsection*.31}%
+\contentsline {subsubsection}{\nonumberline Molecubes}{25}{subsubsection*.36}%
+\contentsline {subsubsection}{\nonumberline Material-robot systems}{25}{subsubsection*.38}%
+\contentsline {subsection}{\numberline {2.3.6}Research tools for SRRS}{28}{subsection.2.3.6}%
+\contentsline {chapter}{\numberline {3}Research Questions}{29}{chapter.3}%
+\contentsline {section}{\numberline {3.1}Approach}{29}{section.3.1}%
+\contentsline {subsubsection}{\nonumberline Experimental platform}{29}{subsubsection*.42}%
+\contentsline {subsubsection}{\nonumberline Generation of a model and specifications for formal-verification}{29}{subsubsection*.44}%
+\contentsline {chapter}{\nonumberline Bibliography}{31}{chapter*.45}%
+\contentsline {chapter}{\numberline {A}Appendix}{33}{appendix.A}%
 \providecommand \tocbasic@end@toc@file {}\tocbasic@end@toc@file 

@@ -317,19 +317,19 @@ or very large numbers of states where traditional model checking is infeasible. 
 implementation: if there is a simulator for your system, adding a statistical checker on top is easier than
 building a full model checker. SMC naturally supports probabilistic properties – e.g., verifying properties of a
 Markov Chain or Markov Decision Process by sampling behaviors and using results like Chernoff or
-Hoeffding bounds to determine if the property likely holds 44. Because it uses actual simulations, SMC can
+Hoeffding bounds to determine if the property likely holds. Because it uses actual simulations, SMC can
 handle very complex nonlinear or black-box system aspects (treating them as black boxes that just produce
 simulation traces).
 
 
 Disadvantages:
 The trade-off is that SMC provides a confidence result, not a guarantee. It is probabilistic
-verification: it might say “with 99\% confidence the property holds with probability $less or equal$ 0.97”. There’s a small
+verification: it might say “with 99\% confidence the property holds with probability $\leq 0.97$”. There’s a small
 chance of error in the verification result (false positives/negatives bounded by the confidence level). Also,
 SMC may require a large number of simulations to reach high confidence, especially for rare events (if the
-property failing is a rare event, one might need many samples to observe it even once) 45 . Rare property
+property failing is a rare event, one might need many samples to observe it even once). Rare property
 verification is a known challenge – advanced importance sampling or rare event simulation techniques
-might be needed in such cases 46 . 
+might be needed in such cases. 
 
 SMC can’t truly prove a property in the mathematical sense – it can only give statistical evidence.
 If a property almost always holds but has a corner-case failure, SMC
@@ -348,7 +348,7 @@ backoffs) – one can estimate latency or success probability with SMC when exac
 too complex. Tools such as PRISM can perform both numerical model checking and SMC. PRISM’s modeling
 language allows you to switch to a “sampling mode” for very large models. For instance, PRISM has been
 used to analyze biochemical reaction networks and one can use SMC when the exact state space of a
-chemical reaction model (which could be astronomically large) is too big 47 48 . UPPAAL SMC is another
+chemical reaction model (which could be astronomically large) is too big. UPPAAL SMC is another
 tool, targeting real-time systems with stochastic aspects (like task execution times given as distributions). It
 allows queries like “what is the probability that the response is below 5ms?” to be answered via simulation.
 In summary, statistical model checking extends the reach of verification to systems that were previously out

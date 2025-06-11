@@ -196,6 +196,9 @@ class GUI:
         label_contact1.grid(row=8, column=4)
         label_contact2.grid(row=7, column=4)
 
+        # KEY shortkats
+        self.root.bind('<Return>', btn_run.invoke())
+
         self.update_angles()
         self.update_fix_end()
         self.update_contact_objects()
@@ -235,6 +238,13 @@ class GUI:
         label_contact2_obj.grid(row=7, column=5)
         # schedule next update every 100 ms
         self.root.after(100, self.update_contact_objects)
+
+    # def press_gotoXYZ():
+    #     self.goto_XYZ(
+    #             outputx.get("1.0", tk.END),
+    #             outputy.get("1.0", tk.END),
+    #             outputz.get("1.0", tk.END),
+    #         )
 
     def goto_XYZ(self, outputx, outputy, outputz):
         thread = threading.Thread(
