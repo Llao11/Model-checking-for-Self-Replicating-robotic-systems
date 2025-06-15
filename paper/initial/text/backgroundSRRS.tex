@@ -350,7 +350,7 @@ measure to evaluate robotic replicating systems.
 
 
 \subsection{Implementations of kinematic self-replicating robotic systems}
-\subsubsection{Low-complexity 2D assembly systems}
+\subsubsection{Low-complexity self-replication systems from specialized modules}
 
 The experimental system developed by \citeauthor{Lee2007Robotic} demonstrates active 
 self-replication using six simple electromechanical subsystems \cite{Lee2007Robotic}. 
@@ -444,11 +444,50 @@ M = {M_1 +...+M_6}
 \]
 
 
-\subsubsection{Molecubes}
+\subsubsection{Kinematic self-replication from unified modules}
+
+Different authors proposed kinematic or geometrical self-replication based on 
+unified modules. 
+\citeauthor{Zykov2005SelfReproducing} in \citeyear{Zykov2005SelfReproducing} 
+demonstrates physical self-replication using autonomous modular 
+robots \cite{Zykov2005SelfReproducing}. 
+
+These machines are built from identical 
+robotic cubes—each a 10 cm module—that can physically attach, detach, 
+and reconfigure to construct replicas of themselves.
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=14cm]{ExampleLipson.png} 
+    \caption{Self-replication of a four-module robot}
+    \label{fig:ExampleLipson}
+\end{figure}
+
+Each cube module is split along a diagonal plane and contains 
+internal mechanisms that allow one half to rotate relative to the other, 
+see Figure \ref{fig:ExampleLipson}a. 
+This ability enables modules to cycle between different configurations 
+by swiveling in few seconds (see Figure \ref{fig:ExampleLipson}b), allowing connected modules to break 
+apart and reattach in new positions. The modules use electromagnets 
+for selective connection and disconnection, and they receive power 
+and communication signals through conductive face-to-face contacts 
+and a powered baseplate.
+
+The replication process begins with a small robot, composed of 
+four such modules, positioned near two "feeding stations" that 
+contain spare cubes. These cubes are manually replenished, 
+but the entire replication procedure is autonomous. Using their internal 
+control logic and distributed microcontrollers, the robot's modules 
+coordinate motion to pick up new cubes, manipulate them into position, 
+and assemble them into a new, functional robot of the same structure. 
+In one experiment, a four-module robot completed replication in 
+approximately 2.5 minutes (see Figure \ref{fig:ExampleLipson}), while a simpler three-module robot 
+managed the task in just over one minute.
+This experiment demonstrates that even simple robotic parts can 
+support mechanical self-replication so that the resulting system can 
+itself repeat the replication process.
 
 
-
-                    
 \subsubsection{Material-robot systems}
 
 The material-robotic system proposed by \citeauthor{Jenett2019MaterialRobot} 
@@ -540,4 +579,3 @@ the framework opens new avenues for autonomous robotic manufacturing systems
 that can grow their own workforce from a finite resource pool.
 
 
-\subsection{Research tools for SRRS}

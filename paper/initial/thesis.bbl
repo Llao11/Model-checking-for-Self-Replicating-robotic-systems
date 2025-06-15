@@ -179,6 +179,52 @@
       \field{title}{Logic in computer science Modelling and Reasoning about Systems}
       \field{year}{2004}
     \endentry
+    \entry{Zykov2005SelfReproducing}{article}{}
+      \name{author}{4}{}{%
+        {{hash=0ca3a70f324ecc5431d036e4da8cfb6a}{%
+           family={Zykov},
+           familyi={Z\bibinitperiod},
+           given={Victor},
+           giveni={V\bibinitperiod}}}%
+        {{hash=5762efe81056f62578ad0f60a562bfaf}{%
+           family={Mytilinaios},
+           familyi={M\bibinitperiod},
+           given={Efstathios},
+           giveni={E\bibinitperiod}}}%
+        {{hash=8bc95dac71837db57b6ee11b152bbd5d}{%
+           family={Adams},
+           familyi={A\bibinitperiod},
+           given={Bryant},
+           giveni={B\bibinitperiod}}}%
+        {{hash=475bdf26aafc86ddd3f62a8ff9267f8a}{%
+           family={Lipson},
+           familyi={L\bibinitperiod},
+           given={Hod},
+           giveni={H\bibinitperiod}}}%
+      }
+      \strng{namehash}{92974094f5b99f33d364442ffbf92d60}
+      \strng{fullhash}{e2774dae5ac944c7fc33137603a9b30e}
+      \strng{bibnamehash}{92974094f5b99f33d364442ffbf92d60}
+      \strng{authorbibnamehash}{92974094f5b99f33d364442ffbf92d60}
+      \strng{authornamehash}{92974094f5b99f33d364442ffbf92d60}
+      \strng{authorfullhash}{e2774dae5ac944c7fc33137603a9b30e}
+      \field{labelalpha}{Zyk+05}
+      \field{sortinit}{2}
+      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Nature}
+      \field{note}{Brief Communication}
+      \field{number}{7038}
+      \field{title}{Self-reproducing machines}
+      \field{volume}{435}
+      \field{year}{2005}
+      \field{pages}{163}
+      \range{pages}{1}
+      \verb{doi}
+      \verb 10.1038/435163a
+      \endverb
+    \endentry
     \entry{Eno2007ReplicationNoControl}{inproceedings}{}
       \true{moreauthor}
       \true{morelabelname}
