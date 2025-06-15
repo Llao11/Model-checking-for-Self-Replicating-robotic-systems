@@ -218,24 +218,30 @@ LTL has the following syntax in Backus Naur form:
 \[ \phi ::= T\ |\  \perp |\  p\ |\  (\neg\phi)\  |\  (\phi \land \phi)\  |\  (\phi \lor \phi) |\ (\phi \rightarrow \phi)\   \]
 \[|\   (X \phi)\  |\  (F \phi)\  |\  (G \phi)\  |\  (\phi\ U\ \phi)\  |\  (\phi\ W\ \phi)\  |\  (\phi\ R\ \phi)\ \]
 The connectives $X, F, G, U, W, R$ called temporal connectives, because they describe relations between states in different moments of time.
-The meaning of these connectives described in table:\\
+The meaning of these connectives described in Table \ref{tab:LTL1}\\
+
 \begin{center}
-    
-    \begin{tabular}{| c | c | c |}
+ 
+\begin{table}[h!]   
+    \begin{tabular}{| m{0.6cm} | m{3.5cm} | m{11cm} |}
         \hline
-        X & Next & \\
+        X & Next & $\phi$ must hold in the very first successor state on the chosen path.\\
         \hline
-        F & Finally &\\
+        F & Finally ($F \phi$) & $\phi$ must hold at some future state on the path (i.e., “eventually $\phi$”).\\
         \hline
-        G & Globally &\\
+        G & Globally ($G \phi$) & $\phi$ must hold at every state on the entire path (“always $\phi$”).\\
         \hline
-        U & Until &\\ 
+        U & Until ($\phi U \psi$) & $\psi$ must be true at a future state, $\phi$ must stay true at every state before that one.\\
         \hline
-        W & Weak until &\\
+        W & Weak until ($\phi W \psi$) & either ($\phi U \psi$) holds or $\phi$ stays true forever if $\psi$ never becomes true.\\
         \hline
-        R & Release &\\
+        R & Release ($\phi R \psi$) & $\psi$ must hold up to and including the first state where 
+        $\phi$ becomes true; if $\phi$ never becomes true, $\psi$ must hold forever (the dual of Until).\\
         \hline
     \end{tabular}
+    \caption{LTL temporal connectives}
+\end{table}
+    \label{tab:LTL1}
 
 \end{center}
 
@@ -283,7 +289,10 @@ Weak until W and release R are usually not included in CTL, but can be derived.
 
 \subsubsection{Temporal logic (CTL*)}
 \begin{figure}[!h]
-    \includegraphics[width=8cm]{CTL} 
+    \centering
+    \includegraphics[width=12cm]{CTL} 
+    \caption{LTL, CTL and CTL* logic relation}
+    \label{fig:CTL}
 \end{figure}
 
 
@@ -432,25 +441,25 @@ continual assurance, RV provides a way to leverage formal specifications dynamic
 completeness for scalability and immediacy.
 
 
-\subsection {Comparison of Model checking methods}
+% \subsection {Comparison of Model checking methods}
 
 
 
 
 
-State explosion - the exponential growth of the state space with system parameters (like number of components or data bits).
-Combating state explosion is a central theme in model checking research
+% State explosion - the exponential growth of the state space with system parameters (like number of components or data bits).
+% Combating state explosion is a central theme in model checking research
 
 
-\subsection {Application of Model checking}
-\subsubsection{Hardware model checking}
-\subsubsection{Software model checking}
-\subsubsection{Reactive systems model checking}
-
-Reactive system: a system that maintains an
-ongoing interaction with its environment, responding to inputs with outputs continually (examples include
-operating systems, web servers, control systems). Reactive systems are typically non-terminating and
-concurrency-intensive. 
+% \subsection {Application of Model checking}
+% \subsubsection{Hardware model checking}
+% \subsubsection{Software model checking}
+% \subsubsection{Reactive systems model checking}
+%
+% Reactive system: a system that maintains an
+% ongoing interaction with its environment, responding to inputs with outputs continually (examples include
+% operating systems, web servers, control systems). Reactive systems are typically non-terminating and
+% concurrency-intensive. 
 
 
 
