@@ -58,3 +58,14 @@ ADD SENSORS:
             xacro robot.xacro > temp_robot.urdf 
             gz sdf -p temp_robot.urdf > temp_robot.sdf
 
+
+Spawn object during runtime: 
+    xacro $(ros2 pkg prefix --share srrs_sim)/urdf/part.xacro part_num:=42 > /tmp/part42.urdf 
+    ros2 run ros_gz_sim create  -world empty  -name  part42  -file  /tmp/part42.urdf   -x 0.40 -y -0.25 -z 0.134
+
+
+
+
+
+TODO: Create a NuSMV model for check the different structures of a robot and a specifications for ability to reach different cells 
+TODO paper: devide the background to the general overview and relevant to my work

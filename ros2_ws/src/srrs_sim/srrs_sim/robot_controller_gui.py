@@ -197,7 +197,7 @@ class GUI:
         label_contact2.grid(row=7, column=4)
 
         # KEY shortkats
-        self.root.bind('<Return>', btn_run.invoke())
+        self.root.bind("<Return>", btn_run.invoke())
 
         self.update_angles()
         self.update_fix_end()
