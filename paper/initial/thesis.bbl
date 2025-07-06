@@ -86,6 +86,69 @@
       \field{title}{Theory of Self-Reproducing Automata}
       \field{year}{1962}
     \endentry
+    \entry{Aziz1996VerifyingCTMC}{inproceedings}{}
+      \name{author}{4}{}{%
+        {{hash=804441a4782f6022f75bb7a72f3b77a7}{%
+           family={Aziz},
+           familyi={A\bibinitperiod},
+           given={Adnan},
+           giveni={A\bibinitperiod}}}%
+        {{hash=c4e1f26efd43ac415679549382683725}{%
+           family={Sanwal},
+           familyi={S\bibinitperiod},
+           given={Kumud},
+           giveni={K\bibinitperiod}}}%
+        {{hash=b5433f89931ef4aefb83285702114927}{%
+           family={Singhal},
+           familyi={S\bibinitperiod},
+           given={Vigyan},
+           giveni={V\bibinitperiod}}}%
+        {{hash=4fb487f81f57d4c6d7412fa6fec1b9d0}{%
+           family={Brayton},
+           familyi={B\bibinitperiod},
+           given={Robert},
+           giveni={R\bibinitperiod}}}%
+      }
+      \name{editor}{2}{}{%
+        {{hash=29db5b94c11f4e678669998ac7867043}{%
+           family={Alur},
+           familyi={A\bibinitperiod},
+           given={Rajeev},
+           giveni={R\bibinitperiod}}}%
+        {{hash=eeb928073fbee58751f87d401a62561a}{%
+           family={Henzinger},
+           familyi={H\bibinitperiod},
+           given={Thomas\bibnamedelima A.},
+           giveni={T\bibinitperiod\bibinitdelim A\bibinitperiod}}}%
+      }
+      \list{location}{1}{%
+        {New Brunswick, NJ}%
+      }
+      \list{publisher}{1}{%
+        {Springer}%
+      }
+      \strng{namehash}{09a2a5c6bd9003955f151a0713b7b805}
+      \strng{fullhash}{6c895725ec91fe8b377fc93e43970219}
+      \strng{bibnamehash}{09a2a5c6bd9003955f151a0713b7b805}
+      \strng{authorbibnamehash}{09a2a5c6bd9003955f151a0713b7b805}
+      \strng{authornamehash}{09a2a5c6bd9003955f151a0713b7b805}
+      \strng{authorfullhash}{6c895725ec91fe8b377fc93e43970219}
+      \strng{editorbibnamehash}{a3c366cf3c106fc2cb97eccfef1c1bcc}
+      \strng{editornamehash}{a3c366cf3c106fc2cb97eccfef1c1bcc}
+      \strng{editorfullhash}{a3c366cf3c106fc2cb97eccfef1c1bcc}
+      \field{labelalpha}{Azi+96}
+      \field{sortinit}{1}
+      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{booktitle}{Proceedings of the 8th International Conference on Computer Aided Verification (CAV)}
+      \field{series}{Lecture Notes in Computer Science}
+      \field{title}{Verifying Continuous Time Markov Chains}
+      \field{volume}{1102}
+      \field{year}{1996}
+      \field{pages}{269\bibrangedash 276}
+      \range{pages}{8}
+    \endentry
     \entry{Sipper1998SelfReplication}{article}{}
       \name{author}{1}{}{%
         {{hash=a6145305940668c078be42c19739a2b8}{%
@@ -148,6 +211,93 @@
       \field{booktitle}{Robosphere 2002, NASA Ames Research Center}
       \field{title}{Self-Replicating Robots for Space Utilization}
       \field{year}{2002}
+    \endentry
+    \entry{Younes2002AcceptanceSampling}{inproceedings}{}
+      \name{author}{2}{}{%
+        {{hash=a10ea3e9edd8eaeeb9a12fe3085740f9}{%
+           family={Younes},
+           familyi={Y\bibinitperiod},
+           given={Håkan\bibnamedelimb L.\bibnamedelimi S.},
+           giveni={H\bibinitperiod\bibinitdelim L\bibinitperiod\bibinitdelim S\bibinitperiod}}}%
+        {{hash=05191e6fcd1964cbbe2cc9f25739c799}{%
+           family={Simmons},
+           familyi={S\bibinitperiod},
+           given={Reid\bibnamedelima G.},
+           giveni={R\bibinitperiod\bibinitdelim G\bibinitperiod}}}%
+      }
+      \list{location}{1}{%
+        {Copenhagen, Denmark}%
+      }
+      \list{publisher}{1}{%
+        {Springer}%
+      }
+      \strng{namehash}{78fa395f08703841f98bb979e53609d4}
+      \strng{fullhash}{78fa395f08703841f98bb979e53609d4}
+      \strng{bibnamehash}{78fa395f08703841f98bb979e53609d4}
+      \strng{authorbibnamehash}{78fa395f08703841f98bb979e53609d4}
+      \strng{authornamehash}{78fa395f08703841f98bb979e53609d4}
+      \strng{authorfullhash}{78fa395f08703841f98bb979e53609d4}
+      \field{labelalpha}{YS02}
+      \field{sortinit}{2}
+      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{booktitle}{Computer Aided Verification (CAV '02)}
+      \field{series}{Lecture Notes in Computer Science}
+      \field{title}{Probabilistic Verification of Discrete-Event Systems Using Acceptance Sampling}
+      \field{volume}{2404}
+      \field{year}{2002}
+      \field{pages}{223\bibrangedash 236}
+      \range{pages}{14}
+      \verb{doi}
+      \verb 10.1007/3-540-45657-0_19
+      \endverb
+    \endentry
+    \entry{Suthakorn2003SemiAutonomous}{inproceedings}{}
+      \name{author}{3}{}{%
+        {{hash=e8436548521d6bb9aa12ef7653127a30}{%
+           family={Suthakorn},
+           familyi={S\bibinitperiod},
+           given={Jackrit},
+           giveni={J\bibinitperiod}}}%
+        {{hash=0432541bc41f2180cd55583de1e3da8c}{%
+           family={Kwon},
+           familyi={K\bibinitperiod},
+           given={Yong\bibnamedelima T.},
+           giveni={Y\bibinitperiod\bibinitdelim T\bibinitperiod}}}%
+        {{hash=0bb4fe91e5d0c99f7ecf93d5e8c0ca09}{%
+           family={Chirikjian},
+           familyi={C\bibinitperiod},
+           given={Gregory\bibnamedelima S.},
+           giveni={G\bibinitperiod\bibinitdelim S\bibinitperiod}}}%
+      }
+      \list{location}{1}{%
+        {Kobe, Japan}%
+      }
+      \list{publisher}{1}{%
+        {IEEE}%
+      }
+      \strng{namehash}{f831bae0427edb25bd6a4e3087a8be17}
+      \strng{fullhash}{f831bae0427edb25bd6a4e3087a8be17}
+      \strng{bibnamehash}{f831bae0427edb25bd6a4e3087a8be17}
+      \strng{authorbibnamehash}{f831bae0427edb25bd6a4e3087a8be17}
+      \strng{authornamehash}{f831bae0427edb25bd6a4e3087a8be17}
+      \strng{authorfullhash}{f831bae0427edb25bd6a4e3087a8be17}
+      \field{labelalpha}{SKC03}
+      \field{sortinit}{2}
+      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{booktitle}{Proceedings of the 2003 IEEE International Symposium on Computational Intelligence in Robotics and Automation (CIRA)}
+      \field{month}{7}
+      \field{series}{IEEE International Symposium on Computational Intelligence in Robotics and Automation, Vol. 2}
+      \field{title}{A Semi-Autonomous Replicating Robotic System}
+      \field{year}{2003}
+      \field{pages}{776\bibrangedash 781}
+      \range{pages}{6}
+      \verb{doi}
+      \verb 10.1109/CIRA.2003.1222279
+      \endverb
     \endentry
     \entry{HuthR1}{book}{}
       \name{author}{1}{}{%
@@ -225,6 +375,37 @@
       \verb 10.1038/435163a
       \endverb
     \endentry
+    \entry{Younes2006StatisticalPMC}{article}{}
+      \name{author}{1}{}{%
+        {{hash=a10ea3e9edd8eaeeb9a12fe3085740f9}{%
+           family={Younes},
+           familyi={Y\bibinitperiod},
+           given={Håkan\bibnamedelimb L.\bibnamedelimi S.},
+           giveni={H\bibinitperiod\bibinitdelim L\bibinitperiod\bibinitdelim S\bibinitperiod}}}%
+      }
+      \strng{namehash}{a10ea3e9edd8eaeeb9a12fe3085740f9}
+      \strng{fullhash}{a10ea3e9edd8eaeeb9a12fe3085740f9}
+      \strng{bibnamehash}{a10ea3e9edd8eaeeb9a12fe3085740f9}
+      \strng{authorbibnamehash}{a10ea3e9edd8eaeeb9a12fe3085740f9}
+      \strng{authornamehash}{a10ea3e9edd8eaeeb9a12fe3085740f9}
+      \strng{authorfullhash}{a10ea3e9edd8eaeeb9a12fe3085740f9}
+      \field{labelalpha}{You06}
+      \field{sortinit}{2}
+      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Information and Computation}
+      \field{month}{9}
+      \field{number}{9}
+      \field{title}{Statistical Probabilistic Model Checking with a Focus on Time-Bounded Properties}
+      \field{volume}{204}
+      \field{year}{2006}
+      \field{pages}{1368\bibrangedash 1409}
+      \range{pages}{42}
+      \verb{doi}
+      \verb 10.1016/j.ic.2006.03.002
+      \endverb
+    \endentry
     \entry{Eno2007ReplicationNoControl}{inproceedings}{}
       \true{moreauthor}
       \true{morelabelname}
@@ -295,6 +476,187 @@
       \verb 10.1109/MRA.2007.910
       \endverb
     \endentry
+    \entry{Kwiatkowska2011PRISM}{inproceedings}{}
+      \name{author}{3}{}{%
+        {{hash=e96e14c940cd49f1c4e8c1f38f89a321}{%
+           family={Kwiatkowska},
+           familyi={K\bibinitperiod},
+           given={Marta},
+           giveni={M\bibinitperiod}}}%
+        {{hash=72e38f5e745acabaeb10e38ca01f1a52}{%
+           family={Norman},
+           familyi={N\bibinitperiod},
+           given={Gethin},
+           giveni={G\bibinitperiod}}}%
+        {{hash=85aa04746604480ce47f280e167052ff}{%
+           family={Parker},
+           familyi={P\bibinitperiod},
+           given={David},
+           giveni={D\bibinitperiod}}}%
+      }
+      \name{editor}{2}{}{%
+        {{hash=c4579367a2df427010d033448d6d3748}{%
+           family={Gopalakrishnan},
+           familyi={G\bibinitperiod},
+           given={Ganesh},
+           giveni={G\bibinitperiod}}}%
+        {{hash=f1b03c9582278ba3b2d670d48bad083d}{%
+           family={Qadeer},
+           familyi={Q\bibinitperiod},
+           given={Shaz},
+           giveni={S\bibinitperiod}}}%
+      }
+      \list{publisher}{1}{%
+        {Springer}%
+      }
+      \strng{namehash}{84b38c4b40e425cbfea3cd18ab69194d}
+      \strng{fullhash}{84b38c4b40e425cbfea3cd18ab69194d}
+      \strng{bibnamehash}{84b38c4b40e425cbfea3cd18ab69194d}
+      \strng{authorbibnamehash}{84b38c4b40e425cbfea3cd18ab69194d}
+      \strng{authornamehash}{84b38c4b40e425cbfea3cd18ab69194d}
+      \strng{authorfullhash}{84b38c4b40e425cbfea3cd18ab69194d}
+      \strng{editorbibnamehash}{ef365c4f42d951adfb13cdebe1253d09}
+      \strng{editornamehash}{ef365c4f42d951adfb13cdebe1253d09}
+      \strng{editorfullhash}{ef365c4f42d951adfb13cdebe1253d09}
+      \field{labelalpha}{KNP11}
+      \field{sortinit}{2}
+      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{booktitle}{Computer Aided Verification (CAV 2011)}
+      \field{series}{Lecture Notes in Computer Science}
+      \field{title}{PRISM 4.0: Verification of Probabilistic Real-Time Systems}
+      \field{volume}{6806}
+      \field{year}{2011}
+      \field{pages}{585\bibrangedash 591}
+      \range{pages}{7}
+      \verb{doi}
+      \verb 10.1007/978-3-642-22110-1_47
+      \endverb
+    \endentry
+    \entry{Hinrichs2014ModelCheckRuntimeVerify}{inproceedings}{}
+      \name{author}{3}{}{%
+        {{hash=5ee1a255e062169594cc138390bb6b94}{%
+           family={Hinrichs},
+           familyi={H\bibinitperiod},
+           given={Timothy\bibnamedelima L.},
+           giveni={T\bibinitperiod\bibinitdelim L\bibinitperiod}}}%
+        {{hash=40318bc73cd0979c85ff356f55ac4e4a}{%
+           family={Sistla},
+           familyi={S\bibinitperiod},
+           given={A.\bibnamedelimi Prasad},
+           giveni={A\bibinitperiod\bibinitdelim P\bibinitperiod}}}%
+        {{hash=7e665c37345a67057674f71051230c32}{%
+           family={Zuck},
+           familyi={Z\bibinitperiod},
+           given={Lenore\bibnamedelima D.},
+           giveni={L\bibinitperiod\bibinitdelim D\bibinitperiod}}}%
+      }
+      \name{editor}{2}{}{%
+        {{hash=e50601e4532a3894411413925585a523}{%
+           family={Voronkov},
+           familyi={V\bibinitperiod},
+           given={Andrei},
+           giveni={A\bibinitperiod}}}%
+        {{hash=ced07cb83a8646605d28aec9faa6c3ac}{%
+           family={Korovina},
+           familyi={K\bibinitperiod},
+           given={Margarita\bibnamedelima V.},
+           giveni={M\bibinitperiod\bibinitdelim V\bibinitperiod}}}%
+      }
+      \list{publisher}{1}{%
+        {EasyChair}%
+      }
+      \strng{namehash}{9f2711ea672f8826e824c72b20991a9e}
+      \strng{fullhash}{9f2711ea672f8826e824c72b20991a9e}
+      \strng{bibnamehash}{9f2711ea672f8826e824c72b20991a9e}
+      \strng{authorbibnamehash}{9f2711ea672f8826e824c72b20991a9e}
+      \strng{authornamehash}{9f2711ea672f8826e824c72b20991a9e}
+      \strng{authorfullhash}{9f2711ea672f8826e824c72b20991a9e}
+      \strng{editorbibnamehash}{5f4379b3e46fc066c020305990ec12c6}
+      \strng{editornamehash}{5f4379b3e46fc066c020305990ec12c6}
+      \strng{editorfullhash}{5f4379b3e46fc066c020305990ec12c6}
+      \field{labelalpha}{HSZ14}
+      \field{sortinit}{2}
+      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{booktitle}{HOWARD‑60: A Festschrift on the Occasion of Howard Barringer’s 60th Birthday}
+      \field{issn}{2398-7340}
+      \field{series}{EPiC Series in Computing}
+      \field{title}{Model Check What You Can, Runtime Verify the Rest}
+      \field{volume}{42}
+      \field{year}{2014}
+      \field{pages}{234\bibrangedash 244}
+      \range{pages}{11}
+      \verb{doi}
+      \verb 10.29007/slnn
+      \endverb
+      \verb{urlraw}
+      \verb https://easychair.org/publications/paper/tq7
+      \endverb
+      \verb{url}
+      \verb https://easychair.org/publications/paper/tq7
+      \endverb
+    \endentry
+    \entry{Legay2016PlasmaLab}{inproceedings}{}
+      \name{author}{3}{}{%
+        {{hash=0fabf3660126ac9e07707dbfb289fd2e}{%
+           family={Legay},
+           familyi={L\bibinitperiod},
+           given={Axel},
+           giveni={A\bibinitperiod}}}%
+        {{hash=4301e560ac538a2c229a1b9a00b48cd6}{%
+           family={Sedwards},
+           familyi={S\bibinitperiod},
+           given={Zacharias\bibnamedelimb R.\bibnamedelimi M.},
+           giveni={Z\bibinitperiod\bibinitdelim R\bibinitperiod\bibinitdelim M\bibinitperiod}}}%
+        {{hash=f7e9842803878c973d04c9d0954fefd5}{%
+           family={Traonouez},
+           familyi={T\bibinitperiod},
+           given={Louis-Marie},
+           giveni={L\bibinithyphendelim M\bibinitperiod}}}%
+      }
+      \name{editor}{2}{}{%
+        {{hash=580cd9f49733e0d6ba54ad9fe7c3ebed}{%
+           family={Margaria},
+           familyi={M\bibinitperiod},
+           given={Tiziana},
+           giveni={T\bibinitperiod}}}%
+        {{hash=665b6687b4ed05721bf55d61032505ca}{%
+           family={Steffen},
+           familyi={S\bibinitperiod},
+           given={Bernhard},
+           giveni={B\bibinitperiod}}}%
+      }
+      \list{publisher}{1}{%
+        {Springer}%
+      }
+      \strng{namehash}{d4c59c2ae981053d17b14a1638e5f600}
+      \strng{fullhash}{d4c59c2ae981053d17b14a1638e5f600}
+      \strng{bibnamehash}{d4c59c2ae981053d17b14a1638e5f600}
+      \strng{authorbibnamehash}{d4c59c2ae981053d17b14a1638e5f600}
+      \strng{authornamehash}{d4c59c2ae981053d17b14a1638e5f600}
+      \strng{authorfullhash}{d4c59c2ae981053d17b14a1638e5f600}
+      \strng{editorbibnamehash}{c584bfc545a74458d025a400536cc144}
+      \strng{editornamehash}{c584bfc545a74458d025a400536cc144}
+      \strng{editorfullhash}{c584bfc545a74458d025a400536cc144}
+      \field{labelalpha}{LST16}
+      \field{sortinit}{2}
+      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{booktitle}{ISoLA 2016 – Leveraging Applications of Formal Methods, Verification and Validation}
+      \field{series}{Lecture Notes in Computer Science}
+      \field{title}{Plasma Lab: A Modular Statistical Model Checking Platform}
+      \field{volume}{9952}
+      \field{year}{2016}
+      \field{pages}{77\bibrangedash 93}
+      \range{pages}{17}
+      \verb{doi}
+      \verb 10.1007/978-3-319-47166-2_6
+      \endverb
+    \endentry
     \entry{DGL1}{book}{}
       \name{author}{2}{}{%
         {{hash=21028e87c3302e0f0cc6af3e888ecb41}{%
@@ -329,6 +691,69 @@
       \field{isbn}{978-1-107-02836-4}
       \field{title}{Temporal Logics in Computer Science Finite-State Systems}
       \field{year}{2016}
+    \endentry
+    \entry{Dehnert2017Storm}{inproceedings}{}
+      \name{author}{4}{}{%
+        {{hash=5e63f298766caafb7f8f711ccd248a4a}{%
+           family={Dehnert},
+           familyi={D\bibinitperiod},
+           given={Christian},
+           giveni={C\bibinitperiod}}}%
+        {{hash=29202fc00e502e6a06092a566a4d041e}{%
+           family={Junges},
+           familyi={J\bibinitperiod},
+           given={Sebastian},
+           giveni={S\bibinitperiod}}}%
+        {{hash=392d5825b15ef7f81f68632c7a49fdef}{%
+           family={Katoen},
+           familyi={K\bibinitperiod},
+           given={Joost-Pieter},
+           giveni={J\bibinithyphendelim P\bibinitperiod}}}%
+        {{hash=ac49976e229e5180f7f8ba6acbfab71b}{%
+           family={Volk},
+           familyi={V\bibinitperiod},
+           given={Matthias},
+           giveni={M\bibinitperiod}}}%
+      }
+      \name{editor}{2}{}{%
+        {{hash=fd8f081bfdff32c5bab11f6680b91459}{%
+           family={Dillig},
+           familyi={D\bibinitperiod},
+           given={Isil},
+           giveni={I\bibinitperiod}}}%
+        {{hash=1684412f847ca2768dd69ca981ed8458}{%
+           family={Palsberg},
+           familyi={P\bibinitperiod},
+           given={Jens},
+           giveni={J\bibinitperiod}}}%
+      }
+      \list{publisher}{1}{%
+        {Springer}%
+      }
+      \strng{namehash}{7df1ccca870052f119e5cfb10b3131dc}
+      \strng{fullhash}{384e4ec4e83e48a9c25f21290f7add4e}
+      \strng{bibnamehash}{7df1ccca870052f119e5cfb10b3131dc}
+      \strng{authorbibnamehash}{7df1ccca870052f119e5cfb10b3131dc}
+      \strng{authornamehash}{7df1ccca870052f119e5cfb10b3131dc}
+      \strng{authorfullhash}{384e4ec4e83e48a9c25f21290f7add4e}
+      \strng{editorbibnamehash}{cb5ed8d97b771ca720462828d087c4fa}
+      \strng{editornamehash}{cb5ed8d97b771ca720462828d087c4fa}
+      \strng{editorfullhash}{cb5ed8d97b771ca720462828d087c4fa}
+      \field{labelalpha}{Deh+17}
+      \field{sortinit}{2}
+      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{booktitle}{Computer Aided Verification (CAV 2017)}
+      \field{series}{Lecture Notes in Computer Science}
+      \field{title}{A Storm is Coming: A Modern Probabilistic Model Checker}
+      \field{volume}{10426}
+      \field{year}{2017}
+      \field{pages}{592\bibrangedash 600}
+      \range{pages}{9}
+      \verb{doi}
+      \verb 10.1007/978-3-319-63390-9_31
+      \endverb
     \endentry
     \entry{Jenett2019MaterialRobot}{article}{}
       \name{author}{4}{}{%
@@ -419,6 +844,41 @@
       \verb 10.1109/ACCESS.2020.2965327
       \endverb
     \endentry
+    \entry{Jones2021Simulation}{article}{}
+      \name{author}{2}{}{%
+        {{hash=754ef483cc118651dbbe70d1a2879764}{%
+           family={Jones},
+           familyi={J\bibinitperiod},
+           given={Andrew},
+           giveni={A\bibinitperiod}}}%
+        {{hash=8164deef41f81b568c90f09ad8ad2141}{%
+           family={Straub},
+           familyi={S\bibinitperiod},
+           given={Jeremy},
+           giveni={J\bibinitperiod}}}%
+      }
+      \strng{namehash}{b0c9d802c4a62460ef3a4271246f2876}
+      \strng{fullhash}{b0c9d802c4a62460ef3a4271246f2876}
+      \strng{bibnamehash}{b0c9d802c4a62460ef3a4271246f2876}
+      \strng{authorbibnamehash}{b0c9d802c4a62460ef3a4271246f2876}
+      \strng{authornamehash}{b0c9d802c4a62460ef3a4271246f2876}
+      \strng{authorfullhash}{b0c9d802c4a62460ef3a4271246f2876}
+      \field{labelalpha}{JS21}
+      \field{sortinit}{2}
+      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Computers}
+      \field{number}{1}
+      \field{title}{Simulation and Analysis of Self-Replicating Robot Decision-Making Systems}
+      \field{volume}{10}
+      \field{year}{2021}
+      \field{pages}{9}
+      \range{pages}{1}
+      \verb{doi}
+      \verb 10.3390/computers10010009
+      \endverb
+    \endentry
     \entry{Jones2021Thesis}{thesis}{}
       \name{author}{1}{}{%
         {{hash=ce8819175bcd004841d34fed42634238}{%
@@ -494,23 +954,86 @@
       \verb 10.1038/s44172-022-00034-3
       \endverb
     \endentry
-    \entry{Wik1}{misc}{}
-      \field{labelalpha}{25}
+    \entry{Chirikjian2022Entropy}{article}{}
+      \name{author}{1}{}{%
+        {{hash=0bb4fe91e5d0c99f7ecf93d5e8c0ca09}{%
+           family={Chirikjian},
+           familyi={C\bibinitperiod},
+           given={Gregory\bibnamedelima S.},
+           giveni={G\bibinitperiod\bibinitdelim S\bibinitperiod}}}%
+      }
+      \strng{namehash}{0bb4fe91e5d0c99f7ecf93d5e8c0ca09}
+      \strng{fullhash}{0bb4fe91e5d0c99f7ecf93d5e8c0ca09}
+      \strng{bibnamehash}{0bb4fe91e5d0c99f7ecf93d5e8c0ca09}
+      \strng{authorbibnamehash}{0bb4fe91e5d0c99f7ecf93d5e8c0ca09}
+      \strng{authornamehash}{0bb4fe91e5d0c99f7ecf93d5e8c0ca09}
+      \strng{authorfullhash}{0bb4fe91e5d0c99f7ecf93d5e8c0ca09}
+      \field{labelalpha}{Chi22}
       \field{sortinit}{2}
       \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
+      \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
-      \field{note}{Accessed: 2025-02-31}
-      \field{title}{Boolean satisfiability problem}
-      \field{year}{2025}
-      \verb{urlraw}
-      \verb https://en.wikipedia.org/wiki/Boolean_satisfiability_problem
-      \endverb
-      \verb{url}
-      \verb https://en.wikipedia.org/wiki/Boolean_satisfiability_problem
+      \field{journaltitle}{arXiv preprint arXiv:2202.02938}
+      \field{title}{Entropy, Symmetry, and the Difficulty of Self-Replication}
+      \field{year}{2022}
+    \endentry
+    \entry{Slagel2024FormalRuntimeAssurance}{inproceedings}{}
+      \name{author}{5}{}{%
+        {{hash=fcceeeafc8718145e17107d83ef41dd0}{%
+           family={Slagel},
+           familyi={S\bibinitperiod},
+           given={J.\bibnamedelimi Tanner},
+           giveni={J\bibinitperiod\bibinitdelim T\bibinitperiod}}}%
+        {{hash=c8790b94304de316129b4ceb53eba16d}{%
+           family={White},
+           familyi={W\bibinitperiod},
+           given={Lauren\bibnamedelima M.},
+           giveni={L\bibinitperiod\bibinitdelim M\bibinitperiod}}}%
+        {{hash=afb086fe3c03d940c4221ebe72060cd2}{%
+           family={Dutle},
+           familyi={D\bibinitperiod},
+           given={Aaron},
+           giveni={A\bibinitperiod}}}%
+        {{hash=d9b375b03eb3b68dc0569be9dee325ab}{%
+           family={Muñoz},
+           familyi={M\bibinitperiod},
+           given={César\bibnamedelima A.},
+           giveni={C\bibinitperiod\bibinitdelim A\bibinitperiod}}}%
+        {{hash=d016e14a21a3e4d47de505d3204b1ea4}{%
+           family={Crespo},
+           familyi={C\bibinitperiod},
+           given={Nicolas},
+           giveni={N\bibinitperiod}}}%
+      }
+      \list{location}{1}{%
+        {Mountain View, CA, USA}%
+      }
+      \list{publisher}{1}{%
+        {Springer}%
+      }
+      \strng{namehash}{80c2215755ed37b27d0a0eb34f2a6882}
+      \strng{fullhash}{3c6fb0d95e3bb4fba7ba016d692f84b6}
+      \strng{bibnamehash}{80c2215755ed37b27d0a0eb34f2a6882}
+      \strng{authorbibnamehash}{80c2215755ed37b27d0a0eb34f2a6882}
+      \strng{authornamehash}{80c2215755ed37b27d0a0eb34f2a6882}
+      \strng{authorfullhash}{3c6fb0d95e3bb4fba7ba016d692f84b6}
+      \field{labelalpha}{Sla+24}
+      \field{sortinit}{2}
+      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{booktitle}{Proceedings of NASA Formal Methods (NFM 2024)}
+      \field{month}{6}
+      \field{series}{Lecture Notes in Computer Science}
+      \field{title}{A Formal Verification Framework for Runtime Assurance}
+      \field{year}{2024}
+      \field{pages}{322\bibrangedash 328}
+      \range{pages}{7}
+      \verb{doi}
+      \verb 10.1007/978-3-031-60698-4_19
       \endverb
     \endentry
   \enddatalist
-  \missing{41}
 \endrefsection
 \endinput
 

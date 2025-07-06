@@ -35,6 +35,26 @@ a copy of itself from raw materials, or from minimal possible units related to
 considered environment, thereby exhibiting self-replication in a manner 
 analogous to that observed in nature.
 
+As shown by \citeauthor{Chirikjian2022Entropy} in  \cite{Chirikjian2022Entropy}
+"the basic difficulty is that in order to close the self-replicating loop, there
+must be a balance between the overall system complexity and the ability of the
+system to handle the simplest inputs possible. Generally speaking, the more
+complex the system is, the more capable it is to assemble the simplest parts,
+or even harvest raw materials. But when the system is very complex, it then
+requires more to reproduce. For example, if a robot needs microprocessors and
+a 3D printing system needs a high-energy laser, then producing those from in
+situ resources becomes an enormous challenge."
+And "One way around that problem is to focus on production of mechanical parts in situ such as structural members 
+for robots, factories, and habitats, and to send the relatively light-weight
+“vitamin” components such as computers, lasers, and some chemical reagents 
+to be considered as inputs to the system rather than as items to be replicated.
+In this way, a practical version of in situ resource utilization (ISRU) can be
+achieved by reclassifying inputs. Moreover, developing systems that are depen-
+dent on some inputs that the systems cannot manufacture from scratch is both
+more akin to living systems that require specific nutrients, and is also safer than
+developing self-replicating systems that could continue to replicate without the
+imposition of resource bottlnecks. Without such intentional bottlenecks there
+could be fears of things running amuck for generations."
 
 
 
@@ -77,7 +97,7 @@ quality across independently operating replication processes.
     \centering
     \subfloat[]{ \includegraphics[width=6.5cm]{ClassificationCentralized.png}}
     \subfloat[]{ \includegraphics[width=8.5cm]{ClassificationDecentralized.png}}\\
-    \caption{Centralized and decentralized replication}
+    \caption{Centralized and decentralized replication \cite{Jones2021Simulation}}
     \label{fig:class1a}
 \end{figure}
 
@@ -100,7 +120,7 @@ specialize in operational tasks, environmental sensing, or resource collection.
 \begin{figure}[h]
     \centering
     \includegraphics[width=9cm]{ClassificationHierarchical.png} 
-    \caption{Hierarchical replication}
+    \caption{Hierarchical replication \cite{Jones2021Simulation}}
     \label{fig:class2}
 \end{figure}
 
@@ -178,7 +198,7 @@ based on their reliance on fixtures and replication strategy:
 \begin{figure}[h]
     \centering
     \includegraphics[width=14cm]{ClassificationDirect.png} 
-    \caption{Directly and indirectly replicating robots classification}
+    \caption{Directly and indirectly replicating robots classification \cite{Suthakorn2003SemiAutonomous}}
 \end{figure}
 
 
@@ -303,7 +323,25 @@ where $\phi$ represents a stochastic or unknown environmental process.
 \end{itemize}
 
 
-\subsection{Degree of replication}
+\subsection{Degree of self-replication}
+As shown in \cite{Chirikjian2022Entropy}:
+"In an artificial self-replicating system, if the number of input parts is small,
+and if each part is itself a complex machine, then the effort involved in the assembly 
+step of self-replication is relatively low compared to the effort of making
+the input parts. The assembly task in self-replication is then relatively unchallenging 
+in such a scenario. In contrast, if there are many simple (easy to
+manufacture) parts that need to be assembled by the robot, the relative difficulty 
+is higher. The difference between these two scenarios can be quantified
+using the concept of the 'degree of self replication'. The highest degree of self
+replication is when raw materials are harvested by a system and used to produce
+a replica, since fabrication and assembly are both done by the self-replicating
+system in that scenario."
+
+In general as shown in \cite{Chirikjian2022Entropy} degree of self-replication 
+can be abstractly described as: 
+
+\[\textit{DOSR} = \frac{\textit{ System\ Complexity }}{\textit{ Parts\ Complexity }}\]
+
 In \citeyear{Lee2007Robotic} \citeauthor{Lee2007Robotic} proposed a measure of degree of replication \cite{Lee2007Robotic}:
 measure of how much order is created by the assembly process relative to the existing order in
 the unassembled parts. 
@@ -365,7 +403,7 @@ simple electromechanical subsystems (called M1 to M6) as it shown on the Figure 
 \begin{figure}[h]
     \centering
     \includegraphics[width=13cm]{ExampleSRRS-2D.png} 
-    \caption{Modules (left) and complete robot (right)}
+    \caption{Modules (left) and complete robot (right) \cite{Lee2007Robotic}}
     \label{fig:ExampleSRRS-2D}
 \end{figure}
 
@@ -387,7 +425,7 @@ sensors, assembly station and wall,  used to align the robot during reversing, e
 \begin{figure}[h]
     \centering
     \includegraphics[width=11cm]{ExampleSRRS-2D-2.png} 
-    \caption{The process of self-replication}
+    \caption{The process of self-replication \cite{Lee2007Robotic}}
     \label{fig:class2}
 \end{figure}
 The robot has six states, see Figure \ref{fig:Example2D-diagram2} and three distinctive behaviors
@@ -417,7 +455,8 @@ itself without any external control or assistance.
 \begin{figure}[h]
     \centering
     \includegraphics[width=10cm]{Example2D-diagram2.png} 
-    \caption{State diagram shows behaviors of the robot according to the sensor inputs}
+    \caption{State diagram shows behaviors of the robot according 
+    to the sensor inputs \cite{Lee2007Robotic}.}
     \label{fig:Example2D-diagram2}
 \end{figure}
 
@@ -459,7 +498,7 @@ and reconfigure to construct replicas of themselves.
 \begin{figure}[h]
     \centering
     \includegraphics[width=14cm]{ExampleLipson.png} 
-    \caption{Self-replication of a four-module robot}
+    \caption{Self-replication of a four-module robot \cite{Zykov2005SelfReproducing}}
     \label{fig:ExampleLipson}
 \end{figure}
 
@@ -520,7 +559,7 @@ of contact, as well as a useful decomposition for voxel fabrication.
     \centering
     \subfloat[Cell]{ \includegraphics[width=6cm]{Material-robot_cell.png}}
     \subfloat[Modular robot]{ \includegraphics[width=10cm]{Material-robot_robot.png}}\\
-    \caption{Material-robot system}
+\caption{Material-robot system  \cite{AbdelRahman2022Hierarchical}}
 \end{figure}
 
 Combining these active voxels with
@@ -535,7 +574,7 @@ material throughput for a given target geometry.
 \begin{figure}[h]
     \centering
     \includegraphics[width=15cm]{Material-robot-assembly.png} 
-    \caption{Self-replication process}
+    \caption{Self-replication process \cite{AbdelRahman2022Hierarchical}}
     \label{fig:1}
 \end{figure}
 
