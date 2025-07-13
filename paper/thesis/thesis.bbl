@@ -1,0 +1,1039 @@
+% $ biblatex auxiliary file $
+% $ biblatex bbl format version 3.2 $
+% Do not modify the above lines!
+%
+% This is an auxiliary file used by the 'biblatex' package.
+% This file may safely be deleted. It will be recreated by
+% biber as required.
+%
+\begingroup
+\makeatletter
+\@ifundefined{ver@biblatex.sty}
+  {\@latex@error
+     {Missing 'biblatex' package}
+     {The bibliography requires the 'biblatex' package.}
+      \aftergroup\endinput}
+  {}
+\endgroup
+
+
+\refsection{0}
+  \datalist[entry]{ynt/global//global/global}
+    \entry{Penrose1958Mechanics}{article}{}
+      \name{author}{1}{}{%
+        {{hash=20015490980b4eb6367fbded70cab53a}{%
+           family={Penrose},
+           familyi={P\bibinitperiod},
+           given={L.\bibnamedelimi S.},
+           giveni={L\bibinitperiod\bibinitdelim S\bibinitperiod}}}%
+      }
+      \strng{namehash}{20015490980b4eb6367fbded70cab53a}
+      \strng{fullhash}{20015490980b4eb6367fbded70cab53a}
+      \strng{bibnamehash}{20015490980b4eb6367fbded70cab53a}
+      \strng{authorbibnamehash}{20015490980b4eb6367fbded70cab53a}
+      \strng{authornamehash}{20015490980b4eb6367fbded70cab53a}
+      \strng{authorfullhash}{20015490980b4eb6367fbded70cab53a}
+      \field{labelalpha}{Pen58}
+      \field{sortinit}{1}
+      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Annals of Human Genetics}
+      \field{month}{11}
+      \field{number}{1}
+      \field{title}{Mechanics of Self-Reproduction}
+      \field{volume}{23}
+      \field{year}{1958}
+      \field{pages}{59\bibrangedash 72}
+      \range{pages}{14}
+      \verb{doi}
+      \verb 10.1111/j.1469-1809.1958.tb01442.x
+      \endverb
+    \endentry
+    \entry{vonNeumann1962Theory}{book}{}
+      \name{author}{2}{}{%
+        {{hash=f8744afb2b8eb53c5804cbac615dbad1}{%
+           family={Neumann},
+           familyi={N\bibinitperiod},
+           given={John},
+           giveni={J\bibinitperiod},
+           prefix={von},
+           prefixi={v\bibinitperiod}}}%
+        {{hash=e2a86044b5230845ffb49afeafa40b85}{%
+           family={Burks},
+           familyi={B\bibinitperiod},
+           given={Arthur\bibnamedelima W.},
+           giveni={A\bibinitperiod\bibinitdelim W\bibinitperiod}}}%
+      }
+      \list{location}{1}{%
+        {Urbana, IL}%
+      }
+      \list{publisher}{1}{%
+        {University of Illinois Press}%
+      }
+      \strng{namehash}{fd1aa7f9a850aa89208e1041c6663b22}
+      \strng{fullhash}{fd1aa7f9a850aa89208e1041c6663b22}
+      \strng{bibnamehash}{fd1aa7f9a850aa89208e1041c6663b22}
+      \strng{authorbibnamehash}{fd1aa7f9a850aa89208e1041c6663b22}
+      \strng{authornamehash}{fd1aa7f9a850aa89208e1041c6663b22}
+      \strng{authorfullhash}{fd1aa7f9a850aa89208e1041c6663b22}
+      \field{labelalpha}{NB62}
+      \field{sortinit}{1}
+      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{note}{Edited and completed by Arthur W. Burks}
+      \field{title}{Theory of Self-Reproducing Automata}
+      \field{year}{1962}
+    \endentry
+    \entry{Aziz1996VerifyingCTMC}{inproceedings}{}
+      \name{author}{4}{}{%
+        {{hash=804441a4782f6022f75bb7a72f3b77a7}{%
+           family={Aziz},
+           familyi={A\bibinitperiod},
+           given={Adnan},
+           giveni={A\bibinitperiod}}}%
+        {{hash=c4e1f26efd43ac415679549382683725}{%
+           family={Sanwal},
+           familyi={S\bibinitperiod},
+           given={Kumud},
+           giveni={K\bibinitperiod}}}%
+        {{hash=b5433f89931ef4aefb83285702114927}{%
+           family={Singhal},
+           familyi={S\bibinitperiod},
+           given={Vigyan},
+           giveni={V\bibinitperiod}}}%
+        {{hash=4fb487f81f57d4c6d7412fa6fec1b9d0}{%
+           family={Brayton},
+           familyi={B\bibinitperiod},
+           given={Robert},
+           giveni={R\bibinitperiod}}}%
+      }
+      \name{editor}{2}{}{%
+        {{hash=29db5b94c11f4e678669998ac7867043}{%
+           family={Alur},
+           familyi={A\bibinitperiod},
+           given={Rajeev},
+           giveni={R\bibinitperiod}}}%
+        {{hash=eeb928073fbee58751f87d401a62561a}{%
+           family={Henzinger},
+           familyi={H\bibinitperiod},
+           given={Thomas\bibnamedelima A.},
+           giveni={T\bibinitperiod\bibinitdelim A\bibinitperiod}}}%
+      }
+      \list{location}{1}{%
+        {New Brunswick, NJ}%
+      }
+      \list{publisher}{1}{%
+        {Springer}%
+      }
+      \strng{namehash}{09a2a5c6bd9003955f151a0713b7b805}
+      \strng{fullhash}{6c895725ec91fe8b377fc93e43970219}
+      \strng{bibnamehash}{09a2a5c6bd9003955f151a0713b7b805}
+      \strng{authorbibnamehash}{09a2a5c6bd9003955f151a0713b7b805}
+      \strng{authornamehash}{09a2a5c6bd9003955f151a0713b7b805}
+      \strng{authorfullhash}{6c895725ec91fe8b377fc93e43970219}
+      \strng{editorbibnamehash}{a3c366cf3c106fc2cb97eccfef1c1bcc}
+      \strng{editornamehash}{a3c366cf3c106fc2cb97eccfef1c1bcc}
+      \strng{editorfullhash}{a3c366cf3c106fc2cb97eccfef1c1bcc}
+      \field{labelalpha}{Azi+96}
+      \field{sortinit}{1}
+      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{booktitle}{Proceedings of the 8th International Conference on Computer Aided Verification (CAV)}
+      \field{series}{Lecture Notes in Computer Science}
+      \field{title}{Verifying Continuous Time Markov Chains}
+      \field{volume}{1102}
+      \field{year}{1996}
+      \field{pages}{269\bibrangedash 276}
+      \range{pages}{8}
+    \endentry
+    \entry{Sipper1998SelfReplication}{article}{}
+      \name{author}{1}{}{%
+        {{hash=a6145305940668c078be42c19739a2b8}{%
+           family={Sipper},
+           familyi={S\bibinitperiod},
+           given={Moshe},
+           giveni={M\bibinitperiod}}}%
+      }
+      \strng{namehash}{a6145305940668c078be42c19739a2b8}
+      \strng{fullhash}{a6145305940668c078be42c19739a2b8}
+      \strng{bibnamehash}{a6145305940668c078be42c19739a2b8}
+      \strng{authorbibnamehash}{a6145305940668c078be42c19739a2b8}
+      \strng{authornamehash}{a6145305940668c078be42c19739a2b8}
+      \strng{authorfullhash}{a6145305940668c078be42c19739a2b8}
+      \field{labelalpha}{Sip98}
+      \field{sortinit}{1}
+      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Artificial Life}
+      \field{number}{3}
+      \field{title}{Fifty Years of Research on Self-Replication: An Overview}
+      \field{volume}{4}
+      \field{year}{1998}
+      \field{pages}{237\bibrangedash 257}
+      \range{pages}{21}
+      \verb{doi}
+      \verb 10.1162/106454698568576
+      \endverb
+    \endentry
+    \entry{Suthakorn2002SpaceUtilization}{article}{}
+      \name{author}{3}{}{%
+        {{hash=e8436548521d6bb9aa12ef7653127a30}{%
+           family={Suthakorn},
+           familyi={S\bibinitperiod},
+           given={Jackrit},
+           giveni={J\bibinitperiod}}}%
+        {{hash=86bc8365ba527136464afb5496c8c143}{%
+           family={Zhou},
+           familyi={Z\bibinitperiod},
+           given={Yu},
+           giveni={Y\bibinitperiod}}}%
+        {{hash=0bb4fe91e5d0c99f7ecf93d5e8c0ca09}{%
+           family={Chirikjian},
+           familyi={C\bibinitperiod},
+           given={Gregory\bibnamedelima S.},
+           giveni={G\bibinitperiod\bibinitdelim S\bibinitperiod}}}%
+      }
+      \strng{namehash}{1d59290a8c55b23bbebfb508d02c6fd0}
+      \strng{fullhash}{1d59290a8c55b23bbebfb508d02c6fd0}
+      \strng{bibnamehash}{1d59290a8c55b23bbebfb508d02c6fd0}
+      \strng{authorbibnamehash}{1d59290a8c55b23bbebfb508d02c6fd0}
+      \strng{authornamehash}{1d59290a8c55b23bbebfb508d02c6fd0}
+      \strng{authorfullhash}{1d59290a8c55b23bbebfb508d02c6fd0}
+      \field{labelalpha}{SZC02}
+      \field{sortinit}{2}
+      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{booktitle}{Robosphere 2002, NASA Ames Research Center}
+      \field{title}{Self-Replicating Robots for Space Utilization}
+      \field{year}{2002}
+    \endentry
+    \entry{Younes2002AcceptanceSampling}{inproceedings}{}
+      \name{author}{2}{}{%
+        {{hash=a10ea3e9edd8eaeeb9a12fe3085740f9}{%
+           family={Younes},
+           familyi={Y\bibinitperiod},
+           given={Håkan\bibnamedelimb L.\bibnamedelimi S.},
+           giveni={H\bibinitperiod\bibinitdelim L\bibinitperiod\bibinitdelim S\bibinitperiod}}}%
+        {{hash=05191e6fcd1964cbbe2cc9f25739c799}{%
+           family={Simmons},
+           familyi={S\bibinitperiod},
+           given={Reid\bibnamedelima G.},
+           giveni={R\bibinitperiod\bibinitdelim G\bibinitperiod}}}%
+      }
+      \list{location}{1}{%
+        {Copenhagen, Denmark}%
+      }
+      \list{publisher}{1}{%
+        {Springer}%
+      }
+      \strng{namehash}{78fa395f08703841f98bb979e53609d4}
+      \strng{fullhash}{78fa395f08703841f98bb979e53609d4}
+      \strng{bibnamehash}{78fa395f08703841f98bb979e53609d4}
+      \strng{authorbibnamehash}{78fa395f08703841f98bb979e53609d4}
+      \strng{authornamehash}{78fa395f08703841f98bb979e53609d4}
+      \strng{authorfullhash}{78fa395f08703841f98bb979e53609d4}
+      \field{labelalpha}{YS02}
+      \field{sortinit}{2}
+      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{booktitle}{Computer Aided Verification (CAV '02)}
+      \field{series}{Lecture Notes in Computer Science}
+      \field{title}{Probabilistic Verification of Discrete-Event Systems Using Acceptance Sampling}
+      \field{volume}{2404}
+      \field{year}{2002}
+      \field{pages}{223\bibrangedash 236}
+      \range{pages}{14}
+      \verb{doi}
+      \verb 10.1007/3-540-45657-0_19
+      \endverb
+    \endentry
+    \entry{Suthakorn2003SemiAutonomous}{inproceedings}{}
+      \name{author}{3}{}{%
+        {{hash=e8436548521d6bb9aa12ef7653127a30}{%
+           family={Suthakorn},
+           familyi={S\bibinitperiod},
+           given={Jackrit},
+           giveni={J\bibinitperiod}}}%
+        {{hash=0432541bc41f2180cd55583de1e3da8c}{%
+           family={Kwon},
+           familyi={K\bibinitperiod},
+           given={Yong\bibnamedelima T.},
+           giveni={Y\bibinitperiod\bibinitdelim T\bibinitperiod}}}%
+        {{hash=0bb4fe91e5d0c99f7ecf93d5e8c0ca09}{%
+           family={Chirikjian},
+           familyi={C\bibinitperiod},
+           given={Gregory\bibnamedelima S.},
+           giveni={G\bibinitperiod\bibinitdelim S\bibinitperiod}}}%
+      }
+      \list{location}{1}{%
+        {Kobe, Japan}%
+      }
+      \list{publisher}{1}{%
+        {IEEE}%
+      }
+      \strng{namehash}{f831bae0427edb25bd6a4e3087a8be17}
+      \strng{fullhash}{f831bae0427edb25bd6a4e3087a8be17}
+      \strng{bibnamehash}{f831bae0427edb25bd6a4e3087a8be17}
+      \strng{authorbibnamehash}{f831bae0427edb25bd6a4e3087a8be17}
+      \strng{authornamehash}{f831bae0427edb25bd6a4e3087a8be17}
+      \strng{authorfullhash}{f831bae0427edb25bd6a4e3087a8be17}
+      \field{labelalpha}{SKC03}
+      \field{sortinit}{2}
+      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{booktitle}{Proceedings of the 2003 IEEE International Symposium on Computational Intelligence in Robotics and Automation (CIRA)}
+      \field{month}{7}
+      \field{series}{IEEE International Symposium on Computational Intelligence in Robotics and Automation, Vol. 2}
+      \field{title}{A Semi-Autonomous Replicating Robotic System}
+      \field{year}{2003}
+      \field{pages}{776\bibrangedash 781}
+      \range{pages}{6}
+      \verb{doi}
+      \verb 10.1109/CIRA.2003.1222279
+      \endverb
+    \endentry
+    \entry{HuthR1}{book}{}
+      \name{author}{1}{}{%
+        {{hash=93a4c7477e242aa1b7d4c837e310ff3d}{%
+           family={Michael\bibnamedelima Huth},
+           familyi={M\bibinitperiod\bibinitdelim H\bibinitperiod},
+           given={Mark\bibnamedelima Ryan},
+           giveni={M\bibinitperiod\bibinitdelim R\bibinitperiod}}}%
+      }
+      \list{location}{1}{%
+        {Cambridge, New York, Melbourne, Madrid, Cape Town, Singapore, São Paulo}%
+      }
+      \list{publisher}{1}{%
+        {Cambridge University Press}%
+      }
+      \strng{namehash}{93a4c7477e242aa1b7d4c837e310ff3d}
+      \strng{fullhash}{93a4c7477e242aa1b7d4c837e310ff3d}
+      \strng{bibnamehash}{93a4c7477e242aa1b7d4c837e310ff3d}
+      \strng{authorbibnamehash}{93a4c7477e242aa1b7d4c837e310ff3d}
+      \strng{authornamehash}{93a4c7477e242aa1b7d4c837e310ff3d}
+      \strng{authorfullhash}{93a4c7477e242aa1b7d4c837e310ff3d}
+      \field{labelalpha}{Mic04}
+      \field{sortinit}{2}
+      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{edition}{2nd}
+      \field{isbn}{978-0-511-26401-6}
+      \field{title}{Logic in computer science Modelling and Reasoning about Systems}
+      \field{year}{2004}
+    \endentry
+    \entry{Zykov2005SelfReproducing}{article}{}
+      \name{author}{4}{}{%
+        {{hash=0ca3a70f324ecc5431d036e4da8cfb6a}{%
+           family={Zykov},
+           familyi={Z\bibinitperiod},
+           given={Victor},
+           giveni={V\bibinitperiod}}}%
+        {{hash=5762efe81056f62578ad0f60a562bfaf}{%
+           family={Mytilinaios},
+           familyi={M\bibinitperiod},
+           given={Efstathios},
+           giveni={E\bibinitperiod}}}%
+        {{hash=8bc95dac71837db57b6ee11b152bbd5d}{%
+           family={Adams},
+           familyi={A\bibinitperiod},
+           given={Bryant},
+           giveni={B\bibinitperiod}}}%
+        {{hash=475bdf26aafc86ddd3f62a8ff9267f8a}{%
+           family={Lipson},
+           familyi={L\bibinitperiod},
+           given={Hod},
+           giveni={H\bibinitperiod}}}%
+      }
+      \strng{namehash}{92974094f5b99f33d364442ffbf92d60}
+      \strng{fullhash}{e2774dae5ac944c7fc33137603a9b30e}
+      \strng{bibnamehash}{92974094f5b99f33d364442ffbf92d60}
+      \strng{authorbibnamehash}{92974094f5b99f33d364442ffbf92d60}
+      \strng{authornamehash}{92974094f5b99f33d364442ffbf92d60}
+      \strng{authorfullhash}{e2774dae5ac944c7fc33137603a9b30e}
+      \field{labelalpha}{Zyk+05}
+      \field{sortinit}{2}
+      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Nature}
+      \field{note}{Brief Communication}
+      \field{number}{7038}
+      \field{title}{Self-reproducing machines}
+      \field{volume}{435}
+      \field{year}{2005}
+      \field{pages}{163}
+      \range{pages}{1}
+      \verb{doi}
+      \verb 10.1038/435163a
+      \endverb
+    \endentry
+    \entry{Younes2006StatisticalPMC}{article}{}
+      \name{author}{1}{}{%
+        {{hash=a10ea3e9edd8eaeeb9a12fe3085740f9}{%
+           family={Younes},
+           familyi={Y\bibinitperiod},
+           given={Håkan\bibnamedelimb L.\bibnamedelimi S.},
+           giveni={H\bibinitperiod\bibinitdelim L\bibinitperiod\bibinitdelim S\bibinitperiod}}}%
+      }
+      \strng{namehash}{a10ea3e9edd8eaeeb9a12fe3085740f9}
+      \strng{fullhash}{a10ea3e9edd8eaeeb9a12fe3085740f9}
+      \strng{bibnamehash}{a10ea3e9edd8eaeeb9a12fe3085740f9}
+      \strng{authorbibnamehash}{a10ea3e9edd8eaeeb9a12fe3085740f9}
+      \strng{authornamehash}{a10ea3e9edd8eaeeb9a12fe3085740f9}
+      \strng{authorfullhash}{a10ea3e9edd8eaeeb9a12fe3085740f9}
+      \field{labelalpha}{You06}
+      \field{sortinit}{2}
+      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Information and Computation}
+      \field{month}{9}
+      \field{number}{9}
+      \field{title}{Statistical Probabilistic Model Checking with a Focus on Time-Bounded Properties}
+      \field{volume}{204}
+      \field{year}{2006}
+      \field{pages}{1368\bibrangedash 1409}
+      \range{pages}{42}
+      \verb{doi}
+      \verb 10.1016/j.ic.2006.03.002
+      \endverb
+    \endentry
+    \entry{Eno2007ReplicationNoControl}{inproceedings}{}
+      \true{moreauthor}
+      \true{morelabelname}
+      \name{author}{3}{}{%
+        {{hash=c0b86379d9aaf678964488030ddc72cc}{%
+           family={Eno},
+           familyi={E\bibinitperiod},
+           given={Steven},
+           giveni={S\bibinitperiod}}}%
+        {{hash=01cd33f077a96951d4921a3aec88eb19}{%
+           family={Mace},
+           familyi={M\bibinitperiod},
+           given={Lauren},
+           giveni={L\bibinitperiod}}}%
+        {{hash=2dca08f44aaebc7d54866d1a9d532e96}{%
+           family={Liu},
+           familyi={L\bibinitperiod},
+           given={Jianyi},
+           giveni={J\bibinitperiod}}}%
+      }
+      \strng{namehash}{a15118bf7792b37694f2b611a1168576}
+      \strng{fullhash}{a15118bf7792b37694f2b611a1168576}
+      \strng{bibnamehash}{a15118bf7792b37694f2b611a1168576}
+      \strng{authorbibnamehash}{a15118bf7792b37694f2b611a1168576}
+      \strng{authornamehash}{a15118bf7792b37694f2b611a1168576}
+      \strng{authorfullhash}{a15118bf7792b37694f2b611a1168576}
+      \field{labelalpha}{EML+07}
+      \field{sortinit}{2}
+      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{booktitle}{Proceedings of the 2007 IEEE International Conference on Robotics and Automation (ICRA)}
+      \field{title}{Robotic Self-Replication in a Structured Environment without Computer Control}
+      \field{year}{2007}
+    \endentry
+    \entry{Lee2007Robotic}{article}{}
+      \name{author}{2}{}{%
+        {{hash=359f32357a7d6cafb247488f6bc9725c}{%
+           family={Lee},
+           familyi={L\bibinitperiod},
+           given={Kiju},
+           giveni={K\bibinitperiod}}}%
+        {{hash=0bb4fe91e5d0c99f7ecf93d5e8c0ca09}{%
+           family={Chirikjian},
+           familyi={C\bibinitperiod},
+           given={Gregory\bibnamedelima S.},
+           giveni={G\bibinitperiod\bibinitdelim S\bibinitperiod}}}%
+      }
+      \strng{namehash}{ed6a3a1e316d90c98367cb2678182b24}
+      \strng{fullhash}{ed6a3a1e316d90c98367cb2678182b24}
+      \strng{bibnamehash}{ed6a3a1e316d90c98367cb2678182b24}
+      \strng{authorbibnamehash}{ed6a3a1e316d90c98367cb2678182b24}
+      \strng{authornamehash}{ed6a3a1e316d90c98367cb2678182b24}
+      \strng{authorfullhash}{ed6a3a1e316d90c98367cb2678182b24}
+      \field{labelalpha}{LC07}
+      \field{sortinit}{2}
+      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{IEEE Robotics \& Automation Magazine}
+      \field{number}{4}
+      \field{title}{Robotic Self-Replication: A Descriptive Framework and a Physical Demonstration from Low-Complexity Parts}
+      \field{volume}{14}
+      \field{year}{2007}
+      \field{pages}{34\bibrangedash 43}
+      \range{pages}{10}
+      \verb{doi}
+      \verb 10.1109/MRA.2007.910
+      \endverb
+    \endentry
+    \entry{Kwiatkowska2011PRISM}{inproceedings}{}
+      \name{author}{3}{}{%
+        {{hash=e96e14c940cd49f1c4e8c1f38f89a321}{%
+           family={Kwiatkowska},
+           familyi={K\bibinitperiod},
+           given={Marta},
+           giveni={M\bibinitperiod}}}%
+        {{hash=72e38f5e745acabaeb10e38ca01f1a52}{%
+           family={Norman},
+           familyi={N\bibinitperiod},
+           given={Gethin},
+           giveni={G\bibinitperiod}}}%
+        {{hash=85aa04746604480ce47f280e167052ff}{%
+           family={Parker},
+           familyi={P\bibinitperiod},
+           given={David},
+           giveni={D\bibinitperiod}}}%
+      }
+      \name{editor}{2}{}{%
+        {{hash=c4579367a2df427010d033448d6d3748}{%
+           family={Gopalakrishnan},
+           familyi={G\bibinitperiod},
+           given={Ganesh},
+           giveni={G\bibinitperiod}}}%
+        {{hash=f1b03c9582278ba3b2d670d48bad083d}{%
+           family={Qadeer},
+           familyi={Q\bibinitperiod},
+           given={Shaz},
+           giveni={S\bibinitperiod}}}%
+      }
+      \list{publisher}{1}{%
+        {Springer}%
+      }
+      \strng{namehash}{84b38c4b40e425cbfea3cd18ab69194d}
+      \strng{fullhash}{84b38c4b40e425cbfea3cd18ab69194d}
+      \strng{bibnamehash}{84b38c4b40e425cbfea3cd18ab69194d}
+      \strng{authorbibnamehash}{84b38c4b40e425cbfea3cd18ab69194d}
+      \strng{authornamehash}{84b38c4b40e425cbfea3cd18ab69194d}
+      \strng{authorfullhash}{84b38c4b40e425cbfea3cd18ab69194d}
+      \strng{editorbibnamehash}{ef365c4f42d951adfb13cdebe1253d09}
+      \strng{editornamehash}{ef365c4f42d951adfb13cdebe1253d09}
+      \strng{editorfullhash}{ef365c4f42d951adfb13cdebe1253d09}
+      \field{labelalpha}{KNP11}
+      \field{sortinit}{2}
+      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{booktitle}{Computer Aided Verification (CAV 2011)}
+      \field{series}{Lecture Notes in Computer Science}
+      \field{title}{PRISM 4.0: Verification of Probabilistic Real-Time Systems}
+      \field{volume}{6806}
+      \field{year}{2011}
+      \field{pages}{585\bibrangedash 591}
+      \range{pages}{7}
+      \verb{doi}
+      \verb 10.1007/978-3-642-22110-1_47
+      \endverb
+    \endentry
+    \entry{Hinrichs2014ModelCheckRuntimeVerify}{inproceedings}{}
+      \name{author}{3}{}{%
+        {{hash=5ee1a255e062169594cc138390bb6b94}{%
+           family={Hinrichs},
+           familyi={H\bibinitperiod},
+           given={Timothy\bibnamedelima L.},
+           giveni={T\bibinitperiod\bibinitdelim L\bibinitperiod}}}%
+        {{hash=40318bc73cd0979c85ff356f55ac4e4a}{%
+           family={Sistla},
+           familyi={S\bibinitperiod},
+           given={A.\bibnamedelimi Prasad},
+           giveni={A\bibinitperiod\bibinitdelim P\bibinitperiod}}}%
+        {{hash=7e665c37345a67057674f71051230c32}{%
+           family={Zuck},
+           familyi={Z\bibinitperiod},
+           given={Lenore\bibnamedelima D.},
+           giveni={L\bibinitperiod\bibinitdelim D\bibinitperiod}}}%
+      }
+      \name{editor}{2}{}{%
+        {{hash=e50601e4532a3894411413925585a523}{%
+           family={Voronkov},
+           familyi={V\bibinitperiod},
+           given={Andrei},
+           giveni={A\bibinitperiod}}}%
+        {{hash=ced07cb83a8646605d28aec9faa6c3ac}{%
+           family={Korovina},
+           familyi={K\bibinitperiod},
+           given={Margarita\bibnamedelima V.},
+           giveni={M\bibinitperiod\bibinitdelim V\bibinitperiod}}}%
+      }
+      \list{publisher}{1}{%
+        {EasyChair}%
+      }
+      \strng{namehash}{9f2711ea672f8826e824c72b20991a9e}
+      \strng{fullhash}{9f2711ea672f8826e824c72b20991a9e}
+      \strng{bibnamehash}{9f2711ea672f8826e824c72b20991a9e}
+      \strng{authorbibnamehash}{9f2711ea672f8826e824c72b20991a9e}
+      \strng{authornamehash}{9f2711ea672f8826e824c72b20991a9e}
+      \strng{authorfullhash}{9f2711ea672f8826e824c72b20991a9e}
+      \strng{editorbibnamehash}{5f4379b3e46fc066c020305990ec12c6}
+      \strng{editornamehash}{5f4379b3e46fc066c020305990ec12c6}
+      \strng{editorfullhash}{5f4379b3e46fc066c020305990ec12c6}
+      \field{labelalpha}{HSZ14}
+      \field{sortinit}{2}
+      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{booktitle}{HOWARD‑60: A Festschrift on the Occasion of Howard Barringer’s 60th Birthday}
+      \field{issn}{2398-7340}
+      \field{series}{EPiC Series in Computing}
+      \field{title}{Model Check What You Can, Runtime Verify the Rest}
+      \field{volume}{42}
+      \field{year}{2014}
+      \field{pages}{234\bibrangedash 244}
+      \range{pages}{11}
+      \verb{doi}
+      \verb 10.29007/slnn
+      \endverb
+      \verb{urlraw}
+      \verb https://easychair.org/publications/paper/tq7
+      \endverb
+      \verb{url}
+      \verb https://easychair.org/publications/paper/tq7
+      \endverb
+    \endentry
+    \entry{Legay2016PlasmaLab}{inproceedings}{}
+      \name{author}{3}{}{%
+        {{hash=0fabf3660126ac9e07707dbfb289fd2e}{%
+           family={Legay},
+           familyi={L\bibinitperiod},
+           given={Axel},
+           giveni={A\bibinitperiod}}}%
+        {{hash=4301e560ac538a2c229a1b9a00b48cd6}{%
+           family={Sedwards},
+           familyi={S\bibinitperiod},
+           given={Zacharias\bibnamedelimb R.\bibnamedelimi M.},
+           giveni={Z\bibinitperiod\bibinitdelim R\bibinitperiod\bibinitdelim M\bibinitperiod}}}%
+        {{hash=f7e9842803878c973d04c9d0954fefd5}{%
+           family={Traonouez},
+           familyi={T\bibinitperiod},
+           given={Louis-Marie},
+           giveni={L\bibinithyphendelim M\bibinitperiod}}}%
+      }
+      \name{editor}{2}{}{%
+        {{hash=580cd9f49733e0d6ba54ad9fe7c3ebed}{%
+           family={Margaria},
+           familyi={M\bibinitperiod},
+           given={Tiziana},
+           giveni={T\bibinitperiod}}}%
+        {{hash=665b6687b4ed05721bf55d61032505ca}{%
+           family={Steffen},
+           familyi={S\bibinitperiod},
+           given={Bernhard},
+           giveni={B\bibinitperiod}}}%
+      }
+      \list{publisher}{1}{%
+        {Springer}%
+      }
+      \strng{namehash}{d4c59c2ae981053d17b14a1638e5f600}
+      \strng{fullhash}{d4c59c2ae981053d17b14a1638e5f600}
+      \strng{bibnamehash}{d4c59c2ae981053d17b14a1638e5f600}
+      \strng{authorbibnamehash}{d4c59c2ae981053d17b14a1638e5f600}
+      \strng{authornamehash}{d4c59c2ae981053d17b14a1638e5f600}
+      \strng{authorfullhash}{d4c59c2ae981053d17b14a1638e5f600}
+      \strng{editorbibnamehash}{c584bfc545a74458d025a400536cc144}
+      \strng{editornamehash}{c584bfc545a74458d025a400536cc144}
+      \strng{editorfullhash}{c584bfc545a74458d025a400536cc144}
+      \field{labelalpha}{LST16}
+      \field{sortinit}{2}
+      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{booktitle}{ISoLA 2016 – Leveraging Applications of Formal Methods, Verification and Validation}
+      \field{series}{Lecture Notes in Computer Science}
+      \field{title}{Plasma Lab: A Modular Statistical Model Checking Platform}
+      \field{volume}{9952}
+      \field{year}{2016}
+      \field{pages}{77\bibrangedash 93}
+      \range{pages}{17}
+      \verb{doi}
+      \verb 10.1007/978-3-319-47166-2_6
+      \endverb
+    \endentry
+    \entry{DGL1}{book}{}
+      \name{author}{2}{}{%
+        {{hash=21028e87c3302e0f0cc6af3e888ecb41}{%
+           family={Stéphane\bibnamedelima Demri},
+           familyi={S\bibinitperiod\bibinitdelim D\bibinitperiod},
+           given={Valentin\bibnamedelima Goranko},
+           giveni={V\bibinitperiod\bibinitdelim G\bibinitperiod}}}%
+        {{hash=026bcaf26338cd485672c7b4e32c9ff7}{%
+           family={Lange},
+           familyi={L\bibinitperiod},
+           given={Martin},
+           giveni={M\bibinitperiod}}}%
+      }
+      \list{location}{1}{%
+        {University Printing House, Cambridge CB2 8BS, United Kingdom}%
+      }
+      \list{publisher}{1}{%
+        {Cambridge University Press}%
+      }
+      \strng{namehash}{fbccac78aaea3180da18b93cd7562d88}
+      \strng{fullhash}{fbccac78aaea3180da18b93cd7562d88}
+      \strng{bibnamehash}{fbccac78aaea3180da18b93cd7562d88}
+      \strng{authorbibnamehash}{fbccac78aaea3180da18b93cd7562d88}
+      \strng{authornamehash}{fbccac78aaea3180da18b93cd7562d88}
+      \strng{authorfullhash}{fbccac78aaea3180da18b93cd7562d88}
+      \field{labelalpha}{SL16}
+      \field{sortinit}{2}
+      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{edition}{2nd}
+      \field{isbn}{978-1-107-02836-4}
+      \field{title}{Temporal Logics in Computer Science Finite-State Systems}
+      \field{year}{2016}
+    \endentry
+    \entry{Dehnert2017Storm}{inproceedings}{}
+      \name{author}{4}{}{%
+        {{hash=5e63f298766caafb7f8f711ccd248a4a}{%
+           family={Dehnert},
+           familyi={D\bibinitperiod},
+           given={Christian},
+           giveni={C\bibinitperiod}}}%
+        {{hash=29202fc00e502e6a06092a566a4d041e}{%
+           family={Junges},
+           familyi={J\bibinitperiod},
+           given={Sebastian},
+           giveni={S\bibinitperiod}}}%
+        {{hash=392d5825b15ef7f81f68632c7a49fdef}{%
+           family={Katoen},
+           familyi={K\bibinitperiod},
+           given={Joost-Pieter},
+           giveni={J\bibinithyphendelim P\bibinitperiod}}}%
+        {{hash=ac49976e229e5180f7f8ba6acbfab71b}{%
+           family={Volk},
+           familyi={V\bibinitperiod},
+           given={Matthias},
+           giveni={M\bibinitperiod}}}%
+      }
+      \name{editor}{2}{}{%
+        {{hash=fd8f081bfdff32c5bab11f6680b91459}{%
+           family={Dillig},
+           familyi={D\bibinitperiod},
+           given={Isil},
+           giveni={I\bibinitperiod}}}%
+        {{hash=1684412f847ca2768dd69ca981ed8458}{%
+           family={Palsberg},
+           familyi={P\bibinitperiod},
+           given={Jens},
+           giveni={J\bibinitperiod}}}%
+      }
+      \list{publisher}{1}{%
+        {Springer}%
+      }
+      \strng{namehash}{7df1ccca870052f119e5cfb10b3131dc}
+      \strng{fullhash}{384e4ec4e83e48a9c25f21290f7add4e}
+      \strng{bibnamehash}{7df1ccca870052f119e5cfb10b3131dc}
+      \strng{authorbibnamehash}{7df1ccca870052f119e5cfb10b3131dc}
+      \strng{authornamehash}{7df1ccca870052f119e5cfb10b3131dc}
+      \strng{authorfullhash}{384e4ec4e83e48a9c25f21290f7add4e}
+      \strng{editorbibnamehash}{cb5ed8d97b771ca720462828d087c4fa}
+      \strng{editornamehash}{cb5ed8d97b771ca720462828d087c4fa}
+      \strng{editorfullhash}{cb5ed8d97b771ca720462828d087c4fa}
+      \field{labelalpha}{Deh+17}
+      \field{sortinit}{2}
+      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{booktitle}{Computer Aided Verification (CAV 2017)}
+      \field{series}{Lecture Notes in Computer Science}
+      \field{title}{A Storm is Coming: A Modern Probabilistic Model Checker}
+      \field{volume}{10426}
+      \field{year}{2017}
+      \field{pages}{592\bibrangedash 600}
+      \range{pages}{9}
+      \verb{doi}
+      \verb 10.1007/978-3-319-63390-9_31
+      \endverb
+    \endentry
+    \entry{Jenett2019MaterialRobot}{article}{}
+      \name{author}{4}{}{%
+        {{hash=adf0762ed660a193284dd64970657a51}{%
+           family={Jenett},
+           familyi={J\bibinitperiod},
+           given={Benjamin},
+           giveni={B\bibinitperiod}}}%
+        {{hash=9fd680d7c46ccc689dc5c22dc80cedf9}{%
+           family={Abdel-Rahman},
+           familyi={A\bibinithyphendelim R\bibinitperiod},
+           given={Amira},
+           giveni={A\bibinitperiod}}}%
+        {{hash=1c5aa26ab8c29ad6e448cb3648e67559}{%
+           family={Cheung},
+           familyi={C\bibinitperiod},
+           given={Kenneth},
+           giveni={K\bibinitperiod}}}%
+        {{hash=113a59d98dd032dc5604a9b82a5700b9}{%
+           family={Gershenfeld},
+           familyi={G\bibinitperiod},
+           given={Neil},
+           giveni={N\bibinitperiod}}}%
+      }
+      \strng{namehash}{a40f2ef59f5e8041746be52219788385}
+      \strng{fullhash}{9be2a0b91957109023a4491a4b464d90}
+      \strng{bibnamehash}{a40f2ef59f5e8041746be52219788385}
+      \strng{authorbibnamehash}{a40f2ef59f5e8041746be52219788385}
+      \strng{authornamehash}{a40f2ef59f5e8041746be52219788385}
+      \strng{authorfullhash}{9be2a0b91957109023a4491a4b464d90}
+      \field{labelalpha}{Jen+19}
+      \field{sortinit}{2}
+      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{IEEE Robotics and Automation Letters}
+      \field{number}{4}
+      \field{title}{Material–Robot System for Assembly of Discrete Cellular Structures}
+      \field{volume}{4}
+      \field{year}{2019}
+      \field{pages}{4019\bibrangedash 4026}
+      \range{pages}{8}
+      \verb{doi}
+      \verb 10.1109/LRA.2019.2930486
+      \endverb
+    \endentry
+    \entry{Tan2020Framework}{article}{}
+      \name{author}{4}{}{%
+        {{hash=49af8917c1871f81ca0a04751f168ed9}{%
+           family={Tan},
+           familyi={T\bibinitperiod},
+           given={Ning},
+           giveni={N\bibinitperiod}}}%
+        {{hash=0bedd50b245d023f50023422fc5ce847}{%
+           family={Hayat},
+           familyi={H\bibinitperiod},
+           given={Abdullah\bibnamedelima Aamir},
+           giveni={A\bibinitperiod\bibinitdelim A\bibinitperiod}}}%
+        {{hash=6ad273ef67cd91db898dadde632736ad}{%
+           family={Elara},
+           familyi={E\bibinitperiod},
+           given={Mohan\bibnamedelima Rajesh},
+           giveni={M\bibinitperiod\bibinitdelim R\bibinitperiod}}}%
+        {{hash=a1772d130e767102aafd39e980a07ef1}{%
+           family={Wood},
+           familyi={W\bibinitperiod},
+           given={Kristin\bibnamedelima L.},
+           giveni={K\bibinitperiod\bibinitdelim L\bibinitperiod}}}%
+      }
+      \strng{namehash}{fd0c5a6301da3f7835a194098887001a}
+      \strng{fullhash}{b2ad4bbd5cee9160e153d5e83adc79aa}
+      \strng{bibnamehash}{fd0c5a6301da3f7835a194098887001a}
+      \strng{authorbibnamehash}{fd0c5a6301da3f7835a194098887001a}
+      \strng{authornamehash}{fd0c5a6301da3f7835a194098887001a}
+      \strng{authorfullhash}{b2ad4bbd5cee9160e153d5e83adc79aa}
+      \field{labelalpha}{Tan+20}
+      \field{sortinit}{2}
+      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{IEEE Access}
+      \field{title}{A Framework for Taxonomy and Evaluation of Self-Reconfigurable Robotic Systems}
+      \field{volume}{8}
+      \field{year}{2020}
+      \field{pages}{13969\bibrangedash 13986}
+      \range{pages}{18}
+      \verb{doi}
+      \verb 10.1109/ACCESS.2020.2965327
+      \endverb
+    \endentry
+    \entry{Jones2021Simulation}{article}{}
+      \name{author}{2}{}{%
+        {{hash=754ef483cc118651dbbe70d1a2879764}{%
+           family={Jones},
+           familyi={J\bibinitperiod},
+           given={Andrew},
+           giveni={A\bibinitperiod}}}%
+        {{hash=8164deef41f81b568c90f09ad8ad2141}{%
+           family={Straub},
+           familyi={S\bibinitperiod},
+           given={Jeremy},
+           giveni={J\bibinitperiod}}}%
+      }
+      \strng{namehash}{b0c9d802c4a62460ef3a4271246f2876}
+      \strng{fullhash}{b0c9d802c4a62460ef3a4271246f2876}
+      \strng{bibnamehash}{b0c9d802c4a62460ef3a4271246f2876}
+      \strng{authorbibnamehash}{b0c9d802c4a62460ef3a4271246f2876}
+      \strng{authornamehash}{b0c9d802c4a62460ef3a4271246f2876}
+      \strng{authorfullhash}{b0c9d802c4a62460ef3a4271246f2876}
+      \field{labelalpha}{JS21}
+      \field{sortinit}{2}
+      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Computers}
+      \field{number}{1}
+      \field{title}{Simulation and Analysis of Self-Replicating Robot Decision-Making Systems}
+      \field{volume}{10}
+      \field{year}{2021}
+      \field{pages}{9}
+      \range{pages}{1}
+      \verb{doi}
+      \verb 10.3390/computers10010009
+      \endverb
+    \endentry
+    \entry{Jones2021Thesis}{thesis}{}
+      \name{author}{1}{}{%
+        {{hash=ce8819175bcd004841d34fed42634238}{%
+           family={Jones},
+           familyi={J\bibinitperiod},
+           given={Andrew\bibnamedelima Burkhard},
+           giveni={A\bibinitperiod\bibinitdelim B\bibinitperiod}}}%
+      }
+      \list{institution}{1}{%
+        {North Dakota State University}%
+      }
+      \strng{namehash}{ce8819175bcd004841d34fed42634238}
+      \strng{fullhash}{ce8819175bcd004841d34fed42634238}
+      \strng{bibnamehash}{ce8819175bcd004841d34fed42634238}
+      \strng{authorbibnamehash}{ce8819175bcd004841d34fed42634238}
+      \strng{authornamehash}{ce8819175bcd004841d34fed42634238}
+      \strng{authorfullhash}{ce8819175bcd004841d34fed42634238}
+      \field{labelalpha}{Jon21}
+      \field{sortinit}{2}
+      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{Decision-Making for Self-Replicating 3D Printed Robot Systems}
+      \field{type}{Ph.D. Dissertation}
+      \field{year}{2021}
+    \endentry
+    \entry{AbdelRahman2022Hierarchical}{article}{}
+      \name{author}{5}{}{%
+        {{hash=9fd680d7c46ccc689dc5c22dc80cedf9}{%
+           family={Abdel-Rahman},
+           familyi={A\bibinithyphendelim R\bibinitperiod},
+           given={Amira},
+           giveni={A\bibinitperiod}}}%
+        {{hash=5ca4d92332f6837e7ac1363503623bd8}{%
+           family={Cameron},
+           familyi={C\bibinitperiod},
+           given={Christopher},
+           giveni={C\bibinitperiod}}}%
+        {{hash=adf0762ed660a193284dd64970657a51}{%
+           family={Jenett},
+           familyi={J\bibinitperiod},
+           given={Benjamin},
+           giveni={B\bibinitperiod}}}%
+        {{hash=6ccff8f81955c3a9bf63a15a906a8400}{%
+           family={Smith},
+           familyi={S\bibinitperiod},
+           given={Miana},
+           giveni={M\bibinitperiod}}}%
+        {{hash=113a59d98dd032dc5604a9b82a5700b9}{%
+           family={Gershenfeld},
+           familyi={G\bibinitperiod},
+           given={Neil},
+           giveni={N\bibinitperiod}}}%
+      }
+      \strng{namehash}{2b9b8b4c8b9fd98b620dc22b77aaef3b}
+      \strng{fullhash}{9469fae13a29e417352fceeebb6205a1}
+      \strng{bibnamehash}{2b9b8b4c8b9fd98b620dc22b77aaef3b}
+      \strng{authorbibnamehash}{2b9b8b4c8b9fd98b620dc22b77aaef3b}
+      \strng{authornamehash}{2b9b8b4c8b9fd98b620dc22b77aaef3b}
+      \strng{authorfullhash}{9469fae13a29e417352fceeebb6205a1}
+      \field{labelalpha}{Abd+22}
+      \field{sortinit}{2}
+      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Communications Engineering}
+      \field{title}{Self-replicating hierarchical modular robotic swarms}
+      \field{volume}{1}
+      \field{year}{2022}
+      \field{pages}{35}
+      \range{pages}{1}
+      \verb{doi}
+      \verb 10.1038/s44172-022-00034-3
+      \endverb
+    \endentry
+    \entry{Chirikjian2022Entropy}{article}{}
+      \name{author}{1}{}{%
+        {{hash=0bb4fe91e5d0c99f7ecf93d5e8c0ca09}{%
+           family={Chirikjian},
+           familyi={C\bibinitperiod},
+           given={Gregory\bibnamedelima S.},
+           giveni={G\bibinitperiod\bibinitdelim S\bibinitperiod}}}%
+      }
+      \strng{namehash}{0bb4fe91e5d0c99f7ecf93d5e8c0ca09}
+      \strng{fullhash}{0bb4fe91e5d0c99f7ecf93d5e8c0ca09}
+      \strng{bibnamehash}{0bb4fe91e5d0c99f7ecf93d5e8c0ca09}
+      \strng{authorbibnamehash}{0bb4fe91e5d0c99f7ecf93d5e8c0ca09}
+      \strng{authornamehash}{0bb4fe91e5d0c99f7ecf93d5e8c0ca09}
+      \strng{authorfullhash}{0bb4fe91e5d0c99f7ecf93d5e8c0ca09}
+      \field{labelalpha}{Chi22}
+      \field{sortinit}{2}
+      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{arXiv preprint arXiv:2202.02938}
+      \field{title}{Entropy, Symmetry, and the Difficulty of Self-Replication}
+      \field{year}{2022}
+    \endentry
+    \entry{Slagel2024FormalRuntimeAssurance}{inproceedings}{}
+      \name{author}{5}{}{%
+        {{hash=fcceeeafc8718145e17107d83ef41dd0}{%
+           family={Slagel},
+           familyi={S\bibinitperiod},
+           given={J.\bibnamedelimi Tanner},
+           giveni={J\bibinitperiod\bibinitdelim T\bibinitperiod}}}%
+        {{hash=c8790b94304de316129b4ceb53eba16d}{%
+           family={White},
+           familyi={W\bibinitperiod},
+           given={Lauren\bibnamedelima M.},
+           giveni={L\bibinitperiod\bibinitdelim M\bibinitperiod}}}%
+        {{hash=afb086fe3c03d940c4221ebe72060cd2}{%
+           family={Dutle},
+           familyi={D\bibinitperiod},
+           given={Aaron},
+           giveni={A\bibinitperiod}}}%
+        {{hash=d9b375b03eb3b68dc0569be9dee325ab}{%
+           family={Muñoz},
+           familyi={M\bibinitperiod},
+           given={César\bibnamedelima A.},
+           giveni={C\bibinitperiod\bibinitdelim A\bibinitperiod}}}%
+        {{hash=d016e14a21a3e4d47de505d3204b1ea4}{%
+           family={Crespo},
+           familyi={C\bibinitperiod},
+           given={Nicolas},
+           giveni={N\bibinitperiod}}}%
+      }
+      \list{location}{1}{%
+        {Mountain View, CA, USA}%
+      }
+      \list{publisher}{1}{%
+        {Springer}%
+      }
+      \strng{namehash}{80c2215755ed37b27d0a0eb34f2a6882}
+      \strng{fullhash}{3c6fb0d95e3bb4fba7ba016d692f84b6}
+      \strng{bibnamehash}{80c2215755ed37b27d0a0eb34f2a6882}
+      \strng{authorbibnamehash}{80c2215755ed37b27d0a0eb34f2a6882}
+      \strng{authornamehash}{80c2215755ed37b27d0a0eb34f2a6882}
+      \strng{authorfullhash}{3c6fb0d95e3bb4fba7ba016d692f84b6}
+      \field{labelalpha}{Sla+24}
+      \field{sortinit}{2}
+      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{booktitle}{Proceedings of NASA Formal Methods (NFM 2024)}
+      \field{month}{6}
+      \field{series}{Lecture Notes in Computer Science}
+      \field{title}{A Formal Verification Framework for Runtime Assurance}
+      \field{year}{2024}
+      \field{pages}{322\bibrangedash 328}
+      \range{pages}{7}
+      \verb{doi}
+      \verb 10.1007/978-3-031-60698-4_19
+      \endverb
+    \endentry
+  \enddatalist
+\endrefsection
+\endinput
+

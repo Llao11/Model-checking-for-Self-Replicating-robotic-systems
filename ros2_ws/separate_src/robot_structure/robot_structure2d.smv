@@ -99,7 +99,6 @@ DEFINE
 MODULE main
 
 VAR
-    -- Joint angles: 0 = up, 9 = right, 18 = down, 27 = left, etc.
     a1 : 0..35;
     a2 : 0..35;
     a3 : 0..35;
@@ -113,9 +112,20 @@ DEFINE
     endX := block3.x_end;
     endY := block3.y_end;
 
--- SPEC: the tip always stays within a 3x3 square
+    error := 2; -- endX and endY coordinates error while checking reachability
+    checkX := 20;
+    checkY := 20;
+    endX_inside_limits := (endX <= (checkX + error) & endX >= (checkX - error));
+    endY_inside_limits := (endY <= (checkY + error) & endY >= (checkY - error));
+    
 -- INVAR  endX >= -3 & endX <= 3 & endY >= -3 & endY <= 3
 
-CTLSPEC 
-EF (endX <=21 & endX>=19 & endY <= 21 & endY>=19)  -- can the tip reach (0,3)?
+-- ---------- Reachability specification------------------------------------------
+
+LTLSPEC 
+     -- G F !(endX <=22 & endX>=18 & endY <= 22 & endY>=18)
+     G F !(endX_inside_limits & endX_inside_limits)
+
+-- CTLSPEC 
+     -- EF (endX <=21 & endX>=19 & endY <= 21 & endY>=19)
 
