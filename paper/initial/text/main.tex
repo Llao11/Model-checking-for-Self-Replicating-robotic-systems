@@ -1,0 +1,56 @@
+\begin{frontmatter}
+
+    \begin{abstract}
+Self-replicating robotic systems (SRRS) promise a great potential for space 
+exploration, in-situ construction, and resilient infrastructure, yet critical importance
+and complex interactions make traditional testing insufficient 
+to guarantee safety or correctness of such system. 
+
+This initial research investigates how formal verification
+and based model checking— can be integrated into the design 
+loop of SRRS to provide provable guarantees of liveness, safety, and functional 
+correctness. 
+
+We first survey existing verification techniques and classify 
+state-of-the-art model-checking algorithms with respect to their scalability 
+and suitability for robotics. Building on this analysis, we propose a tool-
+supported workflow that automatically extracts finite-state abstractions from 
+ROS–Gazebo simulations: mechanical structure is captured from URDF/SDF files,
+while behaviour is mined from Python ROS nodes and logged execution traces
+. The resulting models are compiled to NuSMV and checked against temporal
+-logic specifications that encode key replication properties
+
+An experimental test-bed based on modular robots serves as the reference platform; 
+we evaluate model-checking variants on representative replication 
+scenarios, and try to use counter-example to improve a system.
+By linking robots  simulation to rigorous formal analysis, the work provides a reproducible 
+pathway for checking of next-generation self-replicating robots.
+    
+\end{abstract}
+
+    \tableofcontents
+
+    % \chapter*{Acknowledgements} % optional
+    % I thank my cat Bubbles!
+    % \listoffigures % optional
+    % \listoftables % optional
+\end{frontmatter}
+
+\chapter{Introduction} \label{introduction}
+\input{text/introduction.tex}
+
+\chapter{Background} \label{background}
+\input{text/backgroundFV.tex}
+\newpage
+\input{text/backgroundSRRS.tex}
+\newpage
+\input{text/research_questions_methodology.tex}
+
+
+% Bibliography
+\printbibliography[heading=bibintoc]
+
+% Appendix
+\appendix
+\chapter{Appendix}
+This was just missing.

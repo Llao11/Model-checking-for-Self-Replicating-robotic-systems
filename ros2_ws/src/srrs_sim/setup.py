@@ -37,6 +37,7 @@ setup(
             'robot_controller_keyboard = srrs_sim.robot_controller_keyboard:main',
             'robot_controller_gui = srrs_sim.robot_controller_gui:main',
             'SRRSController = srrs_sim.SRRSController:main',
+            'PartSpawner = srrs_sim.PartSpawner:main',
         ],
     },
 )

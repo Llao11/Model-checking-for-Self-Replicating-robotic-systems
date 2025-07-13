@@ -26,23 +26,22 @@
     <!-- <plugin filename="gz_ros2_control-system" name="gz_ros2_control::GazeboSimROS2ControlPlugin">
       <parameters>$(find srrs_sim)/config/robot_controller.yaml</parameters>
     </plugin> -->
-    <!-- <plugin
-      filename="libgz-sim8-detachable-joint-system.so"
-      name="gz::sim::systems::DetachableJoint">
+    <plugin filename="libgz-sim8-detachable-joint-system.so" name="gz::sim::systems::DetachableJoint">
       <parent_link>part</parent_link>
-      <child_model>base</child_model>
-      <child_link>base_link</child_link>
-      <attach_topic>attach_obj_link1</attach_topic>
-      <detach_topic>detach_obj_link1</detach_topic>
-      <output_topic>detachable_obj_link_state1</output_topic>
-    </plugin> -->
+      <child_model>robot</child_model>
+      <child_link>block0_fix</child_link>
+      <attach_topic>attach_link1_obj_2</attach_topic>
+      <detach_topic>detach1_objects</detach_topic>
+      <output_topic>detachable_obj_link1_state2</output_topic>
+      <suppress_child_warning>true</suppress_child_warning>
+    </plugin>
     <plugin filename="libgz-sim8-detachable-joint-system.so" name="gz::sim::systems::DetachableJoint">
       <parent_link>part</parent_link>
       <child_model>robot</child_model>
       <child_link>block14fix</child_link>
-      <attach_topic>attach_obj_link2</attach_topic>
-      <detach_topic>detach_obj_link2</detach_topic>
-      <output_topic>detachable_obj_link_state2</output_topic>
+      <attach_topic>attach_link2_obj_2</attach_topic>
+      <detach_topic>detach2_objects</detach_topic>
+      <output_topic>detachable_obj_link2_state2</output_topic>
       <suppress_child_warning>true</suppress_child_warning>
     </plugin>
   </gazebo>

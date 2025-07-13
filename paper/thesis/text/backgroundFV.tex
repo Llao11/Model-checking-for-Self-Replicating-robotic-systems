@@ -1,0 +1,490 @@
+\section {Formal verification overview}
+Formal Methods refers to mathematically rigorous techniques and
+tools for the specification, design and verification of software and
+hardware systems.\\ 
+Expanding this definition Formal methods 
+can be used for formal description of the system (specification) 
+on some level of abstraction, program synthesis (design) according to specification
+and verification of a system to prove that model of system under consideration 
+satisfies some properties.
+
+%Let us get started by citing \cite{BeckKKF13}!
+%So what did \citeauthor{BeckKKF13} do in \citeyear{BeckKKF13}?
+%Maybe it is answered in \cref{introduction} on page~\pageref{introduction}?
+
+% You can look it up on \url{https://en.wikipedia.org/wiki/Pythagorean_theorem}.
+Formal verification techniques can be thought of as comprising three parts \cite{HuthR1}:
+\begin{itemize}
+    \item a framework for modelling systems, typically a description language;
+    \item a specification language for describing the properties to be verified;
+    \item a verification method to establish whether the description of a system satisfies the specification.
+\end{itemize}
+These methods and techniques of verification include:
+\begin{enumerate}
+
+    \item SAT solving - operate on propositional logic 
+
+    \item SMT solving (and tools like Z3) extend this to first-order logic,
+        integrating theories such as arithmetic or arrays.
+
+    \item Relational model finding (e.g., Alloy) 
+
+    \item Model checking (e.g., NuSMV) exhaustively explore state-space against CTL/LTL specifications.
+
+    \item Interactive theorem provers (e.g., Coq/Rocq, Isabelle/HOL) 
+\end{enumerate}
+
+
+Approaches to verification can be classified according to the following criteria \cite{HuthR1} pages 172-173:\\
+\textbf{Proof-based vs. model-based}\\
+In a proof-based approach, the system description 
+is a set of formulas $\Gamma$ (in a suitable logic) and the specification is another formula $\phi$. 
+The verification method consists of trying to find a proof that $\Gamma \vdash \phi$. 
+In a model-based approach, the system is represented by a model M for an appropriate logic.
+The specification is again represented by a formula $\phi$ and the verification method consists 
+of computing whether a model M satisfies $\phi$ ($M \models \phi$). This computation is usually automatic
+for finite models. Logical proof systems are often sound and complete, meaning that $\Gamma \vdash \phi$ (provability) holds if, and only
+if, $\Gamma\models\phi$(semantic entailment) holds, where the latter is defined 
+as follows: 
+for all models M, if for all $\psi \in \Gamma$ we have M $\models\psi$, then M $\models\phi$.
+Thus, we see that the model-based approach is potentially simpler than
+the proof-based approach, for it is based on a single model M rather
+than a possibly infinite class of them.
+
+\textbf{Degree of automation. }\\ 
+Approaches differ on how automatic the method is; 
+the extremes are fully automatic and fully manual. Many
+of the computer-assisted techniques are somewhere in the middle.
+
+\textbf{Full- vs. property-verification.}\\ 
+The specification may describe a single property of the system, or it may describe its full behavior. 
+The latter is typically expensive to verify.
+Intended domain of application, which may be hardware or software;
+sequential or concurrent; reactive or terminating; etc. A reactive system
+is one which reacts to its environment and is not meant to terminate
+(e.g., operating systems, embedded systems and computer hardware).
+
+\textbf{Pre- vs. post-development. }\\ 
+Verification is of greater advantage if introduced early in the course of system development, because errors
+caught earlier in the production cycle are less costly to rectify. (It is
+alleged that Intel lost millions of dollars by releasing their Pentium chip with the FDIV error.
+
+
+\subsection {SAT solvers}
+
+Propositional logic - consider  propositions and relations between them and 
+constructions of argument based on them.
+
+Propositions - facts or statements about the world  that can be true or false
+. Also defined as atomic propositions or Atoms.
+Some propositions can be described in natural language as atomic or indecomposable 
+declarative sentences) \cite{HuthR1}.
+
+
+Atomic propositions can be connected to each other with logical connectives and compose propositional formulas.
+The most common connective relations are:
+\begin{itemize}
+    \item Negation $ \neg $
+    \item Conjunction $ \land $ 
+    \item Disunction $ \lor $ 
+    \item Implication $ \rightarrow $
+\end{itemize}
+
+The Backus Naur form (BNF) for propositional logic well-formed formula:
+\[ \phi ::= p\ |\ (\neg \phi)\ |\ (\phi \land \phi)\ |\ (\phi\lor\phi)\ |\ (\phi\rightarrow\phi)    \]
+where p - is any atomic proposition.
+
+Based on these we can construct a system of reasoning: from some set of formulas we can infer (prove) another formula that can be true or false:
+\[ \phi_1, \phi_2, \phi3, ... \phi_n \vdash \psi \]
+Such formulas called sequents, where on the left side there is a set of formulas called premises and on the right side - a formula called conclusion
+
+
+Another relation between logical formulas  is semantic entailment:
+\[ \phi_1, \phi_2, \phi3, ... \phi_n \models \psi \]
+it means that if propositional logic formulas $\phi_1 .. \phi_n$ evaluate to True, then formula $\psi$ also evaluates to True.
+
+The formula $\phi$ is valid if for all valuations of atomic propositions in formula it valuates to True:
+\[ \models \phi \]
+
+
+SAT solver is a program which aims to solve the Boolean satisfiability problem 
+(SAT), where the Boolean satisfiability problem sometimes called 
+propositional satisfiability asks whether there 
+exists an interpretation that satisfies a given Boolean formula. 
+
+Given formula  $\phi$ is \textbf{satisfiable} if it has a valuation in which it valuates to True.:
+
+In other words, it asks whether the formula's variables can be 
+consistently replaced by the values TRUE or FALSE to make the formula 
+evaluate to TRUE. If this is the case, the formula is called satisfiable, 
+else unsatisfiable.\cite{HuthR1}.
+
+SAT problem is NP-complete, as a result, only algorithms with exponential 
+worst-case complexity are known. In spite of this, efficient and 
+scalable algorithms for SAT were developed during the 2000s, which have 
+contributed to dramatic advances in the ability to automatically 
+solve problem instances involving tens of thousands of variables and 
+millions of constraints.%[https:en.wikipedia.org/wiki/SAT_solver -1.]
+
+SAT solvers usually begin by converting a problem to conjunctive normal form (CNF).
+\textbf{Conjunctive normal form (CNF)} - as a conjunction of clauses, where each clause is a disjunction of literals.
+Literal is an atomic proposition or a negated atomic proposition.
+Conjunctive normal form allows easy check of validity of a formula which otherwise take times exponential to number of atoms.
+
+
+
+
+\subsection {SMT}
+Propositional logic is limited to express relations between logical components other than equivalent to natural language: \emph{not, and, or, if..then} and 
+declarative sentences that can only be True or False. 
+
+In order to be able to operate with finer logical structures we need to enrich the language.
+The necessity to solve this problem lead to design of Predicate logic or first-order logic.\\
+In First-order logic we introduce:\\
+\begin{itemize}
+    
+    \item Variables that represent individual objects.
+    \item Functions $\mathcal{F}$ that refer to objects.
+    \item Predicates $\mathcal{P}$ - symbols that semantically represents some property or relation.
+    \item Quantifiers: universal $\forall$ and existential $\exists$.
+\end{itemize}
+
+
+The Backus Naur form (BNF) for predicate logic formulas:
+
+\[ \phi ::= P(t_1,t_2,...t_n)\ |\ (\neg \phi)\ |\ (\phi \lor \phi)\  |\ (\phi \land \phi)\   |\ (\phi \rightarrow \phi)\ |\ (\forall x \phi)\ |\ (\exists x \phi)\ \]
+
+where,\\ 
+t - called Terms and can be variable, constants or functions on terms  \[ t ::= x\ |\ c\ |\ f(t,...t) \]
+
+Atomic formulas are predicates applied to terms: $P(t_1,t_2,...t_n) $
+
+Variables can be free (supplied from outside the formula) or bounded by some quantifier.
+
+Unlike propositional logic, in predicate logical we cannot just evaluate formulas based on given valuation by assigning True or False to the variables.  
+We require a model of all function and predicate symbols involved.\\ 
+A model M for a first‑order logic contains: 
+\begin{itemize}
+    \item Domain A is a non‑empty set of individuals, mapping each variable to a value in A
+    \item Set of functions where n-ary function is interpreted as a concrete function $f^m : A^n \rightarrow A$.
+    \item Set of predicates n-ary predicate is interpreted as a relation $P^m \subseteq A^n $ 
+\end{itemize}
+
+Truth in a model is defined recursively:
+
+\[M \models P(t_1,...,t_n) iff (t_1,...,t_n) \in P^m \]
+
+% TODO!!! formula and citations
+\[M\models\ \text{ forall }\ x\phi\ \text{iff for every a} \ \in A, M \models [x \rightarrow a ] \phi \]
+\[M\models\ \text{exists} \ x\phi \ \text{iff for some a} \  \in A, M \models [x \rightarrow a ] \phi \]
+
+A sentence has no free variables, so its truth value depends solely on M.  
+
+We write $\Gamma\models\psi$ (semantic entailment) when every model that makes all formulas in $\Gamma$ true also makes $\psi $ true. 
+
+Soundness and completeness ensure $\Gamma\vdash\psi$ (provability) exactly when $\Gamma\models\psi$,
+but the two perspectives complement each other: proofs are constructive, while counter‑models establish non‑entailment.
+
+
+
+\section{Model checking}
+
+Model checking is based on temporal logic. 
+The model in temporal logic described as a system with few states that can change with time.
+The formula is not statically true or false in a model, as it is in propositional and predicate logic,
+it can be true in some states and false in others, the static notion is replaced 
+by a dynamic one \cite{HuthR1}.
+
+In model checking, the models M are transition systems and the properties $\phi$ are formulas in temporal logic. 
+To verify that a system satisfies a property, we must do three things:
+\begin{enumerate}
+    \item model the system using the description language of a model checker, arriving at a model M;
+    \item code the property using the specification language of the model checker, resulting in a temporal logic formula $\phi$;
+    \item Run the model checker with inputs M and $\phi$.
+\end{enumerate}
+
+
+
+Model checking is a core approach in Formal verification that involves an algorithmic search of the state space of a system model to check if a
+given property (specification) holds, where:\\
+Model- is an abstract representation of the system (often a state-transition graph or a
+program) capturing its possible states and transitions. The model can be described in a modeling language
+(like Promela for SPIN, or as a transition system in a tool like NuSMV). \\
+Specification- is a formal property that the model should satisfy, commonly expressed in a temporal logic such as LTL or CTL. For example, an LTL
+specification might state that “whenever request happens, eventually response occurs” or a CTL property
+might require that “in all execution paths, a certain error state is never reached.” \\ 
+
+
+\subsection {Classification of Model checking methods}
+Model checking can be classified based on time concept into:
+\textbf{linear-time temporal logic } and \textbf{branching time logic.}
+\cite{HuthR1}
+\\
+
+
+\subsubsection{Linear-time temporal logic }
+Linear-time temporal logic (LTL) considers time as a set of paths, where each path 
+is a sequence of time instances \cite{HuthR1}.
+LTL has the following syntax in Backus Naur form:
+\[ \phi ::= T\ |\  \perp |\  p\ |\  (\neg\phi)\  |\  (\phi \land \phi)\  |\  (\phi \lor \phi) |\ (\phi \rightarrow \phi)\   \]
+\[|\   (X \phi)\  |\  (F \phi)\  |\  (G \phi)\  |\  (\phi\ U\ \phi)\  |\  (\phi\ W\ \phi)\  |\  (\phi\ R\ \phi)\ \]
+The connectives $X, F, G, U, W, R$ called temporal connectives, because they describe relations between states in different moments of time.
+The meaning of these connectives described in Table \ref{tab:LTL1}\\
+
+\begin{center}
+ 
+\begin{table}[h!]   
+    \begin{tabular}{| m{0.6cm} | m{3.5cm} | m{11cm} |}
+        \hline
+        X & Next & $\phi$ must hold in the very first successor state on the chosen path.\\
+        \hline
+        F & Finally ($F \phi$) & $\phi$ must hold at some future state on the path (i.e., “eventually $\phi$”).\\
+        \hline
+        G & Globally ($G \phi$) & $\phi$ must hold at every state on the entire path (“always $\phi$”).\\
+        \hline
+        U & Until ($\phi U \psi$) & $\psi$ must be true at a future state, $\phi$ must stay true at every state before that one.\\
+        \hline
+        W & Weak until ($\phi W \psi$) & either ($\phi U \psi$) holds or $\phi$ stays true forever if $\psi$ never becomes true.\\
+        \hline
+        R & Release ($\phi R \psi$) & $\psi$ must hold up to and including the first state where 
+        $\phi$ becomes true; if $\phi$ never becomes true, $\psi$ must hold forever (the dual of Until).\\
+        \hline
+    \end{tabular}
+    \caption{LTL temporal connectives}
+\end{table}
+    \label{tab:LTL1}
+
+\end{center}
+
+In LTL, model can be represented as a transition system \cite{DGL1}.\\
+Transition system $T$:
+\[ T = (S,\stackrel{a}{\rightarrow}, L,s) \] 
+where:\\
+S - set of states, called the space states of T,\\
+$\stackrel{a}{\rightarrow}$ - transitions (binary relation of states), associated with some action $a \in A$\\
+L - labelling function that reflects states to propositional atoms\\
+s - initial state of T, can be omitted if we want to describe only global structure.\\
+Sometimes if we consider only one action label we can omit labeling transition: $\rightarrow$.\\
+A path $\pi$ in a transition system $T$ is a finite or infinite sequence of states and (optionally) actions
+which transform each state into its successor: $s_0 \stackrel{a_0}{\rightarrow} s_1 \stackrel{a_1}{\rightarrow} ... $
+
+Trace or computation in a transition system is a finite or infinite sequence of state descriptions along the path:
+$L(s_0) \stackrel{a_0}{\rightarrow} L(s_1) \stackrel{a_1}{\rightarrow} ... $
+
+\subsubsection{Branching temporal logic (CTL)}
+Branching temporal logic represents time as a tree rooted in present and 
+branching into the future, the other name is Computation Tree logic (CTL).
+LTL implicitly quantifies universally over paths \cite{DGL1}.  Therefore, properties which 
+assert the existence of a path cannot be expressed in LTL. 
+We can solve this problem by considering the negation of the property
+in question. For example to check whether there exists a path from s satisfying the LTL formula $\phi$, we check whether all paths
+satisfy $\neg\phi$; a positive answer to this is a negative answer to our original question, and vice versa.
+We used this approach when analysing the ferryman puzzle in the previous section. 
+However, properties which mix universal and existential path quantifies cannot in general be model
+checked using LTL approach, because the complement formula still has a mix.
+Branching-time logics solve this problem by allowing us to quantify explicitly over paths.
+
+CTL has the following syntax in Backus Naur form:
+\[ \phi ::= T\ |\  \perp |\  p\ |\  (\neg\phi)\  |\  (\phi \land \phi)\  |\  
+(\phi \lor \phi) |\ (\phi \rightarrow \phi)\   \]
+
+\[|\   (AX \phi)\  |\  (EX \phi)\  |\  (AF \phi)\  |\  (EF \phi)\  |\  
+(AG \phi)\  |\  (EG \phi)\  |\  A[\phi\ U\ \phi]\  |\  E[\phi\ U\ \phi]\  \]
+
+New introduced quantifiers A and E mean:\\
+$A \phi $ - formula $\phi$ for all paths \\
+$E \phi $ - exists a path that formula $\phi$\\
+Connectives X,F,G cannot occure without being preceded by A or E.\\
+Weak until W and release R are usually not included in CTL, but can be derived.
+
+
+\subsubsection{Temporal logic (CTL*)}
+\begin{figure}[!h]
+    \centering
+    \includegraphics[width=12cm]{CTL} 
+    \caption{LTL, CTL and CTL* logic relation \cite{HuthR1}}
+    \label{fig:CTL}
+\end{figure}
+
+
+\subsubsection{Statistical Model Checking (SMC)}
+Some systems have huge or continuous state spaces (e.g. complicated analog components, 
+or software with random timing), or they exhibit probabilistic behavior 
+(randomized protocols, hardware failures) where one is interested in quantitative properties (like
+"the request will be served within 1s with probability at least 0.99"). 
+Statistical Model Checking (SMC) is an approximate verification technique that uses simulation 
+and statistical methods instead of exhaustive exploration \cite{Younes2002AcceptanceSampling}. 
+
+SMC treats the model checking problem as a statistical inference problem \cite{Younes2006StatisticalPMC}.
+It executes a number of simulations (random or guided) of the system. 
+Checks whether each simulation trace satisfies the property $\phi$ 
+(which often is a bounded temporal logic property like “within T time units,
+something happens”). 
+Based on the outcomes, it uses statistics (like hypothesis testing or estimation with
+confidence intervals) to infer with high confidence whether the property holds with required probability.
+
+SMC was pioneered by Younes in the 2000s \cite{Younes2002AcceptanceSampling}. 
+There are two main modes: hypothesis testing (e.g. "check if the probability 
+$P($\textit{property}$) > p$ with confidence 95\%") and estimation (estimate the
+probability itself within some error bound). 
+
+They adopt the continuous stochastic logic (CSL) as our formalism for expressing 
+probabilistic real-time properties of discrete event systems. CSL has previously 
+been proposed as a formalism for expressing temporal and probabilistic
+properties of continuous-time Markov chains (CTMCs) by \citeauthor{Aziz1996VerifyingCTMC} 
+\cite{Aziz1996VerifyingCTMC}.
+
+A CSL formula is either a state formula or a path formula.
+
+The Backus Naur form (BNF) for CSL logic well-formed formula:
+
+State formulas:
+\[
+    \phi ::= \text{true}\ |\ a\ |\ \neg \phi\ |\ \phi \land \phi\ |\ P_{\leq \theta} (\rho)(\phi)
+\]
+
+Path formulas:
+\[
+    \rho::= X \phi\ |\ \phi U_{\leq t} \phi
+\]
+Where $\phi$ is a state formula and  $\rho$ is a path formula.
+
+Tools like PRISM and its SMC extension, described in \cite{Kwiatkowska2011PRISM}, 
+STORM \cite{Dehnert2017Storm}, or PLASMA Lab \cite{Legay2016PlasmaLab} implement 
+statistical model checking for various kinds of stochastic systems.
+
+The obvious advantage is that SMC sidesteps the state explosion by not exploring the full
+state space – instead, it samples paths. 
+This makes it scalable to systems with enormous or even infinite state
+spaces, as long as we can simulate the system. It is also applicable to systems 
+with continuous dynamics or very large numbers of states where traditional model 
+checking is infeasible . Another benefit is ease of implementation: if there 
+is a simulator for your system, adding a statistical checker on top is easier 
+than building a full model checker. SMC naturally supports probabilistic properties 
+– e.g., verifying properties of a Markov Chain or Markov Decision Process by 
+sampling behaviors and using results like Chernoff or Hoeffding bounds to determine 
+if the property likely holds. Because it uses actual simulations, SMC can
+handle very complex nonlinear or black-box system aspects (treating them as 
+black boxes that just produce simulation traces).
+
+The trade-off is that SMC provides a confidence result, not a guarantee. It is probabilistic
+verification: it might say “with 99\% confidence the property holds with probability $\leq 0.97$”. There’s a small
+chance of error in the verification result (false positives/negatives bounded by the confidence level). Also,
+SMC may require a large number of simulations to reach high confidence, especially for rare events (if the
+property failing is a rare event, one might need many samples to observe it even once). Rare property
+verification is a known challenge – advanced importance sampling or rare event simulation techniques
+might be needed in such cases. 
+
+SMC can’t truly prove a property in the mathematical sense – it can only give statistical evidence.
+If a property almost always holds but has a corner-case failure, SMC
+might miss it if that scenario has very low probability and isn’t sampled. Thus, it sacrifices completeness.
+Another limitation is that SMC typically handles quantitative properties (often expressed in probabilistic
+temporal logics like PCTL or BLTL) – it’s not usually used for pure logical properties that are either true or
+false; it’s more for properties like “the probability of an event is at least p”.
+
+
+
+\subsubsection{Runtime Verification and Monitoring}
+
+Runtime verification (RV) is a technique that involves monitoring a running 
+system (or execution traces produced by it) against a formal specification \cite{Hinrichs2014ModelCheckRuntimeVerify}. 
+Unlike the other methods discussed, which are largely offline
+(analyzing a model mathematically), runtime verification is applied during execution. It can be seen as a
+lightweight formal method, sitting somewhere between testing and model checking: you instrument the
+system with monitors, and these monitors check whether the execution is satisfying the desired properties.
+If a violation is detected, it can be logged, or in some cases, a recovery action can be taken.
+
+Key components of runtime verification include:\\ 
+- A set of monitors or runtime assertions derived from the formal specification 
+(often temporal logic formulae or automata on traces).\\
+- An instrumentation of the system to report events to the monitors.\\
+- The monitors run in parallel with the system (or on logged traces)\\
+and detect property satisfaction or violation on the fly.
+
+For example, if you have a property “whenever interrupt is raised, service routine runs within 100ms,” a
+runtime monitor can watch for interrupts and check timing until service routine is called, flagging an error if
+the 100ms deadline is missed.
+
+Runtime verification avoids the state explosion problem entirely, because it doesn’t explore all
+behaviors — it only checks the actual behaviors that occur. Runtime verification 
+avoids the complexity of traditional formal verification techniques (like model 
+checking and theorem proving) by analyzing only one or a few execution traces 
+and by working directly with the actual system. This means it scales well to 
+very complex systems, since you’re just running the system (or a
+high-fidelity simulation of it) and the overhead is only in checking the property 
+on that run. It also has the advantage of checking the real system (no abstraction 
+or modeling error, since the code that runs is what’s verified against the property
+, at least for that run). It can catch errors in scenarios that were not anticipated
+by designers as soon as they occur in the field or during testing, thus serving 
+as a powerful debugging and validation aid. Runtime verification can be used 
+continuously in deployed systems for critical properties
+(e.g., a monitor that ensures no unauthorized file access operations occur, 
+and triggers an alarm if they do, providing a layer of security monitoring).
+Another plus is that runtime verification can sometimes detect issues that static model checking might miss
+due to environment assumptions. At runtime, the real environment provides inputs and the monitor can
+see violations under real conditions, including those hard-to-model aspects.
+
+
+The fundamental limitation is that runtime verification is not exhaustive. It 
+can only inspect the executions that actually happen (or a sample of them). 
+If a particular bug does not manifest in the observed runs, RV cannot detect 
+it. It provides no guarantee that “no bug exists” — only that “no bug was
+observed in the runs we monitored”. In other words, it lacks completeness/coverage
+, unlike model checking which (for a model) covers all behaviors by design. 
+Another challenge is performance overhead:
+monitors consume resources, and if properties are complex (say, specified in 
+LTL, which might require monitoring a suffix of the trace), the runtime checking 
+might slow the system or require buffering events.
+However, in many cases monitors can be optimized or run on a separate core, 
+and the overhead is manageable (reports of a few percent overhead for simple 
+monitors are common).
+Additionally, writing good monitors (formal properties) and instrumenting the 
+system requires effort. It’s easier than full verification, but still requires 
+formal specification skills. If one instrument too much or
+monitors too many properties, the overhead can become significant, or the system
+’s real-time behavior might be perturbed.
+
+
+Runtime verification is often used in safety-critical systems as an additional 
+runtime safety net. 
+For instance, in aerospace or automotive software, one might include monitors 
+for conditions like “no two actuators turn on simultaneously” 
+or “if sensor reading exceeds threshold , system enters safe mode
+within 1 second,” etc. NASA has explored RV for spacecraft software monitoring 
+during missions \cite{Slagel2024FormalRuntimeAssurance}(since you cannot model check the entire flight code with all 
+analog intricacies, but you can monitor key properties as
+the mission progresses). Runtime Verification has also become popular in security 
+(e.g., monitoring program execution for compliance with security policies). 
+For example, a monitor can watch system calls to detect a sequence that matches 
+a known attack pattern or a violation of a security automaton.
+Another domain is testing: during testing, using runtime monitors can greatly 
+increase the chance of noticing an issue. Instead of manually inspecting outputs
+, formal monitors can rigorously check that each test execution satisfies the 
+expected temporal properties. This is often called “monitoring oracles” in testing
+– formal specifications serve as test oracles at runtime.
+In summary, runtime verification does not replace model checking but complements 
+it. Where model checking cannot be applied (due to scale or undecidability), 
+or in deployed scenarios where you want continual assurance, RV provides a way 
+to leverage formal specifications dynamically. It trades completeness for scalability 
+and immediacy.
+
+% \subsection {Comparison of Model checking methods}
+
+
+% State explosion - the exponential growth of the state space with system parameters (like number of components or data bits).
+% Combating state explosion is a central theme in model checking research
+
+
+% \subsection {Application of Model checking}
+% \subsubsection{Hardware model checking}
+% \subsubsection{Software model checking}
+% \subsubsection{Reactive systems model checking}
+%
+% Reactive system: a system that maintains an
+% ongoing interaction with its environment, responding to inputs with outputs continually (examples include
+% operating systems, web servers, control systems). Reactive systems are typically non-terminating and
+% concurrency-intensive. 
+
+
+
+

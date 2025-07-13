@@ -1,15 +1,4 @@
-- ros_topic_name: "/attach_link_voxel"
-  gz_topic_name: "/attach_link_voxel"
-  ros_type_name: "std_msgs/msg/Empty"
-  gz_type_name: "gz.msgs.Empty"
-  direction: BIDIRECTIONAL
-
-- ros_topic_name: "/detach_link_voxel"
-  gz_topic_name: "/detach_link_voxel"
-  ros_type_name: "std_msgs/msg/Empty"
-  gz_type_name: "gz.msgs.Empty"
-  direction: BIDIRECTIONAL
-
+# ATTACH/DETACH to base
 - ros_topic_name: "/attach_link1"
   gz_topic_name: "/attach_link1"
   ros_type_name: "std_msgs/msg/Empty"
@@ -34,31 +23,20 @@
   gz_type_name: "gz.msgs.Empty"
   direction: BIDIRECTIONAL
 
+# DETACH all objects topics
+- ros_topic_name: "/detach1_objects"
+  gz_topic_name: "/detach1_objects"
+  ros_type_name: "std_msgs/msg/Empty"
+  gz_type_name: "gz.msgs.Empty"
+  direction: BIDIRECTIONAL
 
-# - ros_topic_name: "/attach_obj_link1"
-#   gz_topic_name: "/attach_obj_link1"
-#   ros_type_name: "std_msgs/msg/Empty"
-#   gz_type_name: "gz.msgs.Empty"
-#   direction: BIDIRECTIONAL
+- ros_topic_name: "/detach2_objects"
+  gz_topic_name: "/detach2_objects"
+  ros_type_name: "std_msgs/msg/Empty"
+  gz_type_name: "gz.msgs.Empty"
+  direction: BIDIRECTIONAL
 
-# - ros_topic_name: "/attach_obj_link2"
-#   gz_topic_name: "/attach_obj_link2"
-#   ros_type_name: "std_msgs/msg/Empty"
-#   gz_type_name: "gz.msgs.Empty"
-#   direction: BIDIRECTIONAL
-
-# - ros_topic_name: "/detach_obj_link1"
-#   gz_topic_name: "/detach_obj_link1"
-#   ros_type_name: "std_msgs/msg/Empty"
-#   gz_type_name: "gz.msgs.Empty"
-#   direction: BIDIRECTIONAL
-
-# - ros_topic_name: "/detach_obj_link2"
-#   gz_topic_name: "/detach_obj_link2"
-#   ros_type_name: "std_msgs/msg/Empty"
-#   gz_type_name: "gz.msgs.Empty"
-#   direction: BIDIRECTIONAL
-
+# CAMERAS sensor
 - ros_topic_name: "/camera1/image"
   gz_topic_name: "/camera1/image"
   ros_type_name: "sensor_msgs/msg/Image"
@@ -83,6 +61,7 @@
   gz_type_name: "gz.msgs.CameraInfo"
   direction: BIDIRECTIONAL
 
+# CONTACT sensor
 - ros_topic_name: "/robot/contact1"
   gz_topic_name: "/robot/contact1"
   ros_type_name: "ros_gz_interfaces/msg/Contacts"
@@ -95,6 +74,7 @@
   gz_type_name: "gz.msgs.Contacts"
   direction: BIDIRECTIONAL  
 
+# IMU
 - ros_topic_name: "/robot/imu1"
   gz_topic_name: "/robot/imu1"
   ros_type_name: "sensor_msgs/msg/Imu"
