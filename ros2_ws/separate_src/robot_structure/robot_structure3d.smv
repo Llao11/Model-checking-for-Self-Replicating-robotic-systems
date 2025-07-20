@@ -140,20 +140,23 @@ VAR
     pitch2 : 0..9;   -- link2
     yaw3 : 0..35;
     pitch3 : 0..9;   -- link3
+    yaw4 : 0..35;
+    pitch4 : 0..9;   -- link3
 
     link1 : Block(yaw1, pitch1, LEN, 0, 0, 0);                    
     link2 : Block(yaw2, pitch2, LEN, link1.x_end, link1.y_end, link1.z_end);
     link3 : Block(yaw3, pitch3, LEN, link2.x_end, link2.y_end, link2.z_end);
+    link4 : Block(yaw4, pitch4, LEN, link3.x_end, link3.y_end, link3.z_end);
 
 DEFINE
     LEN := 10;           -- same length for all three links
-    endX := link3.x_end;
-    endY := link3.y_end;
-    endZ := link3.z_end;
+    endX := link4.x_end;
+    endY := link4.y_end;
+    endZ := link4.z_end;
 
 
     error := 2; -- endX and endY coordinates error while checking reachability
-    checkX := 10;
+    checkX := 35;
     checkY := 10;
     checkZ := 10;
     endX_inside_limits := (endX <= (checkX + error) & endX >= (checkX - error));
@@ -161,10 +164,11 @@ DEFINE
     endZ_inside_limits := (endZ <= (checkZ + error) & endZ >= (checkZ - error));
 -- ---------- Reachability specification------------------------------------------
 
-LTLSPEC 
+-- LTLSPEC 
     -- G F !(endX = 0 & endY = 0 & endZ = 9)
-    G F !(endX_inside_limits & endX_inside_limits)
--- CTLSPEC 
---      EF (endX = 3 & endY = 5 & endZ = 15)
+    -- G F !(endX_inside_limits & endY_inside_limits & endZ_inside_limits)
+CTLSPEC 
+     -- EF (endX = 3 & endY = 5 & endZ = 15)
+     EF (endX_inside_limits & endY_inside_limits & endZ_inside_limits)
 
 
