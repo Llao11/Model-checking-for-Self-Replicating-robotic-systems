@@ -1,0 +1,174 @@
+-- 3-D robot link with yaw ψ and pitch φ (10° discretisation)
+-- Parameters:
+--   yawVar   : VAR  0..35   ( multiples of 10°)
+--   pitchVar : VAR  0..9    ( multiples of 10°)
+--   LEN      : constant length
+--   baseX,Y,Z: absolute parent-joint coordinates
+-------------------------------------------------------------------------------
+MODULE Block(yawVar, pitchVar, LEN, baseX, baseY, baseZ)
+
+DEFINE
+-- sin and cos [0,1] => [0,100]
+    sinYaw := case
+        yawVar = 0  :   0; 
+        yawVar = 1  : 17;  
+        yawVar = 2  : 34; 
+        yawVar = 3  : 50; 
+        yawVar = 4  : 64; 
+        yawVar = 5  : 77;
+        yawVar = 6  : 87;
+        yawVar = 7  : 94;
+        yawVar = 8  : 98;
+        yawVar = 9  : 100;
+        yawVar = 10 : 98;
+        yawVar = 11 : 94;
+        yawVar = 12 : 87;
+        yawVar = 13 : 77;
+        yawVar = 14 : 64;
+        yawVar = 15 : 50;
+        yawVar = 16 : 34;
+        yawVar = 17 : 17;
+        yawVar = 18 :   0; 
+        yawVar = 19 :-17;
+        yawVar = 20 :-34;
+        yawVar = 21 :-50;
+        yawVar = 22 :-64;
+        yawVar = 23 :-77;
+        yawVar = 24 :-87;
+        yawVar = 25 :-94;
+        yawVar = 26 :-98;
+        yawVar = 27 :-100;
+        yawVar = 28 :-98; 
+        yawVar = 29 :-94;
+        yawVar = 30 :-87;
+        yawVar = 31 :-77;
+        yawVar = 32 :-64;
+        yawVar = 33 :-50;
+        yawVar = 34 :-34;
+        yawVar = 35 :-17;
+        TRUE : 0;
+    esac;
+
+    cosYaw := case
+        yawVar = 0  : 100; yawVar = 1  : 98;  yawVar = 2  : 94;
+        yawVar = 3  : 87;
+        yawVar = 4  : 77;
+        yawVar = 5  : 64;
+        yawVar = 6  : 50;
+        yawVar = 7  : 34;
+        yawVar = 8  : 17;
+        yawVar = 9  :   0 ; 
+        yawVar = 10 :-17;  
+        yawVar = 11 :-34;
+        yawVar = 12 :-50;
+        yawVar = 13 :-64;
+        yawVar = 14 :-77;
+        yawVar = 15 :-87;
+        yawVar = 16 :-94;
+        yawVar = 17 :-98;
+        yawVar = 18 :-100;
+        yawVar = 19 :-98;
+        yawVar = 20 :-94;
+        yawVar = 21 :-87;
+        yawVar = 22 :-77;
+        yawVar = 23 :-64;
+        yawVar = 24 :-50;
+        yawVar = 25 :-34;
+        yawVar = 26 :-17;
+        yawVar = 27 :   0;
+        yawVar = 28 : 17;
+        yawVar = 29 : 34;
+        yawVar = 30 : 50;
+        yawVar = 31 : 64;
+        yawVar = 32 : 77;
+        yawVar = 33 : 87;
+        yawVar = 34 : 94;
+        yawVar = 35 : 98;
+        TRUE : 0;
+    esac;
+
+    sinPitch := case     
+        pitchVar = 0 :  0;
+        pitchVar = 1 : 17;
+        pitchVar = 2 : 34;
+        pitchVar = 3 : 50;
+        pitchVar = 4 : 64;
+        pitchVar = 5 : 77;
+        pitchVar = 6 : 87;
+        pitchVar = 7 : 94;
+        pitchVar = 8 : 98;
+        pitchVar = 9 : 100;
+        TRUE : 0;
+    esac;
+
+    cosPitch := case
+        pitchVar = 0 : 100;
+        pitchVar = 1 : 98;
+        pitchVar = 2 : 94;
+        pitchVar = 3 : 87;
+        pitchVar = 4 : 77;
+        pitchVar = 5 : 64;
+        pitchVar = 6 : 50;
+        pitchVar = 7 : 34;
+        pitchVar = 8 : 17;
+        pitchVar = 9 :  0;
+        TRUE : 0;
+    esac;
+
+    -- ----- Cartesian deltas (integer, scaled ÷10000) -------------------- 
+    deltaX := (LEN * cosPitch * cosYaw) / 10000;
+    deltaY := (LEN * cosPitch * sinYaw) / 10000;
+    deltaZ := (LEN * sinPitch)          / 100;
+
+ ----- absolute tip position ----------------------------------------
+    x_end := baseX + deltaX;
+    y_end := baseY + deltaY;
+    z_end := baseZ + deltaZ;
+
+
+
+
+ --===== MAIN ========================================
+
+MODULE main
+
+VAR
+    -- joint angles (nondet. for exploration)
+    yaw1 : 0..35;
+    pitch1 : 0..9;   -- yaw / pitch  of link1
+    yaw2 : 0..35;
+    pitch2 : 0..9;   -- link2
+    yaw3 : 0..35;
+    pitch3 : 0..9;   -- link3
+    yaw4 : 0..35;
+    pitch4 : 0..9;   -- link3
+
+    link1 : Block(yaw1, pitch1, LEN, 0, 0, 0);                    
+    link2 : Block(yaw2, pitch2, LEN, link1.x_end, link1.y_end, link1.z_end);
+    link3 : Block(yaw3, pitch3, LEN, link2.x_end, link2.y_end, link2.z_end);
+    -- link4 : Block(yaw4, pitch4, LEN, link3.x_end, link3.y_end, link3.z_end);
+
+DEFINE
+    LEN := 10;           -- same length for all three links
+    endX := link3.x_end;
+    endY := link3.y_end;
+    endZ := link3.z_end;
+
+
+    error := 2; -- endX and endY coordinates error while checking reachability
+    checkX := 19;
+    checkY := 10;
+    checkZ := 10;
+    endX_inside_limits := (endX <= (checkX + error) & endX >= (checkX - error));
+    endY_inside_limits := (endY <= (checkY + error) & endY >= (checkY - error));
+    endZ_inside_limits := (endZ <= (checkZ + error) & endZ >= (checkZ - error));
+-- ---------- Reachability specification------------------------------------------
+
+-- LTLSPEC 
+    -- G F !(endX = 0 & endY = 0 & endZ = 9)
+    -- G F !(endX_inside_limits & endY_inside_limits & endZ_inside_limits)
+CTLSPEC 
+     -- EF (endX = 3 & endY = 5 & endZ = 15)
+     AF !(endX_inside_limits & endY_inside_limits & endZ_inside_limits)
+
+
