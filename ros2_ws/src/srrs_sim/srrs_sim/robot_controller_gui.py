@@ -46,12 +46,12 @@ class GUI:
         self.btn_fix1_base = tk.Button(
             self.root,
             text="Fix block1 to base",
-            command=lambda: self.controller_node.fix_1(gui=self),
+            command=lambda: self.controller_node.fix_1_to_base(gui=self),
         )
         self.btn_fix2_base = tk.Button(
             self.root,
             text="Fix block2 to base",
-            command=lambda: self.controller_node.fix_2(gui=self),
+            command=lambda: self.controller_node.fix_2_to_base(gui=self),
         )
 
         self.btn_fix1_obj = tk.Button(
@@ -65,19 +65,26 @@ class GUI:
             command=lambda: self.controller_node.fix_obj_to_block2(1, gui=self),
         )
 
-        # TODO change buttons/elements to fix only connected objects(not only 1 as in line 42)
+        # TODO change buttons/elements to fix only connected objects(
+        # not only 1 as in line 42)
 
         self.btn_free1_obj = tk.Button(
             self.root,
             text="Free objects from block 1",
-            command=lambda: self.controller_node.free_obj1(gui=self),
+            command=lambda: self.controller_node.free_block1_from_obj(gui=self),
         )
         self.btn_free2_obj = tk.Button(
             self.root,
             text="Free objects from block 2",
-            command=lambda: self.controller_node.free_obj2(gui=self),
+            command=lambda: self.controller_node.free_block2_from_obj(gui=self),
+        )
+        self.btn_start_assemble = tk.Button(
+            self.root,
+            text="Start assemble",
+            command=lambda: self.start_assemble(),
         )
 
+        # Position fix/free buttons
         self.btn_fix2_base.grid(row=5, column=0)
         self.btn_fix1_base.grid(row=6, column=0)
         self.btn_fix2_obj.grid(row=7, column=0)
@@ -85,6 +92,9 @@ class GUI:
 
         self.btn_free2_obj.grid(row=7, column=1)
         self.btn_free1_obj.grid(row=8, column=1)
+
+        # Assembly
+        self.btn_start_assemble.grid(row=9, column=0)
 
         # Individual joint control
 
@@ -253,6 +263,21 @@ class GUI:
             daemon=True,
         )
         thread.start()
+
+    # ASSEMBLE ===========================================================================================================================
+
+    def start_assemble(self):
+        # self.controller_node.get_logger().info("Start assemble")
+        self.controller_node.fix_1_to_base(gui=self)
+        self.controller_node.free_block1_from_obj(gui=self)
+        self.controller_node.free_block2_from_obj(gui=self)
+        self.controller_node.goto_XYZ(
+            2,
+            2,
+            2,
+        )
+
+    # RUN ===========================================================================================================================
 
     def run(self):
         self.root.mainloop()

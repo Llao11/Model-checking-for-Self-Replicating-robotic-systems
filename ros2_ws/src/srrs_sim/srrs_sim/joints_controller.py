@@ -3,15 +3,14 @@ from rclpy.node import Node
 from std_msgs.msg import Float64MultiArray
 import math
 
+
 class RobotController(Node):
     def __init__(self):
-        super().__init__('robot_controller')
+        super().__init__("robot_controller")
 
         # Publisher to the position controller command topic
         self.command_publisher = self.create_publisher(
-            Float64MultiArray,
-            '/position_controller/commands',
-            10
+            Float64MultiArray, "/position_controller/commands", 10
         )
 
         # Timer to periodically send commands
@@ -20,8 +19,8 @@ class RobotController(Node):
 
         # Example position sequence 180/pi
         self.command_sequences = [
-            [0.0,  1.0, 0.5,  1.0,  2.0,  1.0, 0.0],  # Joint 1
-            [0.0,  1.5, 1.5,   -1.5,  -1.5,  1.5,   0.0]  # Joint 2
+            [0.0, 1.0, 0.5, 1.0, 2.0, 1.0, 0.0],  # Joint 1
+            [0.0, 1.5, 1.5, -1.5, -1.5, 1.5, 0.0],  # Joint 2
         ]
         self.command_indices = [0] * len(self.command_sequences)
 
@@ -42,8 +41,11 @@ class RobotController(Node):
         # Update indices for the next commands
         for joint_index in range(len(self.command_sequences)):
             self.command_indices[joint_index] += 1
-            if self.command_indices[joint_index] >= len(self.command_sequences[joint_index]):
-                self.command_indices[joint_index] = 0  # Loop back to the beginning
+            if self.command_indices[joint_index] >= len(
+                self.command_sequences[joint_index]
+            ):
+                # Loop back to the beginning
+                self.command_indices[joint_index] = 0
 
 
 def main(args=None):
@@ -59,5 +61,5 @@ def main(args=None):
         rclpy.shutdown()
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()
