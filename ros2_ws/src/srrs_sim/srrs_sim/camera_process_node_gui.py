@@ -19,10 +19,11 @@ class Camera_process_node_gui(Node):
         self.bridge = CvBridge()
         self.out_queue = out_queue
         qos = QoSPresetProfiles.SENSOR_DATA.value  # BEST_EFFORT, small depth
-        self.sub = self.create_subscription(Image, topic, self.cb, qos)
+        self.sub = self.create_subscription(Image, topic, self.callback, qos)
         self.get_logger().info(f"Subscribed to {topic}")
 
-    def cb(self, msg: Image):
+    def callback(self, msg: Image):
+        """Preprocess images and put it in Queue"""
         # Convert ROS -> OpenCV BGR
         frame_bgr = self.bridge.imgmsg_to_cv2(msg, desired_encoding="bgr8")
         # Convert BGR -> RGB for Pillow/Tk
@@ -48,8 +49,8 @@ def start_ros(node, executor):
 
 
 class TkCameraApp:
-    def __init__(self, q: queue.Queue):
-        self.q = q
+    def __init__(self, queue_common: queue.Queue):
+        self.queue_frames = queue_common
         self.root = tk.Tk()
         self.root.title("ROS2 Camera (Tkinter)")
         self.label = tk.Label(self.root)
@@ -65,7 +66,7 @@ class TkCameraApp:
         if not self._running:
             return
         try:
-            frame_rgb = self.q.get_nowait()
+            frame_rgb = self.queue_frames.get_nowait()
             pil_img = PILImage.fromarray(frame_rgb)
             self.photo = ImageTk.PhotoImage(image=pil_img)
             self.label.config(image=self.photo)
@@ -84,16 +85,18 @@ class TkCameraApp:
 
 def main():
     rclpy.init()
-    q = queue.Queue(maxsize=2)
+    queue_frames = queue.Queue(maxsize=2)
 
-    node = Camera_process_node_gui(q, topic="/camera2/image")  # <- set your topic
+    node = Camera_process_node_gui(
+        queue_frames, topic="/camera2/image"
+    )  # <- set your topic
     executor = SingleThreadedExecutor()
 
     ros_thread = threading.Thread(target=start_ros, args=(node, executor), daemon=True)
     ros_thread.start()
 
     # Start Tkinter on main thread
-    app = TkCameraApp(q)
+    app = TkCameraApp(queue_frames)
     app.run()
     # When Tk closes, stop ROS
     executor.shutdown()

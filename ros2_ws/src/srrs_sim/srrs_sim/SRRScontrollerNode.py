@@ -4,6 +4,7 @@ from sensor_msgs.msg import JointState
 from ros_gz_interfaces.msg import Contacts
 from ament_index_python.packages import get_package_share_directory
 from typing import List
+import threading
 import math
 import time
 import numpy as np
@@ -147,9 +148,12 @@ class SRRSController(Node):
     def calculate_angles(self, x, y, z) -> List[float]:
         # in XY plane:
         r = math.sqrt(x * x + y * y)
-        r_0 = math.sqrt(x * x + y * y - 1)
+        r_0 = math.sqrt(abs(x * x + y * y - 1))
         beta = math.degrees(math.atan2(y, x))
-        beta_0 = beta - math.degrees(math.asin(1 / r))
+        if r != 0:
+            beta_0 = beta - math.degrees(math.asin(1 / r))
+        else:
+            beta_0 = 0
         alpha = math.degrees(math.asin(math.sqrt(r_0 * r_0 + z * z) / 4))
         gamma = math.degrees(math.atan2(z, abs(r_0)))
         joint1 = beta_0
@@ -199,39 +203,45 @@ class SRRSController(Node):
 
         pass
 
-    # Wait until movement finished
-    # joint target angles in degrees
+        # Wait until movement finished
+        # joint target angles in degrees
+
     def wait_movement_finish(self, joints_angles_target: list[float]):
         self.current_target_angles = joints_angles_target
-        self.movement_stop_flag = False
-        self.timer_rate = 0.1  # checking rate in seconds
-        self.max_waiting_time = 5  # in seconds
-        self.step_count = 0
-        self.timer = self.create_timer(self.timer_rate, self.waiting_step)
-        while not self.movement_stop_flag:
-            # self.get_logger().info(f"self.step_count \t: {self.step_count} ")
-            max_count = self.max_waiting_time / self.timer_rate
-            if self.step_count >= max_count:  # stop movement after max_waiting_time
-                self.movement_stop_flag = True
-                self.get_logger().info(f"ERROR: target point not achived \n")
-        self.timer.destroy()
+        move_finished = threading.Event()
 
-    def waiting_step(self):
-        self.step_count = self.step_count + 1
-        # self.get_logger().info(f"self.step_count \t: {self.step_count} ")
-        # self.get_logger().info(f"command_sequences: {self.current_target_angles} \n")
-        # str to float
-        joints_angles_target = [float(a) for a in self.current_target_angles]
-        joint_angles_current_deg = [
-            float(angle) * 180.0 / math.pi for angle in self.joint_angles_current
-        ]  # rad to deg
-        # calculate difference in deg
-        diff = [
-            abs(a - b) for a, b in zip(joints_angles_target, joint_angles_current_deg)
-        ]
-        if max(diff) < self.joint_diff_threshold:
-            self.movement_stop_flag = True
-            # self.get_logger().info(f"movement_stop_flag: {self.movement_stop_flag}")
+        timer_rate = 0.1
+        max_waiting_time = 5.0
+
+        def isAchieved() -> bool:
+            # (same logic you had)
+            joints_angles_target_deg = [float(a) for a in self.current_target_angles]
+            joint_angles_current_deg = [
+                float(angle) * 180.0 / math.pi for angle in self.joint_angles_current
+            ]
+            diff = [
+                abs(a - b)
+                for a, b in zip(joints_angles_target_deg, joint_angles_current_deg)
+            ]
+            if max(diff) < self.joint_diff_threshold:
+                move_finished.set()
+                # stop the timer
+                timer.cancel()  # or: self.destroy_timer(timer)
+                return True
+            else:
+                return False
+
+        timer = self.create_timer(timer_rate, isAchieved)
+
+        # Wait without burning CPU / GIL
+        move_finished.wait(timeout=max_waiting_time)
+        if isAchieved():
+            self.get_logger().info(f"Target achived")
+        else:
+            self.get_logger().info(f"ERROR: target point not achived \n")
+
+        # Ensure timer is stopped either way
+        timer.cancel()  # or: self.destroy_timer(timer)
 
     def joint_state_changed(self, msg):
         joint_angles_current_dict = dict(zip(msg.name, msg.position))

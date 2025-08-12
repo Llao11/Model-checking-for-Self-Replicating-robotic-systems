@@ -1,0 +1,2 @@
+Add the difinition of initial (starting) pose of the robot from coodinates to angles of the blocks
+

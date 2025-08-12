@@ -1,23 +1,61 @@
 import rclpy
+import os
+import subprocess
+import queue
 import tkinter as tk
 import threading
 from rclpy.executors import MultiThreadedExecutor
 
+from PIL import Image as PILImage
+from PIL import ImageTk
+import tkinter as tk
+
 from . import SRRScontrollerNode
 from . import SRRSsensorsNode
+from . import camera_subscriber_node
 
 
 class GUI:
     def __init__(
-        self, controller_node: SRRScontrollerNode, sensor_node: SRRSsensorsNode
+        self,
+        controller_node: SRRScontrollerNode.SRRSController,
+        sensor_node: SRRSsensorsNode.SRRSsensorsNode,
+        camera1_queue: queue.Queue,
+        camera2_queue: queue.Queue,
     ):
         self.controller_node = controller_node
         self.sensor_node = sensor_node
+
+        # Camera data initial variables
+        self.queue1_frames = camera1_queue
+        self.queue2_frames = camera2_queue
+        self.photo1 = None  # keep reference
+        self.photo2 = None  # keep reference
+        self._running = True
+
         self.root = tk.Tk()
         self.root.title("Robot Controller")
+        self.root.protocol("WM_DELETE_WINDOW", self.on_close)
 
+        self.ui_setup()
+
+        # setup Video from Camera
+        self.root.after(16, self.poll_queue1)  # ~60 fps
+        self.root.after(26, self.poll_queue2)
+
+        # def create_UI(self):
         # Coordinate control
 
+        # spawn parts
+        self.current_part_num = 10
+
+        # KEY shortkats
+        self.update_angles()
+        self.update_fix_end()
+        self.update_contact_objects()
+        # self.lock = threading.Lock()
+
+    def ui_setup(self):
         label_x = tk.Label(self.root, text="X")
         outputx = tk.Text(self.root, height=1, width=6)
         label_y = tk.Label(self.root, text="Y")
@@ -206,21 +244,47 @@ class GUI:
         label_contact1.grid(row=8, column=4)
         label_contact2.grid(row=7, column=4)
 
-        # KEY shortkats
-        self.root.bind("<Return>", btn_run.invoke())
+        # Labels camera:
+        self.camera_label1 = tk.Label(self.root)
+        self.camera_label1.grid(row=10, column=0, columnspan=3)
+        self.camera_label2 = tk.Label(self.root)
+        self.camera_label2.grid(row=10, column=3, columnspan=3)
+        # self.root.bind("<Return>", lambda e: btn_run.invoke())
 
-        self.update_angles()
-        self.update_fix_end()
-        self.update_contact_objects()
+    def poll_queue1(self):
+        if not self._running:
+            return
+        try:
+            frame_rgb = self.queue1_frames.get_nowait()
+            pil_img = PILImage.fromarray(frame_rgb)
+            pil_img = pil_img.resize((320, 240), PILImage.LANCZOS)
+            self.photo1 = ImageTk.PhotoImage(image=pil_img)
+            self.camera_label1.config(image=self.photo1)
+        except queue.Empty:
+            pass
+        finally:
+            self.root.after(16, self.poll_queue1)
 
-        self.lock = threading.Lock()
+    def poll_queue2(self):
+        if not self._running:
+            return
+        try:
+            frame_rgb = self.queue2_frames.get_nowait()
+            pil_img = PILImage.fromarray(frame_rgb)
+            pil_img = pil_img.resize((320, 240), PILImage.LANCZOS)
+            self.photo2 = ImageTk.PhotoImage(image=pil_img)
+            self.camera_label2.config(image=self.photo2)
+        except queue.Empty:
+            pass
+        finally:
+            self.root.after(26, self.poll_queue2)
 
     def update_angles(self):
-        joint1 = tk.StringVar(value=int(self.sensor_node.get_joint_angle(0)))
-        joint2 = tk.StringVar(value=int(self.sensor_node.get_joint_angle(1)))
-        joint3 = tk.StringVar(value=int(self.sensor_node.get_joint_angle(2)))
-        joint4 = tk.StringVar(value=int(self.sensor_node.get_joint_angle(3)))
-        joint5 = tk.StringVar(value=int(self.sensor_node.get_joint_angle(4)))
+        joint1 = tk.StringVar(value=str(int(self.sensor_node.get_joint_angle(0))))
+        joint2 = tk.StringVar(value=str(int(self.sensor_node.get_joint_angle(1))))
+        joint3 = tk.StringVar(value=str(int(self.sensor_node.get_joint_angle(2))))
+        joint4 = tk.StringVar(value=str(int(self.sensor_node.get_joint_angle(3))))
+        joint5 = tk.StringVar(value=str(int(self.sensor_node.get_joint_angle(4))))
         self.label_joint1_angle.config(textvariable=joint1)
         self.label_joint2_angle.config(textvariable=joint2)
         self.label_joint3_angle.config(textvariable=joint3)
@@ -249,36 +313,65 @@ class GUI:
         # schedule next update every 100 ms
         self.root.after(100, self.update_contact_objects)
 
-    # def press_gotoXYZ():
-    #     self.goto_XYZ(
-    #             outputx.get("1.0", tk.END),
-    #             outputy.get("1.0", tk.END),
-    #             outputz.get("1.0", tk.END),
-    #         )
-
     def goto_XYZ(self, outputx, outputy, outputz):
+        """Create a thread with command to ControlNode to goto_XYZ"""
+        # self.controller_node.goto_XYZ(outputx, outputy, outputz)
         thread = threading.Thread(
             target=self.controller_node.goto_XYZ,
             args=(outputx, outputy, outputz),
             daemon=True,
         )
         thread.start()
+        thread.join()
 
     # ASSEMBLE ===========================================================================================================================
 
     def start_assemble(self):
+        """Main assemble sequence"""
         # self.controller_node.get_logger().info("Start assemble")
         self.controller_node.fix_1_to_base(gui=self)
         self.controller_node.free_block1_from_obj(gui=self)
         self.controller_node.free_block2_from_obj(gui=self)
-        self.controller_node.goto_XYZ(
-            2,
-            2,
-            2,
+        # self.spawn_part()
+        self.goto_XYZ(1, 2, 3)  # .join()
+        self.goto_XYZ(1, 2, 2)  # .join()
+        self.controller_node.fix_obj_to_block2(1)
+        self.goto_XYZ(2, 2, 3)  # .join()
+        self.goto_XYZ(2, -2, 3)  # .join()
+        # self.spawn_part(6, 6, 0)
+
+    def spawn_part(self, X=5, Y=5, Z=0):
+        """Spawns one block on the field, X,Y,Z - int coordinates relative to the robot base"""
+        x = 0.134 * X
+        y = 0.134 * Y
+        z = 0.135 + 0.134 * Z
+        path_to_ros2_ws = (
+            "/home/lao/Documents/Masterarbeit/git/SRRS_gazebo_sim/ros2_ws/"
         )
+        path_to_part = f"{path_to_ros2_ws}/src/srrs_sim/urdf/new_part.urdf"
+        ros_setup = f"source /opt/ros/jazzy/setup.bash && source {
+            path_to_ros2_ws
+        }/install/setup.bash"
+        ros_cmd = f"ros2 run ros_gz_sim create  -world empty  \
+            -name  part{self.current_part_num}  -file  \
+            {path_to_part}  -x {x} -y {y} -z {z}"
+        subprocess.Popen(
+            [
+                "bash",
+                "-c",
+                f"{ros_setup} && {ros_cmd}",
+                "shell=True",
+            ]
+        )
+        self.current_part_num += 1
+
+    # CLOSE ===========================================================================================================================
+
+    def on_close(self):
+        self._running = False
+        self.root.destroy()
 
     # RUN ===========================================================================================================================
-
     def run(self):
         self.root.mainloop()
 
@@ -286,17 +379,33 @@ class GUI:
 def main():
     rclpy.init()
 
+    # common Queue for camera frames
+    queue1_frames = queue.Queue(maxsize=1)
+    queue2_frames = queue.Queue(maxsize=1)
+    camera1_topic = "/camera1/image"
+    camera2_topic = "/camera2/image"
+
+    # create Nodes
     sensors_node = SRRSsensorsNode.SRRSsensorsNode()
     controller_node = SRRScontrollerNode.SRRSController(sensors_node)
+    camera1_sub_node = camera_subscriber_node.Camera_process_node_gui(
+        queue1_frames, camera1_topic
+    )
+    camera2_sub_node = camera_subscriber_node.Camera_process_node_gui(
+        queue2_frames, camera2_topic
+    )
 
+    # initializa Nodes
     executor = MultiThreadedExecutor()
     executor.add_node(controller_node)
     executor.add_node(sensors_node)
+    executor.add_node(camera1_sub_node)
+    executor.add_node(camera2_sub_node)
 
     # Run 2 ROS nodes spin in a separate threads
     threading.Thread(target=executor.spin, daemon=True).start()
 
-    gui = GUI(controller_node, sensors_node)
+    gui = GUI(controller_node, sensors_node, queue1_frames, queue2_frames)
     gui.run()
 
     executor.shutdown()
