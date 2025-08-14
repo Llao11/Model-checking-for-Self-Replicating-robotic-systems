@@ -65,6 +65,18 @@ Spawn object during runtime:
 
 
 
+    <plugin filename="gz-sim-pose-publisher-system" name="gz::sim::systems::PosePublisher">
+      <publish_model_pose>false</publish_model_pose>
+      <publish_visual_pose>true<publish_visual_pose>
+      <publish_collision_pose>true<publish_collision_pose>
+      <publish_nested_model_pose>true<publish_nested_model_pose>
+      <publish_link_pose>false</publish_link_pose>     <!-- set true if you also want link poses -->
+      <use_pose_vector_msg>false</use_pose_vector_msg> <!-- per-entity topics, not Pose_V -->
+      <update_frequency>30</update_frequency>          <!-- Hz -->
+    </plugin>
+
+
+
 
 
 TODO: Create a NuSMV model for check the different structures of a robot and a specifications for ability to reach different cells 

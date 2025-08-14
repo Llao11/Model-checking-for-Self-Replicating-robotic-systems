@@ -27,7 +27,7 @@ class SRRSController(Node):
 
     def create_publishers(self):
         """
-        publishers for attach and detach topics
+        publishers for attach and detach topics: robot to base, voxel to robot ends
         """
 
         self.attach_publisher_voxel = self.create_publisher(
@@ -36,11 +36,14 @@ class SRRSController(Node):
         self.detach_publisher_voxel = self.create_publisher(
             Empty, "/detach_link_voxel", 10
         )
+
+        # ROBOT END 1 and 2 to base
         self.attach_publisher1 = self.create_publisher(Empty, "/attach_link1", 10)
         self.detach_publisher1 = self.create_publisher(Empty, "/detach_link1", 10)
         self.attach_publisher2 = self.create_publisher(Empty, "/attach_link2", 10)
         self.detach_publisher2 = self.create_publisher(Empty, "/detach_link2", 10)
 
+        # OBJECTS to ROBOT END 1 and 2
         self.attach1_publisher_obj1 = self.create_publisher(
             Empty, "/attach_link1_obj_1", 10
         )
@@ -60,6 +63,7 @@ class SRRSController(Node):
             Empty, "/attach_link2_obj_3", 10
         )
 
+        # detauch OBJECTS from ROBOT END 1 and 2
         self.detach1_publisher_objects = self.create_publisher(
             Empty, "/detach1_objects", 10
         )
@@ -342,7 +346,7 @@ class SRRSController(Node):
             gui.btn_fix1_obj.config(bg="red")
             gui.btn_free1_obj.config(bg="white")
 
-    # FREE objects  ===========================================================================================================================
+    # FREE objects from Robot End 1 and 2 ===========================================================================================================================
 
     def free_block1_from_obj(self, **kwargs):
         msg = Empty()

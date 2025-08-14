@@ -1,5 +1,6 @@
 import rclpy
 import os
+import time
 import subprocess
 import queue
 import tkinter as tk
@@ -40,13 +41,23 @@ class GUI:
         self.ui_setup()
 
         # setup Video from Camera
+
+        # thread_cam1 = threading.Thread(
+        #     target=self.root.after,
+        #     args=(16, self.poll_queue1),
+        #     daemon=True,
+        # )
+        # thread_cam2 = threading.Thread(
+        #     target=self.root.after,
+        #     args=(26, self.poll_queue2),
+        #     daemon=True,
+        # )
+        # thread_cam1.start()
+        # thread_cam2.start()
         self.root.after(16, self.poll_queue1)  # ~60 fps
         self.root.after(26, self.poll_queue2)
 
-        # def create_UI(self):
-        # Coordinate control
-
-        # spawn parts
+        # spawn additional parts during runtime
         self.current_part_num = 10
 
         # KEY shortkats
@@ -252,6 +263,7 @@ class GUI:
         # self.root.bind("<Return>", lambda e: btn_run.invoke())
 
     def poll_queue1(self):
+        """camera 1 queue"""
         if not self._running:
             return
         try:
@@ -266,6 +278,7 @@ class GUI:
             self.root.after(16, self.poll_queue1)
 
     def poll_queue2(self):
+        """camera 2 queue"""
         if not self._running:
             return
         try:
@@ -325,20 +338,54 @@ class GUI:
         thread.join()
 
     # ASSEMBLE ===========================================================================================================================
-
     def start_assemble(self):
         """Main assemble sequence"""
-        # self.controller_node.get_logger().info("Start assemble")
+        self.controller_node.get_logger().info("Start assemble")
         self.controller_node.fix_1_to_base(gui=self)
         self.controller_node.free_block1_from_obj(gui=self)
         self.controller_node.free_block2_from_obj(gui=self)
-        # self.spawn_part()
-        self.goto_XYZ(1, 2, 3)  # .join()
-        self.goto_XYZ(1, 2, 2)  # .join()
-        self.controller_node.fix_obj_to_block2(1)
-        self.goto_XYZ(2, 2, 3)  # .join()
-        self.goto_XYZ(2, -2, 3)  # .join()
+        self.assemble_coordinates = {"x": 2, "y": -2, "z": 0}
+        self.move_part(num=1, x=1, y=2)
         # self.spawn_part(6, 6, 0)
+        self.assemble_coordinates["z"] = 1
+        self.move_part(num=2, x=-1, y=2)
+
+    def move_part(self, num, x, y):
+        """move part number num, from x,y coordinates to assemble_coordinates"""
+        self.goto_XYZ(x, y, 3)
+        self.goto_XYZ(x, y, 1)
+        self.fix_part(num)
+        self.goto_XYZ(x, y, 3)
+        self.goto_XYZ(
+            self.assemble_coordinates["x"],
+            self.assemble_coordinates["y"],
+            self.assemble_coordinates["z"] + 2,
+        )
+        self.goto_XYZ(
+            self.assemble_coordinates["x"],
+            self.assemble_coordinates["y"],
+            self.assemble_coordinates["z"] + 1,
+        )
+        self.free_part()
+        self.goto_XYZ(
+            self.assemble_coordinates["x"],
+            self.assemble_coordinates["y"],
+            self.assemble_coordinates["z"] + 2,
+        )
+
+    def fix_part(self, part_num, end_num=2):
+        """Fix part number part_num to end block number end_num"""
+        if end_num == 1:
+            self.controller_node.fix_obj_to_block1(part_num)
+        if end_num == 2:
+            self.controller_node.fix_obj_to_block2(part_num)
+
+    def free_part(self, end_num=2):
+        """Free object from end-effector number end_num block"""
+        if end_num == 1:
+            self.controller_node.free_block1_from_obj()
+        if end_num == 2:
+            self.controller_node.free_block2_from_obj()
 
     def spawn_part(self, X=5, Y=5, Z=0):
         """Spawns one block on the field, X,Y,Z - int coordinates relative to the robot base"""

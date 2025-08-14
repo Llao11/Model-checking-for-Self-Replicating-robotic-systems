@@ -38,6 +38,7 @@ setup(
             "SRRSController = srrs_sim.SRRSController:main",
             "PartSpawner = srrs_sim.PartSpawner:main",
             "Assemble = srrs_sim.Assemble:main",
+            "object_pose_io = srrs_sim.object_pose_io:main",
             "camera_process_node = srrs_sim.camera_process_node:main",
             "camera_process_node_gui = srrs_sim.camera_process_node_gui:main",
         ],

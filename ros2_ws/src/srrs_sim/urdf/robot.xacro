@@ -21,6 +21,7 @@
       <collision name="${name}_collision">
          <geometry>
           <mesh filename="/home/lao/Documents/Masterarbeit/git/SRRS_gazebo_sim/ros2_ws/src/srrs_sim/meshes/Voxel.stl" scale="0.001 0.001 0.001"/>
+
             <!-- <box size="0.1 0.1 0.1"/> -->
          </geometry>
       </collision>
@@ -274,6 +275,7 @@
       filename="gz-sim-contact-system" 
       name="gz::sim::systems::Contact">
     </plugin>
+
 
 
 
