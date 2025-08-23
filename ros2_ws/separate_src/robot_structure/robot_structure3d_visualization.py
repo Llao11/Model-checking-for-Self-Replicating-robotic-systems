@@ -38,6 +38,7 @@ class Plot3DBackend:
     """Encapsulates a single 3‑D figure + axes and exposes draw helpers."""
 
     def __init__(self) -> None:
+        """create plot"""
         self.fig = plt.Figure(figsize=(5, 4), dpi=100)
         self.ax = self.fig.add_subplot(111, projection="3d")
         self._line = None  # will hold the Line3D artist once created
@@ -139,21 +140,24 @@ class Plot3DBackend:
 # Tkinter GUI wrapper
 class App(tk.Tk):
     def __init__(self) -> None:
+        """Create GUI"""
         super().__init__()
-        self.title("3‑D Line Demo")
+        self.title("Robot 3D configuration")
         self.geometry("900x700")
 
+        # Initial robot structure
         self.robot_structure = [[0, 0, 0], [1, 2, 1], [2, 3, 0]]
+        # Variables for coordinates input
         self.coordinates_vars: dict[str, tk.StringVar] = {}
-        # Backend plot
-        self.backend = Plot3DBackend()
-        self.points: List[Point3D] = []
 
-        # --------------------------- main layout (grid) ------------------
+        # main layout (grid)
         self.grid_rowconfigure(0, weight=1)  # canvas row grows
         self.grid_columnconfigure(0, weight=1)
 
         # Matplotlib canvas inside Tk
+        # Backend plot
+        self.backend = Plot3DBackend()
+        self.points: List[Point3D] = []
         self.canvas = FigureCanvasTkAgg(self.backend.fig, master=self)
         self.canvas.draw()
         self.canvas_widget = self.canvas.get_tk_widget()
@@ -174,9 +178,9 @@ class App(tk.Tk):
             row=0, column=3, padx=5, sticky="e"
         )
         # Initial blank plot
-        self.backend.draw_lines(self.points)
+        # self.backend.draw_lines(self.points)
 
-    def show_coord_change(self, index):
+    def show_coord_change(self, index: int):
         # Axis‑limit widgets --------------------------------------------
         coordinates_frame = tk.Frame(self.ctrl)
         coordinates_frame.grid(row=index + 1, column=0, columnspan=2, padx=10)
@@ -220,6 +224,7 @@ class App(tk.Tk):
         self.backend.refresh(self.points)
 
     def add_random(self) -> None:
+        """add random point to a plot"""
         new_pt = (
             random.uniform(0, 5),
             random.uniform(0, 5),

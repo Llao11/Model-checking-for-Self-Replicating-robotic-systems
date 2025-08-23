@@ -1,26 +1,9 @@
-#!/usr/bin/env python3
-"""
-Tkinter GUI embedding a dynamic **3‑D Matplotlib** plot – now laid out with the
-`grid()` geometry‑manager instead of `pack()`.  The functional bits are
-unchanged; only the widget placement differs.
-
-* **Plot3DBackend** – unchanged. Owns the `Figure`/`Axes3D` and helper methods.
-* **App** – uses a 2‑row grid: row 0 hosts the canvas, row 1 hosts a control
-  bar (buttons + axis‑limit widgets).  Columns expand elastically thanks to
-  `grid_columnconfigure(..., weight=1)`.
-
-Run the file and you’ll see the same interactive 3‑D plot with buttons and
-limit‑boxes, but everything is positioned via `grid()`.
-"""
-
 from __future__ import annotations, print_function
 
 import random
-import re
-import subprocess
 import tkinter as tk
 from typing import List, Tuple, Optional
-from Plot3DBackend import Plot3DBackend
+from Plot3D import Plot3D
 import matplotlib
 
 # Use the TkAgg backend so Matplotlib can render inside a Tk widget
@@ -33,27 +16,30 @@ from mpl_toolkits.mplot3d import Axes3D  # noqa: F401 – required for 3‑D bac
 # Data model helper
 Point3D = [float, float, float]
 
-
-# ---------------------------------------------------------------------------
 # Tkinter GUI wrapper
+
+
 class App(tk.Tk):
     def __init__(self) -> None:
+        """Create GUI"""
         super().__init__()
-        self.title("3‑D Line Demo")
+        self.title("Robot 3D configuration")
         self.geometry("900x700")
 
+        # Initial robot structure
         self.robot_structure = [[0, 0, 0], [1, 2, 1], [2, 3, 0]]
+        # Variables for coordinates input
         self.coordinates_vars: dict[str, tk.StringVar] = {}
-        # Backend plot
-        self.backend = Plot3DBackend()
-        self.points: List[Point3D] = []
 
-        # --------------------------- main layout (grid) ------------------
+        # main layout (grid)
         self.grid_rowconfigure(0, weight=1)  # canvas row grows
         self.grid_columnconfigure(0, weight=1)
 
         # Matplotlib canvas inside Tk
-        self.canvas = FigureCanvasTkAgg(self.backend.fig, master=self)
+        # Backend plot
+        self.plot = Plot3D()
+        self.points: List[Point3D] = []
+        self.canvas = FigureCanvasTkAgg(self.plot.fig, master=self)
         self.canvas.draw()
         self.canvas_widget = self.canvas.get_tk_widget()
         self.canvas_widget.grid(row=0, column=0, sticky="nsew")
@@ -69,25 +55,17 @@ class App(tk.Tk):
         tk.Button(self.ctrl, text="Add Random Point", command=self.add_random).grid(
             row=0, column=1, padx=5, sticky="w"
         )
-        tk.Button(self.ctrl, text="Check model", command=self.check_model).grid(
-            row=0, column=2, padx=5, sticky="e"
-        )
         tk.Button(self.ctrl, text="Quit", command=self.destroy).grid(
             row=0, column=3, padx=5, sticky="e"
         )
-
-        goalX = tk.StringVar(value=str(1))
-        entry = tk.Entry(self.ctrl, textvariable=goalX, width=5).grid(
-            row=0, column=3, padx=5, sticky="e"
-        )
-
         # Initial blank plot
-        self.backend.draw_lines(self.points)
+        # self.backend.draw_lines(self.points)
 
-    def show_coord_change(self, index):
+    def show_coord_change(self, index: int):
+        """show ui to change the robot coordinates"""
         # Axis‑limit widgets --------------------------------------------
         coordinates_frame = tk.Frame(self.ctrl)
-        coordinates_frame.grid(row=index + 1, column=0, columnspan=3, padx=10)
+        coordinates_frame.grid(row=index + 1, column=0, columnspan=2, padx=10)
         # for index in range(len(self.robot_structure)):
         lbl = tk.Label(coordinates_frame, text=f"Block{index}")
         for idx, axis in enumerate(
@@ -113,68 +91,36 @@ class App(tk.Tk):
             return None
 
     def move_block(self, index) -> None:
+        """moves block number "index" according to inputed values"""
         x = self.parse_coordinates("X" + str(index))
         y = self.parse_coordinates("Y" + str(index))
         z = self.parse_coordinates("Z" + str(index))
         # Convert pairs where at least one bound was provided; else None
-        self.backend.update_point(self.points, index, x, y, z)
-        self.backend.refresh(self.points)
+        self.plot.update_point(self.points, index, x, y, z)
+        self.plot.refresh(self.points)
 
     def show_robot(self) -> None:
         """Render a little 3‑D L‑shaped robot made of 2 points."""
-        self.points = []
+        self.points: List[Point3D] = []
         for idx, pt in enumerate(self.robot_structure):
-            self.backend.add_point_to_list(self.points, *pt)
+            self.plot.add_point_with_line(self.points, *pt)
             self.show_coord_change(idx)
-        self.backend.refresh(self.points)
+        self.plot.refresh(self.points)
 
-    def check_model(self) -> None:
-        result = subprocess.run(
-            [
-                ".././NuSMV-2.7.0-linux64/bin/NuSMV",
-                "-dynamic",
-                "./smv/robot_structure3d.smv",
-            ],
-            capture_output=True,
-            text=True,
-        )
-        if "is true" in result.stdout:
-            print("The LTL property holds.")
-        else:
-            counterexample = result.stdout
-            print("The LTL property does not hold. Counterexample:")
-            blocks = {}
-            base = {}
-            for line in counterexample.splitlines():
-                match_base = re.search(r"base([X,Y,Z])\s*=\s*(-?\d+)", line)
-                if match_base:
-                    axis_base = match_base.group(1)
-                    value_base = int(match_base.group(2))
-                    base[axis_base] = value_base
-                match = re.search(r"block_(\d+)\.([a-zA-Z])_end\s*=\s*(-?\d+)", line)
-                if match:
-                    idx = int(match.group(1))
-                    axis = match.group(2)
-                    value = int(match.group(3))
-                    if idx not in blocks:
-                        blocks[idx] = {}
-                    blocks[idx][axis] = value
-            result = [
-                [block["x"], block["y"], block["z"]]
-                for _, block in sorted(blocks.items())
-            ]
-            result.insert(0, [base["X"], base["Y"], base["Z"]])
-            print(result)
-            print(result)
-            self.robot_structure = result
-        self.backend.refresh(self.points)
+    def add_target_point(self, x, y, z) -> None:
+        """add target point to a plot"""
+        self.plot.draw_point(x, y, z, "as")
+        # self.plot.add_point_with_line(self.points, *new_pt)
+        self.plot.refresh(self.points)
 
     def add_random(self) -> None:
-        x = random.uniform(0, 5)
-        y = random.uniform(0, 5)
-        z = random.uniform(0, 5)
-        self.backend.add_point(x, y, z)
-        self.backend.refresh(self.points)
+        """add random point to a plot"""
+        x = float(random.uniform(0, 2))
+        y = float(random.uniform(0, 2))
+        z = float(random.uniform(0, 2))
+        self.plot.draw_point(x, y, z, "as")
+        # self.plot.add_point_with_line(self.points, *new_pt)
+        self.plot.refresh(self.points)
 
 
 # ---------------------------------------------------------------------------

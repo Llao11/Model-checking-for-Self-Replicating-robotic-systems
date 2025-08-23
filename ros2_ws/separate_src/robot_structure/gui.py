@@ -136,11 +136,12 @@ class App(tk.Tk):
         self.backend.refresh(self.points)
 
     def check_model(self) -> None:
+        """run smv template and get counterexample"""
         result = subprocess.run(
             [
                 ".././NuSMV-2.7.0-linux64/bin/NuSMV",
                 "-dynamic",
-                "./smv/robot_structure3d.smv",
+                "./smv/template_robot_structure3d.smv",
             ],
             capture_output=True,
             text=True,
@@ -172,27 +173,59 @@ class App(tk.Tk):
             ]
             result.insert(0, [base["X"], base["Y"], base["Z"]])
             print(result)
-            print(result)
+            print(type(result))
             self.robot_structure = result
-        self.backend.refresh(self.points)
+            self.backend.refresh(self.points)
 
-    def change_goal_in_model(self, x, y, z) -> None:
-        model_path = "./smv/robot_structure3d.smv"
+    def get_goal_from_model(self, x, y, z) -> None:
+        """Get goal point coordinates from current NuSMV model"""
+        model_path = "./smv/template_robot_structure3d.smv"
         with open(model_path, "r") as model:
             data = model.read()
             for line in data.splitlines():
                 # checkX := 2;
-                match = re.search(r"check[X,Y,Z]\s*:=\s*(-?\d:)", line)
-                # if "checkX :=" in line
-        # with open(model_path, "w") as model:
-        #     data = model.write(data)
-        #     print(data)
+                # check[X,Y,Z]\s*:=\s*(-?\d:)
+                pattern = r"check[X,Y,Z]\s*:=*"
+                match = re.search(pattern, line)
+                if match:
+                    prefix = match.group()
+                    if "X" in prefix:
+                        x = int(line.strip().removeprefix(prefix).strip(";"))
+                        print(x, end="")
+                    if "Y" in prefix:
+                        y = int(line.strip().removeprefix(prefix).strip(";"))
+                        print(y, end="")
+                    if "Z" in prefix:
+                        z = int(line.strip().removeprefix(prefix).strip(";"))
+                        print(z)
+
+    def change_goal_in_model(self, x, y, z) -> None:
+        """Set goal point coordinates in NuSMV model"""
+        model_path = "./smv/robot_structure3d.smv"
+        with open(model_path, "r") as model:
+            lines = model.readlines()
+        temp_model_path = "./smv/template_robot_structure3d.smv"
+        with open(temp_model_path, "w") as model:
+            for line in lines:
+                # check[X,Y,Z]\s*:=\s*(-?\d:)
+                if re.search(r"checkX\s*:=\s*-?\d+;", line):
+                    newX_line = f"checkX := {x};"
+                    model.write(newX_line + "\n")
+                elif re.search(r"checkY\s*:=\s*-?\d+;", line):
+                    newY_line = f"checkY := {y};"
+                    model.write(newY_line + "\n")
+                elif re.search(r"checkZ\s*:=\s*-?\d+;", line):
+                    newZ_line = f"checkZ := {z};"
+                    model.write(newZ_line + "\n")
+                else:
+                    model.write(line)
 
     def add_goal_point(self) -> None:
+        """Add goal point to NuSMV model and to a graph"""
         x = int(self.goalX.get().strip())
         y = int(self.goalY.get().strip())
         z = int(self.goalZ.get().strip())
-        self.backend.add_point(x, y, z)
+        self.backend.add_point(x, y, z, f"Target:({x},{y},{z})")
         self.backend.refresh(self.points)
         self.change_goal_in_model(x, y, z)
 
