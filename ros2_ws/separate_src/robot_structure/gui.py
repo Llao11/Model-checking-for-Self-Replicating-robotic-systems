@@ -18,9 +18,10 @@ from __future__ import annotations, print_function, with_statement
 import random
 import re
 import subprocess
+import threading
 import tkinter as tk
 from typing import List, Tuple, Optional
-from Plot3DBackend import Plot3DBackend
+from Plot3D import Plot3D
 import matplotlib
 
 # Use the TkAgg backend so Matplotlib can render inside a Tk widget
@@ -45,7 +46,8 @@ class App(tk.Tk):
         self.robot_structure = [[0, 0, 0], [1, 2, 1], [2, 3, 0]]
         self.coordinates_vars: dict[str, tk.StringVar] = {}
         # Backend plot
-        self.backend = Plot3DBackend()
+        self.plot = Plot3D()
+        self.plot.set_limits((-50, 50), (-50, 50), (0, 100))
         self.points: List[Point3D] = []
 
         # --------------------------- main layout (grid) ------------------
@@ -53,7 +55,7 @@ class App(tk.Tk):
         self.grid_columnconfigure(0, weight=1)
 
         # Matplotlib canvas inside Tk
-        self.canvas = FigureCanvasTkAgg(self.backend.fig, master=self)
+        self.canvas = FigureCanvasTkAgg(self.plot.fig, master=self)
         self.canvas.draw()
         self.canvas_widget = self.canvas.get_tk_widget()
         self.canvas_widget.grid(row=0, column=0, sticky="nsew")
@@ -84,12 +86,19 @@ class App(tk.Tk):
         tk.Button(self.ctrl, text="Check model", command=self.check_model).grid(
             row=0, column=5, padx=5, sticky="e"
         )
+        self.status_var = tk.StringVar(value="Ready")
+        tk.Label(self.ctrl, textvariable=self.status_var, anchor="w").grid(
+            row=1, column=5, padx=5, sticky="e"
+        )
         tk.Button(self.ctrl, text="Quit", command=self.destroy).grid(
             row=0, column=6, padx=5, sticky="e"
         )
 
         # Initial blank plot
-        self.backend.draw_lines(self.points)
+        self.plot.draw_lines(self.points)
+
+    def change_status(self, new_status):
+        self.status_var.set(new_status)
 
     def show_coord_change(self, index):
         # Axis‑limit widgets --------------------------------------------
@@ -124,33 +133,41 @@ class App(tk.Tk):
         y = self.parse_coordinates("Y" + str(index))
         z = self.parse_coordinates("Z" + str(index))
         # Convert pairs where at least one bound was provided; else None
-        self.backend.update_point(self.points, index, x, y, z)
-        self.backend.refresh(self.points)
+        self.plot.update_point(self.points, index, x, y, z)
+        self.plot.refresh(self.points)
 
     def show_robot(self) -> None:
         """Render a little 3‑D L‑shaped robot made of 2 points."""
         self.points = []
         for idx, pt in enumerate(self.robot_structure):
-            self.backend.add_point_to_list(self.points, *pt)
+            self.plot.add_point_with_line(self.points, *pt)
             self.show_coord_change(idx)
-        self.backend.refresh(self.points)
+        self.plot.refresh(self.points)
 
     def check_model(self) -> None:
         """run smv template and get counterexample"""
-        result = subprocess.run(
-            [
-                ".././NuSMV-2.7.0-linux64/bin/NuSMV",
-                "-dynamic",
-                "./smv/template_robot_structure3d.smv",
-            ],
-            capture_output=True,
-            text=True,
-        )
+        self.change_status("Checking ...")
+
+        def start_checking():
+            result = subprocess.run(
+                [
+                    ".././NuSMV-2.7.0-linux64/bin/NuSMV",
+                    "-dynamic",
+                    "./smv/template_robot_structure3d.smv",
+                ],
+                capture_output=True,
+                text=True,
+            )
+            self.after(0, lambda: self.finish_checking(result))
+
+        threading.Thread(target=start_checking).start()
+
+    def finish_checking(self, result):
         if "is true" in result.stdout:
             print("The LTL property holds.")
+            self.change_status("No counterexample found")
         else:
             counterexample = result.stdout
-            print("The LTL property does not hold. Counterexample:")
             blocks = {}
             base = {}
             for line in counterexample.splitlines():
@@ -172,10 +189,12 @@ class App(tk.Tk):
                 for _, block in sorted(blocks.items())
             ]
             result.insert(0, [base["X"], base["Y"], base["Z"]])
+            status = "Counterexample:"
+            self.change_status(status + "\n" + str(result))
             print(result)
-            print(type(result))
             self.robot_structure = result
-            self.backend.refresh(self.points)
+            self.plot.refresh(self.points)
+            self.show_robot()
 
     def get_goal_from_model(self, x, y, z) -> None:
         """Get goal point coordinates from current NuSMV model"""
@@ -225,9 +244,10 @@ class App(tk.Tk):
         x = int(self.goalX.get().strip())
         y = int(self.goalY.get().strip())
         z = int(self.goalZ.get().strip())
-        self.backend.add_point(x, y, z, f"Target:({x},{y},{z})")
-        self.backend.refresh(self.points)
+        self.plot.draw_point(x, y, z, f"Target:({x},{y},{z})")
+        self.plot.refresh(self.points)
         self.change_goal_in_model(x, y, z)
+        print("Target point set: x={0}, y={1}, z={2}".format(x, y, z))
 
 
 # ---------------------------------------------------------------------------

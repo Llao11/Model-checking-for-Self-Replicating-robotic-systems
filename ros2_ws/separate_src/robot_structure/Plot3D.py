@@ -32,8 +32,9 @@ class Plot3D:
         }
         self._style_axes()
         self._text_labels: List = []
-        self.pt_ref = None
-        self.pt_ref_label = None
+        self.target = None
+        self.target_ref = None
+        self.target_ref_label = None
 
     # --------------------------- private helpers -------------------------
     def _style_axes(self) -> None:
@@ -92,20 +93,6 @@ class Plot3D:
         self._apply_limits()
         self.fig.canvas.draw_idle()
 
-    def draw_point(self, x: float, y: float, z: float, label: str | None = None):
-        if self.pt_ref:
-            self.pt_ref.remove()
-        if self.pt_ref_label:
-            self.pt_ref_label.remove()
-        self.pt_ref = self.ax.scatter([x], [y], [z], s=40, c="red")
-        if label:
-            self.pt_ref_label = self.ax.text(
-                x, y, z, label, fontsize=8, ha="left", va="bottom"
-            )
-        self.ax.auto_scale_xyz([x], [y], [z])  # keep axes nicely scaled
-        self._apply_limits()  # re-apply any user limits
-        self.fig.canvas.draw_idle()
-
     def add_point_with_line(
         self, pts: List[Point3D], x: float, y: float, z: float
     ) -> None:
@@ -119,10 +106,30 @@ class Plot3D:
         else:
             raise IndexError("Point index out of range")
 
+    def draw_point(self, x: float, y: float, z: float, label: str | None = None):
+        self.target = (x, y, z, label)
+        if self.target_ref:
+            self.target_ref.remove()
+        if self.target_ref_label:
+            self.target_ref_label.remove()
+            self.target_ref = self.ax.scatter([x], [y], [z], s=40, c="red")
+        if label:
+            self.target_ref_label = self.ax.text(
+                x, y, z, label, fontsize=8, ha="left", va="bottom"
+            )
+        self.ax.auto_scale_xyz([x], [y], [z])  # keep axes nicely scaled
+        self._apply_limits()  # re-apply any user limits
+        # self.fig.canvas.draw_idle()
+        self.fig.canvas.draw()
+
     def refresh(self, pts: List[Point3D]) -> None:
         """Efficiently update the existing Line3D artist in‑place."""
         if not pts or self._line is None:
             self.draw_lines(pts)  # falls back to full redraw
+            if self.target is not None:
+                self.draw_point(
+                    self.target[0], self.target[1], self.target[2], self.target[3]
+                )
             return
 
         x, y, z = zip(*pts)

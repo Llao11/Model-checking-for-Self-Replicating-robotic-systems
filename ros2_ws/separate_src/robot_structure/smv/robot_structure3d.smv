@@ -184,7 +184,7 @@ DEFINE
     -- discretization_angle := 10;
     -- error := LEN*sin10 = 10 * 0,173 = 1,73;
 
-    error := 2; -- endX and endY coordinates error while checking reachability
+    error := 1; -- +-1 (error=2) endX and endY coordinates error while checking reachability
     checkX := -10;
     checkY := -10;
     checkZ := 26;
