@@ -31,11 +31,6 @@ Advantage: optimal configuration for a new robot
 
 4. Counterexample based pathfinding in local space
 
-
-
-
-
-
 \section{Kinematic robot configuration checking}
 
 \subsection{Overview}
@@ -44,18 +39,13 @@ Block types -> NuSMV block modules structure -> NuSMV template
 Border conditions:
     - Base blocks on the end
     - initial block position
-    - connect only from upper side
 
 python script -> Generate NuSMV -> check reachability border
 Criteria: reachability of the random distributed blocks, given base block position
 Validation: 
 optimal structure -> generate xacro, check assembly
+
 \subsection{implementation}
-
-
-
-
-
 
 \section{Model checking based control in local space}
 
@@ -63,10 +53,7 @@ optimal structure -> generate xacro, check assembly
 \subsection{Overview}
 Input: Initial position, target position, set of obstacles
 Robot structure (xacro) -> Generate NuSMV -> check model, get counterexample -> 
-derive path -> compare with shortest path algorithm (implement Deikstra/ A*)
-
-Evaluation: comparithon, 
-Validation: assembly simulation in Gazebo
+derive path -> compare with shortest path algorithm
 
 \subsection{Experimental setup}
 TODO: plan experiments: 
@@ -113,33 +100,6 @@ Measure values: average assembly time, average success rate
 
 \newpage
 
-
-
-\section{Model checking based control in global space}
-
-% \section{Evaluation}
-\subsection{Overview}
-Input: Initial position, target position, set of obstacles
-Robot structure (xacro) -> Define step algorithm -> optimal step?-> Generate NuSMV -> check model, get counterexample -> 
-derive path -> compare with shortest path algorithm (implement Deikstra/ A* in 2D)
-
-Evaluation: comparithon with shortest path algorithms
-Validation: assembly simulation in global space in Gazebo
-\subsection{Evaluation}
-
-
-
-
-\section{General System Model checking }
-
-% \section{Evaluation}
-\subsection{Overview}
-Input: Initial position, target position, set of obstacles
-Robot structure (xacro) -> Define step algorithm -> optimal step?-> Generate NuSMV -> check model, get counterexample -> 
-derive path -> compare with shortest path algorithm (implement Deikstra/ A* in 2D)
-
-Evaluation: comparithon with shortest path algorithms
-Validation: assembly simulation in global space in Gazebo
 \subsection{Evaluation}
 
 \section{Collective behavior model checking}

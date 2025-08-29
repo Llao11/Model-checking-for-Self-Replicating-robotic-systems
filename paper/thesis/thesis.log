@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023/Debian) (preloaded format=pdflatex 2025.5.5)  23 JUL 2025 16:51
+This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023/Debian) (preloaded format=pdflatex 2025.5.5)  26 AUG 2025 19:14
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -1388,17 +1388,17 @@ LaTeX Font Info:    Font shape `T1/LinuxBiolinumT-TLF/b/n' will be
 (Font)              scaled to size 24.88pt on input line 31.
  (./thesis.toc
 Package cleveref Info: loaded `english' language definitions on input line 1.
-)
+LaTeX Font Info:    Font shape `T1/LinuxLibertineT-TLF/m/sl' in size <12> not available
+(Font)              Font shape `T1/LinuxLibertineT-TLF/m/it' tried instead on input line 42.
+LaTeX Font Info:    Font shape `T1/LinuxLibertineT-TLF/m/it' will be
+(Font)              scaled to size 12.0pt on input line 42.
+ [4
+
+])
 \tf@toc=\write6
 \openout6 = `thesis.toc'.
 
-LaTeX Font Info:    Font shape `T1/LinuxLibertineT-TLF/m/sl' in size <12> not available
-(Font)              Font shape `T1/LinuxLibertineT-TLF/m/it' tried instead on input line 37.
-LaTeX Font Info:    Font shape `T1/LinuxLibertineT-TLF/m/it' will be
-(Font)              scaled to size 12.0pt on input line 37.
- [4
-
-]
+ [5]
 chapter 1.
 (./text/introduction.tex) [1
 
@@ -1477,7 +1477,7 @@ Package cleveref Info: loaded `english' language definitions on input line 270.
 [8]
 Package cleveref Info: loaded `english' language definitions on input line 289.
  [9]
-<./img/CTL.png, id=154, 542.025pt x 257.96375pt>
+<./img/CTL.png, id=183, 542.025pt x 257.96375pt>
 File: ./img/CTL.png Graphic file (type png)
 <use ./img/CTL.png>
 Package pdftex.def Info: ./img/CTL.png  used on input line 304.
@@ -1500,7 +1500,7 @@ Package cleveref Info: loaded `english' language definitions on input line 58.
  [15]
 Package cleveref Info: loaded `english' language definitions on input line 95.
  [16]
-<./img/ClassificationCentralized.png, id=227, 908.39375pt x 711.65875pt>
+<./img/ClassificationCentralized.png, id=255, 908.39375pt x 711.65875pt>
 File: ./img/ClassificationCentralized.png Graphic file (type png)
 <use ./img/ClassificationCentralized.png>
 Package pdftex.def Info: ./img/ClassificationCentralized.png  used on input line 98.
@@ -1509,7 +1509,7 @@ LaTeX Font Info:    Font shape `T1/LinuxLibertineT-TLF/m/n' will be
 (Font)              scaled to size 10.0pt on input line 98.
 LaTeX Font Info:    Font shape `T1/LinuxLibertineT-TLF/b/n' will be
 (Font)              scaled to size 10.0pt on input line 98.
-<./img/ClassificationDecentralized.png, id=228, 786.94pt x 729.72626pt>
+<./img/ClassificationDecentralized.png, id=256, 786.94pt x 729.72626pt>
 File: ./img/ClassificationDecentralized.png Graphic file (type png)
 <use ./img/ClassificationDecentralized.png>
 Package pdftex.def Info: ./img/ClassificationDecentralized.png  used on input line 99.
@@ -1519,7 +1519,7 @@ Overfull \hbox (14.5376pt too wide) in paragraph at lines 98--99
  [][][] 
  []
 
-<./img/ClassificationHierarchical.png, id=232, 926.46124pt x 866.23625pt>
+<./img/ClassificationHierarchical.png, id=260, 926.46124pt x 866.23625pt>
 File: ./img/ClassificationHierarchical.png Graphic file (type png)
 <use ./img/ClassificationHierarchical.png>
 Package pdftex.def Info: ./img/ClassificationHierarchical.png  used on input line 122.
@@ -1535,7 +1535,7 @@ Overfull \hbox (4.44176pt too wide) in paragraph at lines 140--147
 
 Package cleveref Info: loaded `english' language definitions on input line 154.
 [18 <./img/ClassificationHierarchical.png>]
-<./img/ClassificationDirect.png, id=254, 961.5925pt x 603.25375pt>
+<./img/ClassificationDirect.png, id=282, 961.5925pt x 603.25375pt>
 File: ./img/ClassificationDirect.png Graphic file (type png)
 <use ./img/ClassificationDirect.png>
 Package pdftex.def Info: ./img/ClassificationDirect.png  used on input line 200.
@@ -1567,7 +1567,7 @@ Package cleveref Info: loaded `english' language definitions on input line 318.
 [22]
 Package cleveref Info: loaded `english' language definitions on input line 364.
  [23]
-<./img/ExampleSRRS-2D.png, id=301, 1231.60126pt x 919.435pt>
+<./img/ExampleSRRS-2D.png, id=330, 1231.60126pt x 919.435pt>
 File: ./img/ExampleSRRS-2D.png Graphic file (type png)
 <use ./img/ExampleSRRS-2D.png>
 Package pdftex.def Info: ./img/ExampleSRRS-2D.png  used on input line 405.
@@ -1578,7 +1578,7 @@ LaTeX Warning: `h' float specifier changed to `ht'.
 
 Package cleveref Info: loaded `english' language definitions on input line 417.
 [24]
-<./img/ExampleSRRS-2D-2.png, id=312, 792.9625pt x 939.51pt>
+<./img/ExampleSRRS-2D-2.png, id=340, 792.9625pt x 939.51pt>
 File: ./img/ExampleSRRS-2D-2.png Graphic file (type png)
 <use ./img/ExampleSRRS-2D-2.png>
 Package pdftex.def Info: ./img/ExampleSRRS-2D-2.png  used on input line 427.
@@ -1589,383 +1589,5 @@ LaTeX Warning: `h' float specifier changed to `ht'.
 
 Package cleveref Info: loaded `english' language definitions on input line 453.
 [25 <./img/ExampleSRRS-2D.png>]
-<./img/Example2D-diagram2.png, id=322, 796.9775pt x 642.4pt>
-File: ./img/Example2D-diagram2.png Graphic file (type png)
-<use ./img/Example2D-diagram2.png>
-Package pdftex.def Info: ./img/Example2D-diagram2.png  used on input line 457.
-(pdftex.def)             Requested size: 284.52756pt x 229.34259pt.
-
-
-LaTeX Warning: `h' float specifier changed to `ht'.
-
-Package cleveref Info: loaded `english' language definitions on input line 467.
-[26 <./img/ExampleSRRS-2D-2.png>]
-<./img/ExampleLipson.png, id=333, 931.48pt x 699.61375pt>
-File: ./img/ExampleLipson.png Graphic file (type png)
-<use ./img/ExampleLipson.png>
-Package pdftex.def Info: ./img/ExampleLipson.png  used on input line 500.
-(pdftex.def)             Requested size: 398.33858pt x 299.18407pt.
-
-
-LaTeX Warning: `h' float specifier changed to `ht'.
-
-Package cleveref Info: loaded `english' language definitions on input line 514.
-[27 <./img/Example2D-diagram2.png>]
-Package cleveref Info: loaded `english' language definitions on input line 530.
- [28 <./img/ExampleLipson.png>]
-<./img/Material-robot_cell.png, id=356, 461.725pt x 472.76625pt>
-File: ./img/Material-robot_cell.png Graphic file (type png)
-<use ./img/Material-robot_cell.png>
-Package pdftex.def Info: ./img/Material-robot_cell.png  used on input line 560.
-(pdftex.def)             Requested size: 170.71652pt x 174.79813pt.
-<./img/Material-robot_robot.png, id=357, 1019.81pt x 658.46pt>
-File: ./img/Material-robot_robot.png Graphic file (type png)
-<use ./img/Material-robot_robot.png>
-Package pdftex.def Info: ./img/Material-robot_robot.png  used on input line 561.
-(pdftex.def)             Requested size: 284.52756pt x 183.71446pt.
-
-Overfull \hbox (42.99036pt too wide) in paragraph at lines 560--561
- [][][] 
- []
-
-<./img/Material-robot-assembly.png, id=360, 1117.17375pt x 951.555pt>
-File: ./img/Material-robot-assembly.png Graphic file (type png)
-<use ./img/Material-robot-assembly.png>
-Package pdftex.def Info: ./img/Material-robot-assembly.png  used on input line 576.
-(pdftex.def)             Requested size: 426.79134pt x 363.51123pt.
-
-Overfull \hbox (8.53761pt too wide) in paragraph at lines 576--577
- [][] 
- []
-
-Package cleveref Info: loaded `english' language definitions on input line 579.
-[29 <./img/Material-Robot_cell.png> <./img/Material-robot_robot.png>]
-Package cleveref Info: loaded `english' language definitions on input line 602.
- [30 <./img/Material-robot-assembly.png>]
-Overfull \hbox (18.3258pt too wide) in paragraph at lines 612--619
-[]\T1/LinuxLibertineT-TLF/m/n/12 While this model is a proof-of-concept, it suc-cess-fully demon-strates robotic self-replication
- []
-
-)
-Package cleveref Info: loaded `english' language definitions on input line 46.
- [31] (./text/research_questions_methodology.tex
-chapter 3.
-
-Overfull \hbox (0.96817pt too wide) in paragraph at lines 15--18
-\T1/LinuxLibertineT-TLF/m/n/12 straints of self-replicating robots into ex-pres-sive temporal-logic mod-els and spec-
- []
-
-[32
-
-]
-Package cleveref Info: loaded `english' language definitions on input line 106.
- [33]
-Package cleveref Info: loaded `english' language definitions on input line 117.
- [34]
-chapter 4.
-
-Underfull \hbox (badness 10000) in paragraph at lines 140--140
-[]|\T1/LinuxLibertineT-TLF/b/n/12 Physics
- []
-
-
-Overfull \hbox (4.45041pt too wide) in paragraph at lines 140--140
-[]|\T1/LinuxLibertineT-TLF/b/n/12 Modularity
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 142--142
-[]|\T1/LinuxLibertineT-TLF/m/n/12 Gazebo+
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 144--144
-[]|\T1/LinuxLibertineT-TLF/m/n/12 Strong via
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 145--145
-[]|\T1/LinuxLibertineT-TLF/m/n/12 ROS in-te-gra-
- []
-
-
-Underfull \hbox (badness 5316) in paragraph at lines 145--145
-\T1/LinuxLibertineT-TLF/m/n/12 tion, plu-g-ins,
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 145--145
-\T1/LinuxLibertineT-TLF/m/n/12 Python/C++
- []
-
-
-Overfull \hbox (5.25444pt too wide) in paragraph at lines 148--148
-[]|\T1/LinuxLibertineT-TLF/m/n/12 CoppeliaSim
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 150--150
-[]|\T1/LinuxLibertineT-TLF/m/n/12 Native
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 150--150
-\T1/LinuxLibertineT-TLF/m/n/12 mod-u-lar
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 151--151
-[]|\T1/LinuxLibertineT-TLF/m/n/12 Lua, Python
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 155--155
-[]|\T1/LinuxLibertineT-TLF/m/n/12 Medium
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 156--156
-[]|\T1/LinuxLibertineT-TLF/m/n/12 Good (via
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 156--156
-\T1/LinuxLibertineT-TLF/m/n/12 URDF
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 157--157
-[]|\T1/LinuxLibertineT-TLF/m/n/12 Python API
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 158--159
-[]|\T1/LinuxLibertineT-TLF/m/n/12 Cube/voxel-based sys-tems
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 163--163
-[]|\T1/LinuxLibertineT-TLF/m/n/12 C/C++
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 163--163
-\T1/LinuxLibertineT-TLF/m/n/12 /Python
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 164--165
-[]|\T1/LinuxLibertineT-TLF/m/n/12 Lightweight sim-u-la-tion of
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 166--166
-[]|\T1/LinuxLibertineT-TLF/m/n/12 Unity+
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 168--168
-[]|\T1/LinuxLibertineT-TLF/m/n/12 High
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 168--168
-\T1/LinuxLibertineT-TLF/m/n/12 (cus-tom
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 169--169
-[]|\T1/LinuxLibertineT-TLF/m/n/12 C#,Python
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 170--171
-[]|\T1/LinuxLibertineT-TLF/m/n/12 Learning-based or
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 170--171
-\T1/LinuxLibertineT-TLF/m/n/12 perception-driven repli-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 172--172
-[]|\T1/LinuxLibertineT-TLF/m/n/12 Isaac Sim
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 174--174
-[]|\T1/LinuxLibertineT-TLF/m/n/12 Strong
- []
-
-
-Underfull \hbox (badness 2065) in paragraph at lines 174--174
-\T1/LinuxLibertineT-TLF/m/n/12 (via Om-ni-
- []
-
-
-Underfull \hbox (badness 5460) in paragraph at lines 176--177
-[]|\T1/LinuxLibertineT-TLF/m/n/12 High-fidelity sim-u-la-tion of
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 178--178
-[]|\T1/LinuxLibertineT-TLF/m/n/12 Golly
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 178--178
-\T1/LinuxLibertineT-TLF/m/n/12 Net-L-ogo
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 180--180
-[]|\T1/LinuxLibertineT-TLF/m/n/12 Tile-based,
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 181--181
-[]|\T1/LinuxLibertineT-TLF/m/n/12 Rule-based/
- []
-
-
-Underfull \hbox (badness 6477) in paragraph at lines 182--183
-\T1/LinuxLibertineT-TLF/m/n/12 Neu-mann or Lang-ton au-
- []
-
-
-Overfull \hbox (14.03203pt too wide) in paragraph at lines 138--185
- [][] 
- []
-
-
-LaTeX Warning: `!h' float specifier changed to `!ht'.
-
-<./img/Gazebo.png, id=402, 1013.7875pt x 887.315pt>
-File: ./img/Gazebo.png Graphic file (type png)
-<use ./img/Gazebo.png>
-Package pdftex.def Info: ./img/Gazebo.png  used on input line 195.
-(pdftex.def)             Requested size: 426.79134pt x 373.53627pt.
-
-Overfull \hbox (8.53761pt too wide) in paragraph at lines 195--196
- [][] 
- []
-
-
-LaTeX Warning: `h' float specifier changed to `ht'.
-
-[35
-
-]
-Package cleveref Info: loaded `english' language definitions on input line 242.
- [36]
-Package cleveref Info: loaded `english' language definitions on input line 250.
- [37 <./img/Gazebo.png>])
-Package cleveref Info: loaded `english' language definitions on input line 48.
- [38] (./text/reachability.tex)
-Package cleveref Info: loaded `english' language definitions on input line 52.
- [39]
-chapter without number
-LaTeX Font Info:    Font shape `T1/LinuxLibertineT-TLF/m/sc' will be
-(Font)              scaled to size 12.0pt on input line 52.
-
-Overfull \hbox (5.67776pt too wide) in paragraph at lines 52--52
-\T1/LinuxLibertineT-TLF/m/it/12 Ver-i-fi-ca-tion (CAV '02)\T1/LinuxLibertineT-TLF/m/n/12 . Vol. 2404. Lec-ture Notes in Com-puter Sci-ence. Copen-
- []
-
-
-Overfull \hbox (3.04646pt too wide) in paragraph at lines 52--52
-[]\T1/LinuxLibertineT-TLF/m/n/12 Victor Zykov et al. ^^P  Self-reproducing ma-chines^^Q. In: \T1/LinuxLibertineT-TLF/m/it/12 Na-ture \T1/LinuxLibertineT-TLF/m/n/12 435.7038 (2005).
- []
-
-[40
-
-{/usr/share/texlive/texmf-dist/fonts/enc/dvips/libertine/lbtn_ncsllp.enc}]
-Overfull \hbox (9.62698pt too wide) in paragraph at lines 52--52
-\T1/LinuxLibertineT-TLF/m/n/12 tive Frame-work and a Phys-i-cal Demon-stra-tion from Low-Complexity Parts^^Q.
- []
-
-
-Overfull \hbox (0.76227pt too wide) in paragraph at lines 52--52
-\T1/LinuxLibertineT-TLF/m/it/12 tion (CAV 2011)\T1/LinuxLibertineT-TLF/m/n/12 . Ed. by Ganesh Gopalakr-ish-nan and Shaz Qadeer. Vol. 6806.
- []
-
-
-Overfull \hbox (15.7332pt too wide) in paragraph at lines 52--52
-\T1/LinuxLibertineT-TLF/m/n/12 2014, pp. 234^^U244. \T1/LinuxLibertineT-TLF/m/sc/12 doi\T1/LinuxLibertineT-TLF/m/n/12 : []$10 . 29007 / slnn$[]. \T1/LinuxLibertineT-TLF/m/sc/12 url\T1/LinuxLibertineT-TLF/m/n/12 : []$https : / / easychair . org / publications /
- []
-
-
-Overfull \hbox (7.09537pt too wide) in paragraph at lines 52--52
-[]\T1/LinuxLibertineT-TLF/m/n/12 Axel Legay, Zacharias R. M. Sed-wards, and Louis-Marie Traonouez. ^^P  Plasma
- []
-
-
-Overfull \hbox (2.09122pt too wide) in paragraph at lines 52--52
-[]\T1/LinuxLibertineT-TLF/m/n/12 Christian Dehn-ert et al. ^^P  A Storm is Com-ing: A Mod-ern Prob-a-bilis-tic Model
- []
-
-Package cleveref Info: loaded `english' language definitions on input line 52.
-[41]
-Overfull \hbox (39.75421pt too wide) in paragraph at lines 52--52
-[]\T1/LinuxLibertineT-TLF/m/n/12 Ning Tan et al. ^^P  A Frame-work for Tax-on-omy and Eval-u-a-tion of Self-Reconfigurable
- []
-
-
-Overfull \hbox (19.19334pt too wide) in paragraph at lines 52--52
-[]\T1/LinuxLibertineT-TLF/m/n/12 Andrew Jones and Jeremy Straub. ^^P  Sim-u-la-tion and Anal-y-sis of Self-Replicating
- []
-
-
-Overfull \hbox (2.2806pt too wide) in paragraph at lines 52--52
-[]\T1/LinuxLibertineT-TLF/m/n/12 Andrew Burkhard Jones. ^^P  Decision-Making for Self-Replicating 3D Printed
- []
-
-
-Overfull \hbox (35.91733pt too wide) in paragraph at lines 52--52
-[]\T1/LinuxLibertineT-TLF/m/n/12 Gregory S. Chirikjian. ^^P  En-tropy, Sym-me-try, and the Dif-fi-culty of Self-Replication^^Q.
- []
-
-
-Overfull \hbox (0.26779pt too wide) in paragraph at lines 52--52
-\T1/LinuxLibertineT-TLF/m/n/12 Notes in Com-puter Sci-ence. Moun-tain View, CA, USA: Springer, June 2024,
- []
-
-Package cleveref Info: loaded `english' language definitions on input line 56.
-[42]
-chapter A.
-) [43
-
-] (./thesis.aux
-Package cleveref Info: loaded `english' language definitions on input line 10.
-)
- ***********
-LaTeX2e <2023-11-01> patch level 1
-L3 programming layer <2020/03/25>
- ***********
-
-
-LaTeX Warning: There were multiply-defined labels.
-
-Package rerunfilecheck Info: File `thesis.out' has not changed.
-(rerunfilecheck)             Checksum: D41D8CD98F00B204E9800998ECF8427E;0.
-Package logreq Info: Writing requests to 'thesis.run.xml'.
-\openout1 = `thesis.run.xml'.
-
- ) 
-Here is how much of TeX's memory you used:
- 44979 strings out of 474222
- 945908 string characters out of 5748734
- 1944975 words of memory out of 5000000
- 66476 multiletter control sequences out of 15000+600000
- 679229 words of font info for 100 fonts, out of 8000000 for 9000
- 1141 hyphenation exceptions out of 8191
- 125i,20n,131p,10933b,2326s stack positions out of 10000i,1000n,20000p,200000b,200000s
-</usr/share/texlive/texmf-dist/fonts/type1/public/libertinust1math/LibertinusT1Math.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/libertine/LinBiolinumT.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/libertine/LinBiolinumTB.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/libertine/LinLibertineT.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/libertine/LinLibertineTB.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/libertine/LinLibertineTI.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/stix/stix-mathcal.pfb>
-Output written on thesis.pdf (47 pages, 5625067 bytes).
-PDF statistics:
- 671 PDF objects out of 1000 (max. 8388607)
- 558 compressed objects within 6 object streams
- 149 named destinations out of 1000 (max. 500000)
- 288 words of extra memory for PDF output out of 10000 (max. 10000000)
-
+<./img/Example2D-diagram2.png, id=350, 796.9775pt x 642.4pt>
+File: ./img/Example2D-diagr

@@ -16,7 +16,10 @@ This paper will address the following research questions:
         structural constraints of self-replicating robots into expressive 
         temporal-logic models and specifications?
     \item What limitations—computational, semantic, or 
-        modelling-related -- does developed approach face, and how might these limitations be mitigated?
+        modelling-related -- does developed approach face, and how might these limitations be mitigated?\\
+        Compare the  finite state machine algorithm control with SMV counterexample-based control 
+        in simulation by time, flexibility
+
 \end{enumerate}
 
 
@@ -286,8 +289,9 @@ robustness in all logical conditions—an essential feature for deploying self
 % \section{Analysis of results}
 
 
+\chapter{Implementation}
 
-% \section{Evaluation}
+\section{Implementation}
 
 \subsection{Experimental setup}
 As a subject of a research a simple robot will be taken, with two grippers 
@@ -295,6 +299,13 @@ and an elbow joint that can manipulate blocks (cuboctahedral voxels) one at a ti
 An experimental platform will be realised as a simulation in Gazebo environment 
 with control from ROS2 nodes. The  blocks and environment geometry robot joints 
 and sensors and conections will be defined in Xacro/URDF files. 
+
+    TODO: plan experiments: 
+    Criteria: success rate, average time, \\
+    1. Test with predefined assembly process (search, move, repeat) 
+    with random distribution of the parts\\
+    2. Test with predefined assembly process (...) with 
+    , criteria and analysis 
 
 
 

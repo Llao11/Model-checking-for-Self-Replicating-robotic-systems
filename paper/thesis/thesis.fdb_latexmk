@@ -1,12 +1,12 @@
 # Fdb version 4
-["biber thesis"] 1752245184.76996 "thesis.bcf" "thesis.bbl" "thesis" 1753282268.19589 0
+["biber thesis"] 1752245184.76996 "thesis.bcf" "thesis.bbl" "thesis" 1756228365.95544 0
   "literature.bib" 1752406572.95526 14251 917187a107f2a21b34ad809a70918bbb ""
-  "thesis.bcf" 1753282268.02329 113119 47f4c5ca2153173314f77f969da32095 "pdflatex"
+  "thesis.bcf" 1756228365.75545 113119 47f4c5ca2153173314f77f969da32095 "pdflatex"
   (generated)
   "thesis.bbl"
   "thesis.blg"
   (rewritten before read)
-["pdflatex"] 1753282263.89128 "thesis.tex" "thesis.pdf" "thesis" 1753282268.19636 0
+["pdflatex"] 1756228361.2983 "thesis.tex" "thesis.pdf" "thesis" 1756228365.95582 0
   "/etc/texmf/web2c/texmf.cnf" 1746443699.79388 475 c0e671620eb5563b2130f56340a5fde8 ""
   "/usr/share/texlive/texmf-dist/fonts/enc/dvips/libertine/lbtn_25tcsq.enc" 1490131464 2921 8ca0eb0831f9bc5da080d3697cfe67bf ""
   "/usr/share/texlive/texmf-dist/fonts/enc/dvips/libertine/lbtn_76gpa5.enc" 1490131464 2933 9ad527ce78d7c5fa0a642dead095f172 ""
@@ -262,6 +262,9 @@
   "img/ExampleSRRS-2D-2.png" 1752406572.94126 836740 b107c235c1ab52c8674e1646734a30d6 ""
   "img/ExampleSRRS-2D.png" 1752406572.94526 945384 8915668375a60d829fd3d464464b59f6 ""
   "img/Gazebo.png" 1752406572.94626 109766 e22aaef72a8a209e32cb980869834552 ""
+  "img/LocalAssembly.png" 1755852456.85818 84494 cc5073de357f63efa98c3182c17f2297 ""
+  "img/LocalAssemblyWithRMC.png" 1755852497.49367 120584 fbf6297613f27e3b8e8c4a53896f5fd2 ""
+  "img/LocalAssemblyWithRMCandCE.png" 1755852527.58529 127390 17e426d2888a16aa975f196f79666ccd ""
   "img/Material-Robot_cell.png" 1752406572.94626 219221 5f9b1141971cdbeee68a705ac6cfa075 ""
   "img/Material-robot-assembly.png" 1752406572.94826 679530 ca526cbf46650d3876295c3a8f9cf3f6 ""
   "img/Material-robot_robot.png" 1752406572.95326 332200 2e79307de2180bc0dc63219f038a2288 ""
@@ -271,14 +274,14 @@
   "text/backgroundSRRS.tex" 1752406572.95626 32931 01f60197bb2eac47a5cc2847060a7ac1 ""
   "text/introduction.tex" 1752406572.95626 2345 5b104f99075af8edc234f1f32f683dc5 ""
   "text/main.tex" 1752406572.95626 2101 05ea4d87517d532b213b0b296f26b732 ""
-  "text/reachability.tex" 1753282257.45849 225 77ed8a4ccc277f3afe33e89827ba742d ""
-  "text/research_questions_methodology.tex" 1752406572.95626 15196 8c6f4f16fcfa2c10a23cc1eb8f4b709b ""
-  "thesis.aux" 1753282268.00529 30891 0bb6cf2f5a474b12a3110e20d37d4e2e "pdflatex"
+  "text/reachability.tex" 1756228360.00749 3638 dcc498a2d56c935623f1cbc160b7cdfa ""
+  "text/research_questions_methodology.tex" 1756215807.2972 15642 08c046c0bc88f839f34650531113ede4 ""
+  "thesis.aux" 1756228365.73645 36720 71474f9ce4f5a56497e47f51fac228b0 "pdflatex"
   "thesis.bbl" 1752406572.95726 41707 c0921bc802966ca4b4d0382145e8184e "biber thesis"
-  "thesis.out" 1753282265.56032 0 d41d8cd98f00b204e9800998ecf8427e "pdflatex"
-  "thesis.run.xml" 1753282268.02487 2325 eb57b2c8ff26aef91d87581d4112222d "pdflatex"
+  "thesis.out" 1756228362.95149 0 d41d8cd98f00b204e9800998ecf8427e "pdflatex"
+  "thesis.run.xml" 1756228365.7578 2325 eb57b2c8ff26aef91d87581d4112222d "pdflatex"
   "thesis.tex" 1752406572.97326 2220 01605dd36878cbae98e9178e158bdde4 ""
-  "thesis.toc" 1753282268.02487 3574 aa9ddc480f55aab7b29467ba7c153210 "pdflatex"
+  "thesis.toc" 1756228365.7578 4545 8c9c81238dec70137c3b12423210af6b "pdflatex"
   (generated)
   "thesis.aux"
   "thesis.bcf"
