@@ -31,7 +31,7 @@
     <plugin filename="libgz-sim8-detachable-joint-system.so" name="gz::sim::systems::DetachableJoint">
       <parent_link>part</parent_link>
       <child_model>robot</child_model>
-      <child_link>block0_fix</child_link>
+      <child_link>block0</child_link>
       <attach_topic>attach_link1_obj_1</attach_topic>
       <detach_topic>detach1_objects</detach_topic>
       <output_topic>detachable_obj_link1_state1</output_topic>
@@ -40,7 +40,7 @@
     <plugin filename="libgz-sim8-detachable-joint-system.so" name="gz::sim::systems::DetachableJoint">
       <parent_link>part</parent_link>
       <child_model>robot</child_model>
-      <child_link>block14fix</child_link>
+      <child_link>block11</child_link>
       <attach_topic>attach_link2_obj_1</attach_topic>
       <detach_topic>detach2_objects</detach_topic>
       <output_topic>detachable_obj_link2_state1</output_topic>

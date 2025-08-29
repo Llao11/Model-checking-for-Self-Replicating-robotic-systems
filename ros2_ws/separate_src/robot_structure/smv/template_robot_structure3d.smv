@@ -114,13 +114,14 @@ DEFINE
     cosYaw := cos.val;
 
  --- Cartesian delta (lies in the XY-plane) ------------------------ */
-    deltaX := (LEN * sinYaw) / 100;
-    deltaY := (LEN * cosYaw) / 100;
-    deltaZ := 0;
+    deltaX := 0; --(LEN * sinYaw) / 100;
+    deltaY := 0; --(LEN * cosYaw) / 100;
+    deltaZ := LEN;
 
     x_end := baseX + deltaX;
     y_end := baseY + deltaY;
     z_end := baseZ + deltaZ;
+
 
 
  --===== HORIZONTAL ROTATING BLOCK========================================
@@ -175,7 +176,6 @@ DEFINE
     baseY :=0;
     baseZ :=0;
     endX := block_5.x_end;
-
     endY := block_5.y_end;
     endZ := block_5.z_end;
 
@@ -185,12 +185,20 @@ DEFINE
     -- error := LEN*sin10 = 10 * 0,173 = 1,73;
 
     error := 1; -- +-1 (error=2) endX and endY coordinates error while checking reachability
-checkX := 1;
-checkY := 1;
-checkZ := 1;
+checkX := 60;
+checkY := 60;
+checkZ := 60;
     endX_inside_limits := (endX <= (checkX + error) & endX >= (checkX - error));
     endY_inside_limits := (endY <= (checkY + error) & endY >= (checkY - error));
     endZ_inside_limits := (endZ <= (checkZ + error) & endZ >= (checkZ - error));
+    blocks_above_serface := (
+    block_0.z_end>=0 & 
+    block_1.z_end>=0 &
+    block_2.z_end>=0 &
+    block_3.z_end>=0 &
+    block_4.z_end>=0 &
+    block_5.z_end>=0 
+    );
 
 ASSIGN
     init(yaw1)   := 0;
@@ -230,6 +238,5 @@ ASSIGN
 -- LTLSPEC 
 --     G F !(endX_inside_limits & endY_inside_limits & endZ_inside_limits)
 CTLSPEC 
-      AG !(endX_inside_limits & endY_inside_limits & endZ_inside_limits)
-
+      AG !(endX_inside_limits & endY_inside_limits & endZ_inside_limits & blocks_above_serface)
 

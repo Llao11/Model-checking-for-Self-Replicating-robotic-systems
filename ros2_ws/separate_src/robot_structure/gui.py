@@ -14,6 +14,7 @@ limit‑boxes, but everything is positioned via `grid()`.
 """
 
 from __future__ import annotations, print_function, with_statement
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolbar2Tk
 
 import random
 import re
@@ -39,6 +40,7 @@ Point3D = [float, float, float]
 # Tkinter GUI wrapper
 class App(tk.Tk):
     def __init__(self) -> None:
+        """Initiate GUI"""
         super().__init__()
         self.title("3‑D Line Demo")
         self.geometry("900x700")
@@ -60,9 +62,12 @@ class App(tk.Tk):
         self.canvas_widget = self.canvas.get_tk_widget()
         self.canvas_widget.grid(row=0, column=0, sticky="nsew")
 
+        toolbar = NavigationToolbar2Tk(self.canvas, self, pack_toolbar=False)
+        toolbar.grid(row=1, column=0, sticky="ew")
+        toolbar.update()
         # Control panel --------------------------------------------------
         self.ctrl = tk.Frame(self)
-        self.ctrl.grid(row=1, column=0, sticky="ew", pady=5)
+        self.ctrl.grid(row=2, column=0, sticky="ew", pady=5)
         self.ctrl.columnconfigure((0, 1, 2, 3, 4, 5), weight=1)
 
         tk.Button(self.ctrl, text="Show Robot", command=self.show_robot).grid(
@@ -83,7 +88,8 @@ class App(tk.Tk):
         tk.Button(self.ctrl, text="Set goal point", command=self.add_goal_point).grid(
             row=0, column=4, padx=5, sticky="w"
         )
-        tk.Button(self.ctrl, text="Check model", command=self.check_model).grid(
+        # tk.Button(self.ctrl, text="Check model", command=self.check_model).grid(
+        tk.Button(self.ctrl, text="Check model", command=self.check_points).grid(
             row=0, column=5, padx=5, sticky="e"
         )
         self.status_var = tk.StringVar(value="Ready")
@@ -96,11 +102,14 @@ class App(tk.Tk):
 
         # Initial blank plot
         self.plot.draw_lines(self.points)
+        # self.add_points()
 
     def change_status(self, new_status):
+        """change status label in UI"""
         self.status_var.set(new_status)
 
     def show_coord_change(self, index):
+        """show UI for changing block"""
         # Axis‑limit widgets --------------------------------------------
         coordinates_frame = tk.Frame(self.ctrl)
         coordinates_frame.grid(row=index + 1, column=0, columnspan=3, padx=10)
@@ -137,12 +146,27 @@ class App(tk.Tk):
         self.plot.refresh(self.points)
 
     def show_robot(self) -> None:
-        """Render a little 3‑D L‑shaped robot made of 2 points."""
+        """Render a robot"""
         self.points = []
         for idx, pt in enumerate(self.robot_structure):
             self.plot.add_point_with_line(self.points, *pt)
             self.show_coord_change(idx)
         self.plot.refresh(self.points)
+
+    def check_model_nonthreaded(self) -> None:
+        """run smv template and get counterexample"""
+        self.change_status("Checking ...")
+
+        result = subprocess.run(
+            [
+                ".././NuSMV-2.7.0-linux64/bin/NuSMV",
+                "-dynamic",
+                "./smv/template_robot_structure3d.smv",
+            ],
+            capture_output=True,
+            text=True,
+        )
+        self.finish_checking(result)
 
     def check_model(self) -> None:
         """run smv template and get counterexample"""
@@ -163,9 +187,11 @@ class App(tk.Tk):
         threading.Thread(target=start_checking).start()
 
     def finish_checking(self, result):
+        """process model checking result"""
         if "is true" in result.stdout:
             print("The LTL property holds.")
             self.change_status("No counterexample found")
+            self.point_check_status = False
         else:
             counterexample = result.stdout
             blocks = {}
@@ -190,15 +216,17 @@ class App(tk.Tk):
             ]
             result.insert(0, [base["X"], base["Y"], base["Z"]])
             status = "Counterexample:"
-            self.change_status(status + "\n" + str(result))
+            self.change_status(str(status + "\n" + str(result)))
             print(result)
             self.robot_structure = result
             self.plot.refresh(self.points)
             self.show_robot()
+            self.point_check_status = True
 
-    def get_goal_from_model(self, x, y, z) -> None:
+    def get_goal_from_model(self):
         """Get goal point coordinates from current NuSMV model"""
         model_path = "./smv/template_robot_structure3d.smv"
+        x, y, z = 0, 0, 0
         with open(model_path, "r") as model:
             data = model.read()
             for line in data.splitlines():
@@ -210,13 +238,14 @@ class App(tk.Tk):
                     prefix = match.group()
                     if "X" in prefix:
                         x = int(line.strip().removeprefix(prefix).strip(";"))
-                        print(x, end="")
+                        print(x, end=";")
                     if "Y" in prefix:
                         y = int(line.strip().removeprefix(prefix).strip(";"))
-                        print(y, end="")
+                        print(y, end=";")
                     if "Z" in prefix:
                         z = int(line.strip().removeprefix(prefix).strip(";"))
                         print(z)
+        return x, y, z
 
     def change_goal_in_model(self, x, y, z) -> None:
         """Set goal point coordinates in NuSMV model"""
@@ -239,12 +268,24 @@ class App(tk.Tk):
                 else:
                     model.write(line)
 
+    def check_points(self) -> None:
+        """Add set of available points"""
+        print("start checking points")
+        for i in range(-60, 70, 10):
+            for j in range(-60, 70, 10):
+                for k in range(0, 70, 10):
+                    self.change_goal_in_model(i, j, k)
+                    self.check_model_nonthreaded()
+                    print(i, j, k, self.point_check_status)
+                    if self.point_check_status:
+                        self.plot.draw_point(i, j, k)
+
     def add_goal_point(self) -> None:
         """Add goal point to NuSMV model and to a graph"""
         x = int(self.goalX.get().strip())
         y = int(self.goalY.get().strip())
         z = int(self.goalZ.get().strip())
-        self.plot.draw_point(x, y, z, f"Target:({x},{y},{z})")
+        self.plot.draw_target(x, y, z, f"Target:({x},{y},{z})")
         self.plot.refresh(self.points)
         self.change_goal_in_model(x, y, z)
         print("Target point set: x={0}, y={1}, z={2}".format(x, y, z))

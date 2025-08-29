@@ -106,7 +106,15 @@ class Plot3D:
         else:
             raise IndexError("Point index out of range")
 
-    def draw_point(self, x: float, y: float, z: float, label: str | None = None):
+    def draw_point(self, x: float, y: float, z: float):
+        """Draw point"""
+        self.target_ref = self.ax.scatter([x], [y], [z], s=4, c="red")
+        self.ax.auto_scale_xyz([x], [y], [z])  # keep axes nicely scaled
+        self._apply_limits()  # re-apply any user limits
+        self.fig.canvas.draw()
+
+    def draw_target(self, x: float, y: float, z: float, label: str | None = None):
+        """Draw target point (only one)"""
         self.target = (x, y, z, label)
         if self.target_ref:
             self.target_ref.remove()
@@ -127,7 +135,7 @@ class Plot3D:
         if not pts or self._line is None:
             self.draw_lines(pts)  # falls back to full redraw
             if self.target is not None:
-                self.draw_point(
+                self.draw_target(
                     self.target[0], self.target[1], self.target[2], self.target[3]
                 )
             return
