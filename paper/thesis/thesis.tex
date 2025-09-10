@@ -36,6 +36,20 @@
 \usepackage{subcaption}
 \usepackage{lipsum} % only used for blind text, can be removed in production
 
+\usepackage{listings}
+\usepackage{xcolor}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\lstset{
+    backgroundcolor=\color{backcolour},   % Light gray background color
+    basicstyle=\ttfamily\footnotesize,    % Typewriter font with footnotesize text
+    numbers=left,                         % Line numbers on the left
+    numberstyle=\tiny\color{codegray},    % Line number style: tiny gray font
+    numbersep=5pt,                       % Space between numbers and code
+    frame=single,                        % Frame the code block with a single line
+    breaklines=true,                     % Automatic line breaking
+    captionpos=b                        % Caption position at the bottom (if used)
+}
 %
 % Suggested Packages
 % ------------------

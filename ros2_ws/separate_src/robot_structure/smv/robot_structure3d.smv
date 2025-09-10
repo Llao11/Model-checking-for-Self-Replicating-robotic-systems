@@ -102,9 +102,36 @@ DEFINE
     z_end  := LEN;   -- vertical
     yawAbs := 0;     -- no rotation
 
+
+ --===== FIX BLOCK========================================
+
+MODULE block_fix(pitchVar, LEN, baseX, baseY, baseZ, parentYaw)
+VAR
+    sinPitchVar : sin(pitchVar);
+    cosPitchVar : cos(pitchVar);
+    sinYawVar : sin(parentYaw);
+    cosYawVar : cos(parentYaw);
+DEFINE
+-- sin and cos [0,1] => [0,100]
+    sinPitch := sinPitchVar.val;
+    cosPitch := cosPitchVar.val;
+-- sin and cos [0,1] => [0,100]
+    sinYaw := sinYawVar.val;
+    cosYaw := cosYawVar.val;
+
+    -- ----- Cartesian deltas (integer, scaled ÷10000) -------------------- 
+    deltaX := (LEN * cosPitch * cosYaw) / 10000;
+    deltaY := (LEN * cosPitch * sinYaw) / 10000;
+    deltaZ := (LEN * sinPitch)          / 100;
+
+    x_end := baseX + deltaX;
+    y_end := baseY + deltaY;
+    z_end := baseZ + deltaZ;
+
+    yawAbs := parentYaw;   -- this joint does not change yaw
  --===== VERTICAL ROTATING BLOCK========================================
 
-MODULE block_rot_vert(yawVar, LEN, baseX, baseY, baseZ, parentYaw)
+MODULE block_rot_ver(yawVar, LEN, baseX, baseY, baseZ, parentYaw)
 VAR
     sin : sin(yawAbs);
     cos : cos(yawAbs);
@@ -157,18 +184,19 @@ MODULE main
 
 VAR 
     -- joint angles (nondet. for exploration)
-    yaw1 : 0..35;
-    pitch2 : 0..35;   -- link2
-    pitch3 : 0..35;   -- link3
-    pitch4 : 0..35;   -- link3
-    yaw5 : 0..35;
+    yaw1 :      0..35;
+    pitch2 :    0..35;   -- link2
+    pitch3 :    0..35;   -- link3
+    pitch4 :    0..35;   -- link3
+    yaw5 :      0..35;
     block_0 : BaseBlock(LEN,baseX,baseY,baseZ);
-    block_1 : block_rot_vert(yaw1, LEN, block_0.x_end, block_0.y_end, block_0.z_end, block_0.yawAbs);
+    block_1 : block_rot_ver(yaw1,   LEN, block_0.x_end, block_0.y_end, block_0.z_end, block_0.yawAbs);
     block_2 : block_rot_hor(pitch2, LEN, block_1.x_end, block_1.y_end, block_1.z_end, block_1.yawAbs);
     block_3 : block_rot_hor(pitch3, LEN, block_2.x_end, block_2.y_end, block_2.z_end, block_2.yawAbs);
     block_4 : block_rot_hor(pitch4, LEN, block_3.x_end, block_3.y_end, block_3.z_end, block_3.yawAbs);
-    block_5 : block_rot_vert(yaw5, LEN, block_4.x_end, block_4.y_end, block_4.z_end, block_4.yawAbs);
+    block_5 : block_rot_hor(yaw5,   LEN, block_4.x_end, block_4.y_end, block_4.z_end, block_4.yawAbs);
     -- block_6 : BaseBlock(LEN,block_5.x_end,block_5.y_end, block_5.z_end);
+
 
 DEFINE
     LEN := 10;           -- same length for all three links
@@ -191,14 +219,14 @@ DEFINE
     endX_inside_limits := (endX <= (checkX + error) & endX >= (checkX - error));
     endY_inside_limits := (endY <= (checkY + error) & endY >= (checkY - error));
     endZ_inside_limits := (endZ <= (checkZ + error) & endZ >= (checkZ - error));
-    blocks_above_serface := (
-    block_0.z_end>=0 & 
-    block_1.z_end>=0 &
-    block_2.z_end>=0 &
-    block_3.z_end>=0 &
-    block_4.z_end>=0 &
-    block_5.z_end>=0 
-    );
+    -- blocks_above_serface := (
+    -- block_0.z_end>=0 & 
+    -- block_1.z_end>=0 &
+    -- block_2.z_end>=0 &
+    -- block_3.z_end>=0 &
+    -- block_4.z_end>=0 &
+    -- block_5.z_end>=0 
+    -- );
 
 ASSIGN
     init(yaw1)   := 0;
@@ -238,5 +266,5 @@ ASSIGN
 -- LTLSPEC 
 --     G F !(endX_inside_limits & endY_inside_limits & endZ_inside_limits)
 CTLSPEC 
-      AG !(endX_inside_limits & endY_inside_limits & endZ_inside_limits & blocks_above_serface)
+      AG !(endX_inside_limits & endY_inside_limits & endZ_inside_limits ) --& blocks_above_serface)
 

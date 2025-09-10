@@ -16,6 +16,8 @@ limit‑boxes, but everything is positioned via `grid()`.
 from __future__ import annotations, print_function, with_statement
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolbar2Tk
 
+from block import Block
+import xml.etree.ElementTree as ET
 import random
 import re
 import subprocess
@@ -34,10 +36,13 @@ from mpl_toolkits.mplot3d import Axes3D  # noqa: F401 – required for 3‑D bac
 # ---------------------------------------------------------------------------
 # Data model helper
 Point3D = [float, float, float]
-
+input_smv_file = "./smv/robot_structure3d.smv"
+output_smv_file = "./smv/template_robot_structure3d.smv"
 
 # ---------------------------------------------------------------------------
 # Tkinter GUI wrapper
+
+
 class App(tk.Tk):
     def __init__(self) -> None:
         """Initiate GUI"""
@@ -88,13 +93,18 @@ class App(tk.Tk):
         tk.Button(self.ctrl, text="Set goal point", command=self.add_goal_point).grid(
             row=0, column=4, padx=5, sticky="w"
         )
-        # tk.Button(self.ctrl, text="Check model", command=self.check_model).grid(
-        tk.Button(self.ctrl, text="Check model", command=self.check_points).grid(
+        tk.Button(self.ctrl, text="Check model", command=self.check_model).grid(
             row=0, column=5, padx=5, sticky="e"
+        )
+        tk.Button(
+            self.ctrl, text="Check reachability", command=self.check_reachability
+        ).grid(row=1, column=5, padx=5, sticky="e")
+        tk.Button(self.ctrl, text="Read xacro", command=self.read_robot_structure).grid(
+            row=2, column=5, padx=5, sticky="e"
         )
         self.status_var = tk.StringVar(value="Ready")
         tk.Label(self.ctrl, textvariable=self.status_var, anchor="w").grid(
-            row=1, column=5, padx=5, sticky="e"
+            row=3, column=5, padx=5, sticky="e"
         )
         tk.Button(self.ctrl, text="Quit", command=self.destroy).grid(
             row=0, column=6, padx=5, sticky="e"
@@ -161,7 +171,7 @@ class App(tk.Tk):
             [
                 ".././NuSMV-2.7.0-linux64/bin/NuSMV",
                 "-dynamic",
-                "./smv/template_robot_structure3d.smv",
+                output_smv_file,
             ],
             capture_output=True,
             text=True,
@@ -177,7 +187,7 @@ class App(tk.Tk):
                 [
                     ".././NuSMV-2.7.0-linux64/bin/NuSMV",
                     "-dynamic",
-                    "./smv/template_robot_structure3d.smv",
+                    output_smv_file,
                 ],
                 capture_output=True,
                 text=True,
@@ -225,9 +235,8 @@ class App(tk.Tk):
 
     def get_goal_from_model(self):
         """Get goal point coordinates from current NuSMV model"""
-        model_path = "./smv/template_robot_structure3d.smv"
         x, y, z = 0, 0, 0
-        with open(model_path, "r") as model:
+        with open(output_smv_file, "r") as model:
             data = model.read()
             for line in data.splitlines():
                 # checkX := 2;
@@ -249,11 +258,9 @@ class App(tk.Tk):
 
     def change_goal_in_model(self, x, y, z) -> None:
         """Set goal point coordinates in NuSMV model"""
-        model_path = "./smv/robot_structure3d.smv"
-        with open(model_path, "r") as model:
+        with open(input_smv_file, "r") as model:
             lines = model.readlines()
-        temp_model_path = "./smv/template_robot_structure3d.smv"
-        with open(temp_model_path, "w") as model:
+        with open(output_smv_file, "w") as model:
             for line in lines:
                 # check[X,Y,Z]\s*:=\s*(-?\d:)
                 if re.search(r"checkX\s*:=\s*-?\d+;", line):
@@ -268,12 +275,12 @@ class App(tk.Tk):
                 else:
                     model.write(line)
 
-    def check_points(self) -> None:
+    def check_reachability(self) -> None:
         """Add set of available points"""
         print("start checking points")
-        for i in range(-60, 70, 10):
-            for j in range(-60, 70, 10):
-                for k in range(0, 70, 10):
+        for i in range(-60, 70, 20):
+            for j in range(-60, 70, 20):
+                for k in range(-60, 70, 20):
                     self.change_goal_in_model(i, j, k)
                     self.check_model_nonthreaded()
                     print(i, j, k, self.point_check_status)
@@ -289,6 +296,46 @@ class App(tk.Tk):
         self.plot.refresh(self.points)
         self.change_goal_in_model(x, y, z)
         print("Target point set: x={0}, y={1}, z={2}".format(x, y, z))
+
+    def read_robot_structure(self, xacro_path="./robot_example.xacro"):
+        """
+        Read robot structure from xacro file in "xacro_path"
+        create:
+        MAIN Module::VAR::blocks_sequence and angles
+        MAIN module::DEFINE::endXYZ=end_blockXYZ
+        MAIN module::ASSIGN::inits and next
+        """
+        # example xacro:
+        # <xacro:block_ver block_number="11" parent_number="10"   x="0"   y="0"    z="0.5" />
+        # example smv:
+
+        # block_0 : BaseBlock(LEN,baseX,baseY,baseZ);
+        # block_1 : block_rot_vert(yaw1, LEN, block_0.x_end, block_0.y_end, block_0.z_end, block_0.yawAbs);
+        # block_2 : block_rot_hor(pitch2, LEN, block_1.x_end, block_1.y_end, block_1.z_end, block_1.yawAbs);
+        structure_xacro = ""
+        smv_var_blocks = "SMV structure: \n"
+        smv_var_angles = "SMV angles: \n"
+        end_block = None
+        with open(xacro_path, "r") as xacro:
+            for line in xacro.readlines():
+                if "xacro:block_" in line:
+                    structure_xacro += line
+                    line = line.strip().lstrip("<xacro:")
+                    block_type = line.split()[0][6]
+                    attrs = dict(re.findall(r'(\w+)="([^"]+)"', line))
+                    num = int(attrs["block_number"])
+                    parent = int(attrs["parent_number"])
+                    x = float(attrs["x"])
+                    y = float(attrs["y"])
+                    z = float(attrs["z"])
+                    current_block = Block(num, block_type, x, y, z, parent)
+                    smv_var_blocks += current_block.get_nusmv_block()
+                    smv_var_angles += current_block.get_nusmv_angle()
+                    end_block = current_block
+        print(structure_xacro)
+        print(smv_var_blocks)
+        print(smv_var_angles)
+        print(end_block.get_nusmv_endblock_definition)
 
 
 # ---------------------------------------------------------------------------

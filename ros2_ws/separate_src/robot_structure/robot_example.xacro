@@ -180,34 +180,23 @@
         </gazebo>
     </xacro:macro>
 
-    <!-- MAIN STRUCTURE -->
     <!-- For Revolute joints parent_coord_system->joint_coordinate_system->child_coordinate_system -->
     <!-- joint CS is relative to parent CS -->
     <!-- child CS is relative to joint -->
     <!-- for fixed joint all CS relative to world -->
 
+    <!-- MAIN STRUCTURE -->
     <xacro:voxel name="block0" origin="0 0 0" color="${red}"/>
-
     <xacro:block_ver block_number="1"  parent_number="0"    x="0"   y="0"    z="0" />
-
     <xacro:block_fix block_number="2"  parent_number="1"    x="0"   y="0"    z="1" />
-
     <xacro:block_hor block_number="3"  parent_number="2"    x="0"   y="1"    z="1" />
-
     <xacro:block_fix block_number="4"  parent_number="3"    x="0"   y="0"    z="0.5" />
-
     <xacro:block_fix block_number="5"  parent_number="4"    x="0"   y="0"    z="1.5" />
-
     <xacro:block_hor block_number="6"  parent_number="5"    x="0"   y="-1"   z="1.5" />
-
     <xacro:block_fix block_number="7"  parent_number="6"    x="0"   y="0"    z="0.5" />
-
     <xacro:block_fix block_number="8"  parent_number="7"    x="0"   y="0"    z="1.5" />
-
     <xacro:block_hor block_number="9"  parent_number="8"    x="0"   y="1"    z="1.5" />
-
     <xacro:block_fix block_number="10" parent_number="9"    x="0"   y="0"    z="0.5" />
-
     <xacro:block_ver block_number="11" parent_number="10"   x="0"   y="0"    z="0.5" />
 
 
