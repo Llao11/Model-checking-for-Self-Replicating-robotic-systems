@@ -1,0 +1,54 @@
+\babel@toc {english}{}\relax 
+\contentsline {chapter}{\numberline {1}Introduction}{1}{chapter.1}%
+\contentsline {chapter}{\numberline {2}Background}{3}{chapter.2}%
+\contentsline {section}{\numberline {2.1}Formal verification overview}{3}{section.2.1}%
+\contentsline {subsection}{\numberline {2.1.1}SAT solvers}{4}{subsection.2.1.1}%
+\contentsline {subsection}{\numberline {2.1.2}SMT}{6}{subsection.2.1.2}%
+\contentsline {section}{\numberline {2.2}Model checking}{7}{section.2.2}%
+\contentsline {subsection}{\numberline {2.2.1}Classification of Model checking methods}{8}{subsection.2.2.1}%
+\contentsline {subsubsection}{\nonumberline Linear-time temporal logic}{8}{subsubsection*.3}%
+\contentsline {subsubsection}{\nonumberline Branching temporal logic (CTL)}{9}{subsubsection*.6}%
+\contentsline {subsubsection}{\nonumberline Temporal logic (CTL*)}{10}{subsubsection*.8}%
+\contentsline {subsubsection}{\nonumberline Statistical Model Checking (SMC)}{10}{subsubsection*.11}%
+\contentsline {subsubsection}{\nonumberline Runtime Verification and Monitoring}{12}{subsubsection*.13}%
+\contentsline {section}{\numberline {2.3}Self-replicating robotic systems}{15}{section.2.3}%
+\contentsline {subsection}{\numberline {2.3.1}Self-replication introduction}{15}{subsection.2.3.1}%
+\contentsline {subsection}{\numberline {2.3.2}Classification of Self-replication systems}{16}{subsection.2.3.2}%
+\contentsline {subsubsection}{\nonumberline Type-related replication}{16}{subsubsection*.15}%
+\contentsline {subsubsection}{\nonumberline Population Composition Classification}{18}{subsubsection*.19}%
+\contentsline {subsubsection}{\nonumberline Interaction with environment or external system}{19}{subsubsection*.21}%
+\contentsline {subsubsection}{\nonumberline Interaction with environment or external system, alternative classification}{19}{subsubsection*.23}%
+\contentsline {subsection}{\numberline {2.3.3}Self-replication models}{21}{subsection.2.3.3}%
+\contentsline {subsection}{\numberline {2.3.4}Degree of self-replication}{23}{subsection.2.3.4}%
+\contentsline {subsection}{\numberline {2.3.5}Implementations of kinematic self-replicating robotic systems}{24}{subsection.2.3.5}%
+\contentsline {subsubsection}{\nonumberline Low-complexity self-replication systems from specialized modules}{24}{subsubsection*.26}%
+\contentsline {subsubsection}{\nonumberline Kinematic self-replication from unified modules}{27}{subsubsection*.31}%
+\contentsline {subsubsection}{\nonumberline Material-robot systems}{29}{subsubsection*.34}%
+\contentsline {chapter}{\numberline {3}Research questions}{32}{chapter.3}%
+\contentsline {section}{\numberline {3.1}Analysis of model checking approaches in self-replicating systems domain}{32}{section.3.1}%
+\contentsline {section}{\numberline {3.2}Experimental checking}{33}{section.3.2}%
+\contentsline {section}{\numberline {3.3}Limitations and challenges}{33}{section.3.3}%
+\contentsline {chapter}{\numberline {4}Methodology}{35}{chapter.4}%
+\contentsline {section}{\numberline {4.1}Research tools}{35}{section.4.1}%
+\contentsline {section}{\numberline {4.2}Proposed approach}{37}{section.4.2}%
+\contentsline {chapter}{\numberline {5}Implementation}{39}{chapter.5}%
+\contentsline {section}{\numberline {5.1}Overview}{39}{section.5.1}%
+\contentsline {section}{\numberline {5.2}Robot configuration model checking}{40}{section.5.2}%
+\contentsline {subsection}{\numberline {5.2.1}Overview}{40}{subsection.5.2.1}%
+\contentsline {subsection}{\numberline {5.2.2}Robot configutation model}{41}{subsection.5.2.2}%
+\contentsline {subsubsection}{\nonumberline Reachability checking specifications:}{44}{subsubsection*.43}%
+\contentsline {section}{\numberline {5.3}Model checking based control in local space}{46}{section.5.3}%
+\contentsline {subsection}{\numberline {5.3.1}Overview}{46}{subsection.5.3.1}%
+\contentsline {subsection}{\numberline {5.3.2}Experimental setup}{46}{subsection.5.3.2}%
+\contentsline {section}{\numberline {5.4}Model checking based control in global space}{47}{section.5.4}%
+\contentsline {subsection}{\numberline {5.4.1}Overview}{47}{subsection.5.4.1}%
+\contentsline {subsection}{\numberline {5.4.2}Evaluation}{48}{subsection.5.4.2}%
+\contentsline {section}{\numberline {5.5}General System Model checking}{48}{section.5.5}%
+\contentsline {subsection}{\numberline {5.5.1}Overview}{48}{subsection.5.5.1}%
+\contentsline {subsection}{\numberline {5.5.2}Evaluation}{49}{subsection.5.5.2}%
+\contentsline {section}{\numberline {5.6}Collective behavior model checking}{49}{section.5.6}%
+\contentsline {subsection}{\numberline {5.6.1}Overview}{49}{subsection.5.6.1}%
+\contentsline {chapter}{\numberline {6}Evaluation}{50}{chapter.6}%
+\contentsline {chapter}{\nonumberline Bibliography}{51}{chapter*.47}%
+\contentsline {chapter}{\numberline {A}Appendix}{54}{appendix.A}%
+\providecommand \tocbasic@end@toc@file {}\tocbasic@end@toc@file 
