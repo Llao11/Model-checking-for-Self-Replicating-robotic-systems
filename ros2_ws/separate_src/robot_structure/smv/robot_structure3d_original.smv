@@ -263,8 +263,8 @@ ASSIGN
 
 
 -- ---------- Reachability specification------------------------------------------
--- LTLSPEC 
---     G F !(endX_inside_limits & endY_inside_limits & endZ_inside_limits)
-CTLSPEC 
-      AG !(endX_inside_limits & endY_inside_limits & endZ_inside_limits ) --& blocks_above_serface)
+LTLSPEC 
+    G F !(endX_inside_limits & endY_inside_limits & endZ_inside_limits)
+-- CTLSPEC 
+--       AG !(endX_inside_limits & endY_inside_limits & endZ_inside_limits ) --& blocks_above_serface)
 

@@ -1,7 +1,7 @@
 -- 3-D robot link with yaw and pitch (10 degrees discretisation)
 -- Parameters:
 --   yawVar   : VAR  0..35   ( multiples of 10°)
---   pitchVar : VAR  0..9    ( multiples of 10°)
+--   pitchVar : VAR  0..35    ( multiples of 10°)
 --   LEN      : constant length
 --   baseX,Y,Z: absolute parent-joint coordinates
 -------------------------------------------------------------------------------
@@ -93,7 +93,7 @@ DEFINE
     esac;
 
 -- ================================
--- Rotate basis by yaw (about ẑ) then pitch (about new ŷ)
+-- Rotate basis by yaw (about z) then pitch (about new y)
 -- Inputs:
 --   xhx,xhy,xhz, yhx,yhy,yhz, zhx,zhy,zhz  -- basis components (×100)
 --   psi, theta   -- angles (integers, 0..35)
@@ -104,34 +104,37 @@ DEFINE
 -- ================================
 MODULE yaw_pitch_update(xhx, xhy, xhz, yhx, yhy, yhz, zhx, zhy, zhz, yaw, pitch)
 VAR
-    cos_yaw  : cos(yaw).val;   
-    sin_yaw  : sin(yaw).val;
-    cthet : cos(pitch).val; 
-    sthet : sin(pitch).val;
+    cos_yaw_var  : cos(yaw);   
+    sin_yaw_var  : sin(yaw);
+    cos_pitch_var : cos(pitch); 
+    sin_pitch_var : sin(pitch);
 
 DEFINE
     SCALE := 100;
-    -- ---------- YAW about current ẑ ----------
-    x1x := (xhx * cos_yaw - yhx * sin_yaw) div SCALE;
-    x1y := (xhy * cos_yaw - yhy * sin_yaw) div SCALE;
-    x1z := (xhz * cos_yaw - yhz * sin_yaw) div SCALE;
-    y1x := (xhx * sin_yaw + yhx * cos_yaw) div SCALE;
-    y1y := (xhy * sin_yaw + yhy * cos_yaw) div SCALE;
-    y1z := (xhz * sin_yaw + yhz * cos_yaw) div SCALE;
+    cos_yaw     := cos_yaw_var.val;   
+    sin_yaw     := sin_yaw_var.val;
+    cos_pitch   := cos_pitch_var.val; 
+    sin_pitch   := sin_pitch_var.val;
+    -- ---------- YAW about current z ----------
+    x1x := (xhx * cos_yaw - yhx * sin_yaw)/ (SCALE);
+    x1y := (xhy * cos_yaw - yhy * sin_yaw)/ (SCALE);
+    x1z := (xhz * cos_yaw - yhz * sin_yaw)/ (SCALE);
+    y1x := (xhx * sin_yaw + yhx * cos_yaw)/ (SCALE);
+    y1y := (xhy * sin_yaw + yhy * cos_yaw)/ (SCALE);
+    y1z := (xhz * sin_yaw + yhz * cos_yaw)/ (SCALE);
     z1x := zhx;
     z1y := zhy;
     z1z := zhz;
-
     -- ---------- PITCH about the new y1 ----------
-    xhx_new := (x1x * cthet + z1x * sthet) div SCALE;
-    xhy_new := (x1y * cthet + z1y * sthet) div SCALE;
-    xhz_new := (x1z * cthet + z1z * sthet) div SCALE;
+    xhx_new := (x1x * cos_pitch + z1x * sin_pitch)/ (SCALE);
+    xhy_new := (x1y * cos_pitch + z1y * sin_pitch)/ (SCALE);
+    xhz_new := (x1z * cos_pitch + z1z * sin_pitch)/ (SCALE);
     yhx_new := y1x;
     yhy_new := y1y;
     yhz_new := y1z;
-    zhx_new := (-x1x * sthet + z1x * cthet) div SCALE;
-    zhy_new := (-x1y * sthet + z1y * cthet) div SCALE;
-    zhz_new := (-x1z * sthet + z1z * cthet) div SCALE;
+    zhx_new := (-x1x * sin_pitch + z1x * cos_pitch)/ (SCALE);
+    zhy_new := (-x1y * sin_pitch + z1y * cos_pitch)/ (SCALE);
+    zhz_new := (-x1z * sin_pitch + z1z * cos_pitch)/ (SCALE);
 
 
 -- ================================
@@ -153,60 +156,69 @@ VAR
 DEFINE
     SCALE := 100;
   -- updated basis (exposed)
-  xhx2 := upd.xhx_new;  xhy2 := upd.xhy_new;  xhz2 := upd.xhz_new;
-  yhx2 := upd.yhx_new;  yhy2 := upd.yhy_new;  yhz2 := upd.yhz_new;
-  zhx2 := upd.zhx_new;  zhy2 := upd.zhy_new;  zhz2 := upd.zhz_new;
+  xhx2 := upd.xhx_new;  
+  xhy2 := upd.xhy_new;  
+  xhz2 := upd.xhz_new;
+  yhx2 := upd.yhx_new;  
+  yhy2 := upd.yhy_new;  
+  yhz2 := upd.yhz_new;
+  zhx2 := upd.zhx_new;  
+  zhy2 := upd.zhy_new;  
+  zhz2 := upd.zhz_new;
   -- advance along +ẑ by length L; ẑ components are ×100
-  px2 := px + (zhx2 * L) / SCALE;
-  py2 := py + (zhy2 * L) / SCALE;
-  pz2 := pz + (zhz2 * L) / SCALE;
+  px2 := px + (zhx2 * L) / (SCALE);
+  py2 := py + (zhy2 * L) / (SCALE);
+  pz2 := pz + (zhz2 * L) / (SCALE);
 
 
 MODULE main
 
 VAR
-    -- base pose: origin; basis aligned with world axes (×100)
-    px : integer; py : integer; pz : integer;
-    xhx : integer; xhy : integer; xhz : integer;
-    yhx : integer; yhy : integer; yhz : integer;
-    zhx : integer; zhy : integer; zhz : integer;
-
-    seg1 : next_segment(px, py, pz,
-                      xhx, xhy, xhz, 
-                      yhx, yhy, yhz, 
-                      zhx, zhy, zhz,
-                      yaw1, pitch1, L1);
+    -- joint angles (nondet. for exploration)
+    yaw1 :      0..35;
+    yaw2 :      0..35;
+    -- yaw3 :      0..35;
+    -- yaw4 :      0..35;
+    pitch1 :    0..35;   -- link2
+    pitch2 :    0..35;   -- link2
+    -- pitch3 :    0..35;   -- link2
+    -- pitch4 :    0..35;   -- link2
+    
+    seg1 : next_segment(base_px, base_py, base_pz,
+                        base_xhx, base_xhy, base_xhz,
+                        base_yhx, base_yhy, base_yhz,
+                        base_zhx, base_zhy, base_zhz,
+                        yaw1, pitch1, L1);
 
     seg2 : next_segment(seg1.px2, seg1.py2, seg1.pz2,
                       seg1.xhx2, seg1.xhy2, seg1.xhz2,
                       seg1.yhx2, seg1.yhy2, seg1.yhz2,
                       seg1.zhx2, seg1.zhy2, seg1.zhz2,
                       yaw2, pitch2, L2);
-    seg3 : next_segment(seg2.px2, seg2.py2, seg2.pz2,
-                      seg2.xhx2, seg2.xhy2, seg2.xhz2,
-                      seg2.yhx2, seg2.yhy2, seg2.yhz2,
-                      seg2.zhx2, seg2.zhy2, seg2.zhz2,
-                      yaw3, pitch3, L3);
-
-    seg4 : next_segment(seg3.px2, seg3.py2, seg3.pz2,
-                      seg3.xhx2, seg3.xhy2, seg3.xhz2,
-                      seg3.yhx2, seg3.yhy2, seg3.yhz2,
-                      seg3.zhx2, seg3.zhy2, seg3.zhz2,
-                      yaw4, pitch4, L4);
+    -- seg3 : next_segment(seg2.px2, seg2.py2, seg2.pz2,
+    --                   seg2.xhx2, seg2.xhy2, seg2.xhz2,
+    --                   seg2.yhx2, seg2.yhy2, seg2.yhz2,
+    --                   seg2.zhx2, seg2.zhy2, seg2.zhz2,
+    --                  yaw3, pitch3, L3);
+    --
+    -- seg4 : next_segment(seg3.px2, seg3.py2, seg3.pz2,
+    --                   seg3.xhx2, seg3.xhy2, seg3.xhz2,
+    --                   seg3.yhx2, seg3.yhy2, seg3.yhz2,
+    --                   seg3.zhx2, seg3.zhy2, seg3.zhz2,
+    --                   yaw4, pitch4, L4);
 DEFINE
-    L1 := 100;   L2 := 80;    L3 := 60;    L4 := 50;  -- lengths (world units)
-    yaw1 := 30;  pitch1 := 20;
-    yaw2 := 27;  pitch2 := 22;
-    yaw3 := 6;   pitch3 := 3;
-    yaw4 := 12;  pitch4 := 31;
-    end1_x := seg1.px2;  end1_y := seg1.py2;  end1_z := seg1.pz2;
-    end2_x := seg2.px2;  end2_y := seg2.py2;  end2_z := seg2.pz2;
-    end3_x := seg3.px2;  end3_y := seg3.py2;  end3_z := seg3.pz2;
-    end4_x := seg4.px2;  end4_y := seg4.py2;  end4_z := seg4.pz2;
+    -- POS_MAX := 100;
+    L1 := 10;   L2 := 10;    L3 := 10;    L4 := 10;  -- lengths (world units)
 
-    endX := end4_x;
-    endY := end4_y;
-    endZ := end4_z;
+    -- constant base pose and world-aligned basis (×100)
+    base_px := 0; base_py := 0; base_pz := 0;
+    base_xhx := 100; base_xhy := 0;   base_xhz := 0;
+    base_yhx := 0;   base_yhy := 100; base_yhz := 0;
+    base_zhx := 0;   base_zhy := 0;   base_zhz := 100;
+
+    endX := seg2.px2;  
+    endY := seg2.py2;  
+    endZ := seg2.pz2;
 
 --Error calculation
 -- 2D CASE: y - up
@@ -214,66 +226,59 @@ DEFINE
     -- error := LEN*sin10 = 10 * 0,173 = 1,73;
 
     error := 1; -- +-1 (error=2) endX and endY coordinates error while checking reachability
-    checkX := 10;
-    checkY := 10;
-    checkZ := 26;
+    checkX := 0;
+    checkY := 0;
+    checkZ := 19;
     endX_inside_limits := (endX <= (checkX + error) & endX >= (checkX - error));
     endY_inside_limits := (endY <= (checkY + error) & endY >= (checkY - error));
     endZ_inside_limits := (endZ <= (checkZ + error) & endZ >= (checkZ - error));
 
 ASSIGN
-    init(px)  := 0;   init(py)    := 0;   init(pz)    := 0;
-    -- world-aligned basis (×100):
-    init(xhx) := 100; init(xhy)   := 0;   init(xhz)   := 0;
-    init(yhx) := 0;   init(yhy)   := 100; init(yhz)   := 0;
-    init(zhx) := 0;   init(zhy)   := 0;   init(zhz)   := 100;
-
-
+-- Block 1
+    init(yaw1) := 0;
+    init(pitch1) := 0;
     next(yaw1)   := { 
-                    yaw1,               -- stays the same 
-                    (yaw1+1) mod 36,    -- + 10 degrees
-                    (yaw1+35) mod 36    -- - 10 degrees
-                    };
-    next(yaw2)   := { 
-                    yaw2,               -- stays the same 
-                    (yaw2+1) mod 36,    -- + 10 degrees
-                    (yaw2+35) mod 36    -- - 10 degrees
-                    };
-    next(yaw3)   := { 
-                    yaw3,               -- stays the same 
-                    (yaw3+1) mod 36,    -- + 10 degrees
-                    (yaw3+35) mod 36    -- - 10 degrees
-                    };
-    next(yaw4)   := { 
-                    yaw4,               -- stays the same 
-                    (yaw4+1) mod 36,    -- + 10 degrees
-                    (yaw4+35) mod 36    -- - 10 degrees
-                    };
+            yaw1,               -- stays the same 
+            (yaw1+1) mod 36,    -- + 10 degrees
+            (yaw1+35) mod 36    -- - 10 degrees
+    };
     next(pitch1)   := { 
-                    pitch1,             -- stays the same 
-                    (pitch1+1) mod 36, -- + 10 degrees
-                    (pitch1+35) mod 36 -- - 10 degrees
-                    };
-    next(pitch2)   := { 
-                    pitch2,             -- stays the same 
-                    (pitch2+1) mod 36, -- + 10 degrees
-                    (pitch2+35) mod 36 -- - 10 degrees
-                    };
-    next(pitch3)   := { 
-                    pitch3,             -- stays the same
-                    (pitch3+1) mod 36,  -- + 10 degrees
-                    (pitch3+35) mod 36  -- - 10 degrees
-                    };
-    next(pitch4)   := { 
-                    pitch4,             -- stays the same
-                    (pitch4+1) mod 36,  -- + 10 degrees
-                    (pitch4+35) mod 36  -- - 10 degrees
-                    };
+            pitch1,             -- stays the same 
+            (pitch1+1) mod 36, -- + 10 degrees
+            (pitch1+35) mod 36 -- - 10 degrees
+    };
 
+-- Block 2
+    init(yaw2) := 0;
+    init(pitch2) := 0;
+    next(yaw2)   := { 
+                yaw2,               -- stays the same 
+                (yaw2+1) mod 36,    -- + 10 degrees
+                (yaw2+35) mod 36    -- - 10 degrees
+                };
+    next(pitch2)   := { 
+                pitch2,             -- stays the same 
+                (pitch2+1) mod 36, -- + 10 degrees
+                (pitch2+35) mod 36 -- - 10 degrees
+    };
+
+-- Block 3
+    -- init(yaw3) := 0;
+    -- init(pitch3) := 0;
+    -- next(yaw3)   := { 
+    --                 yaw3,               -- stays the same 
+    --                 (yaw3+1) mod 36,    -- + 10 degrees
+    --                 (yaw3+35) mod 36    -- - 10 degrees
+    --                 };
+    -- next(pitch3)   := { 
+    --             pitch3,             -- stays the same 
+    --             (pitch3+1) mod 36, -- + 10 degrees
+    --             (pitch3+35) mod 36 -- - 10 degrees
+    -- };
 
 -- ---------- Reachability specification------------------------------------------
 -- LTLSPEC 
---     G F !(endX_inside_limits & endY_inside_limits & endZ_inside_limits)
+--     G !(endX_inside_limits & endY_inside_limits & endZ_inside_limits)
 CTLSPEC 
       AG !(endX_inside_limits & endY_inside_limits & endZ_inside_limits ) --& blocks_above_serface)
 
