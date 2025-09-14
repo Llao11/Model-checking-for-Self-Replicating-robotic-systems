@@ -37,6 +37,28 @@
 \usepackage{lipsum} % only used for blind text, can be removed in production
 
 \usepackage{listings}
+\lstdefinelanguage{NuSMV}{
+    morekeywords={@F\~,@O\~, A, ABF, ABG, abs,AF, AG, array,ASSIGN,at next, at last,AX, bool,
+            BU, case, Clock, clock, COMPASSION, COMPID, COMPUTE, COMPWFF, CONSTANTS, CONSTARRAY,CONSTRAINT, cos, count, CTLSPEC, CTLWFF, DEFINE, E, EBF, EBG, EF, EG, esac,
+   EX, exp, extend, F, FAIRNESS, floor, FROZENVAR, FUN, G, H, IN, INIT, init, Integer, INVAR, INVARSPEC, ISA, ITYPE, IVAR, JUSTICE, ln,LTLSPEC, LTLWFF,MAX, max, MDEFINE, MIN, min, MIRROR, MODULE, NAME, next, NEXTWFF, noncontinuous,  O, of, PRED, PREDICATES, pi,pow, PSLSPEC, PARSYNTH, READ, Real, resize, S, SAT, self, signed, SIMPWFF,sin, sizeof, SPEC, swconst, T, tan, time, time since, time until, toint, TRANS, typeof, U, union,unsigned, URGENT, uwconst, V, VALID, VAR, Word,word, word1, WRITE, X, X\~ Y, Y\~, Z, TRUE, FALSE}, % Add more keywords here
+    sensitive=false, % keywords are not case-sensitive
+    morecomment=[l]{--}, % Line comment
+    morestring=[b]", % String literals
+    basicstyle=\footnotesize, % Code font style
+    keywordstyle=\color{blue}, % Keyword style
+    commentstyle=\color{comcolor}, % Comment style
+    stringstyle=\color{red}, % String literal style
+    numbers=left, % Line numbers on the left
+    numberstyle=\color{gray}, % Line number style
+    stepnumber=1, % Each line will be numbered
+    numbersep=5pt, % Distance of line numbers from the code
+    %frame=single, % Adds a frame around the code
+    breaklines=true, % Wrap lines if they are too long
+    showstringspaces=false, % Don't show spaces in strings as special characters
+    backgroundcolor=\color{nusmvbgcolor},
+    captionpos=b % Sets the caption position to bottom
+}
+
 \usepackage{xcolor}
 \definecolor{backcolour}{rgb}{0.95,0.95,0.92}
 \definecolor{codegray}{rgb}{0.5,0.5,0.5}
@@ -99,7 +121,10 @@
 \crefformat{hypothesis}{\textbf{H\textsubscript{#1}}}
 \crefformat{shypothesis}{\textbf{\textit{H\textsubscript{#1}}}}
 \graphicspath{{./img/}}
-
+% Define a custom style for NuSMV Language
+\definecolor{nusmvbgcolor}{RGB}{255,255,224} 
+\definecolor{comcolor}{RGB}{0,150,0}
+ 
 \begin{document}
 \input{text/main.tex}
 \end{document}
