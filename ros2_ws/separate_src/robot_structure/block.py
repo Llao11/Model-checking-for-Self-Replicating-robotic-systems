@@ -13,98 +13,62 @@ class Block:
         self,
         number: int,
         type: str,
-        x: float,
-        y: float,
-        z: float,
+        # x: float,
+        # y: float,
+        # z: float,
         parent_block_num: int | None,
+        length=10,
     ):
         self.number = number
         self.type = type
         self.parent = parent_block_num
-        self.x = x
-        self.y = y
-        self.z = z
+        self.length = length
+        # self.x = x
+        # self.y = y
+        # self.z = z
 
-    def __get_angle_type(self) -> str:
+    def __repr__(self):
+        return f"Block{self.number}: {self.type}"
+
+    def __get_angle(self) -> str:
         """return angle(yaw1 or pitch2)"""
-        if self.type == "f" or self.type == "v":
-            return f"yaw{self.number}"
-        elif self.type == "h" or self.type == "b":
-            return f"pitch{self.number}"
-        else:
-            raise Exception("Block has a wrong type")
-
-    def __get_block_type(self) -> str:
-        if self.type == "f":
-            return "block_fix"
-        elif self.type == "v":
-            return "block_rot_ver"
-        elif self.type == "h":
-            return "block_rot_hor"
-        elif self.type == "b":
-            return "BaseBlock"
-        else:
-            raise Exception("Block has a wrong type")
+        return f"{self.type}{self.number}"
 
     def get_nusmv_block(self) -> str:
         """
         returns lines like:
-        "block_0 : BaseBlock(pitch0, LEN, baseX, baseY, baseZ);\t\t--generated"
-        "block_1 : block_rot_ver(yaw1,LEN, block_0.x_end, block_0.y_end, block_0.z_end, block_0.yawAbs);\t\t-- generated\n"
-        "block_2 : block_rot_hor(pitch2, LEN, block_1.x_end, block_1.y_end, block_1.z_end, block_1.yawAbs);\t\t-- generated\n"
-        "block_3 : block_fix(yaw3, LEN, block_2.x_end, block_2.y_end, block_2.z_end, block_2.yawAbs);\t\t-- generated\n"
+        block0: block_base(base_px, base_py, base_pz,
+                        base_xhx, base_xhy, base_xhz,
+                        base_yhx, base_yhy, base_yhz,
+                        base_zhx, base_zhy, base_zhz,
+                        L1);
         """
-
-        start = f"block_{self.number} : "
-        end = "\t\t-- generated\n"
-        if self.type == "f" or self.type == "v" or self.type == "h":
-            line = f"{self.__get_block_type()}({self.__get_angle_type()}, LEN, block_{
-                self.parent
-            }.x_end, block_{self.parent}.y_end, block_{self.parent}.z_end, block_{
-                self.parent
-            }.yawAbs);"
-            return start + line + end
-        elif self.type == "b":
-            line = f"BaseBlock(pitch{self.number}, LEN, baseX, baseY, baseZ);"
-            return start + line + end
-        else:
-            raise Exception("Block has a wrong type")
-
-    def get_nusmv_angle(self) -> str:
-        if self.type == "f" or self.type == "v":
-            angle = f"yaw{self.number}"
-        elif self.type == "h":
-            angle = f"pitch{self.number}"
-        elif self.type == "b":
-            angle = " "
-        else:
-            raise Exception("Block has a wrong type")
-        end = "\t:\t0..35;\t\t-- generated"
-        return angle + end + "\n"
+        if self.parent is None:
+            return """\tblock0: block_base(base_px, base_py, base_pz,
+                                \tbase_xhx, base_xhy, base_xhz,
+                                \tbase_yhx, base_yhy, base_yhz,
+                                \tbase_zhx, base_zhy, base_zhz,
+                                \tL1);"""
+        return f"""\tblock{self.number}: block_{self.type}(block{self.parent}.px2, block{self.parent}.py2, block{self.parent}.pz2,
+                        \tblock{self.parent}.xhx2, block{self.parent}.xhy2, block{self.parent}.xhz2,
+                        \tblock{self.parent}.yhx2, block{self.parent}.yhy2, block{self.parent}.yhz2,
+                        \tblock{self.parent}.zhx2, block{self.parent}.zhy2, block{self.parent}.zhz2,
+                        \tL{self.number}, {self.__get_angle()});"""
 
     def get_nusmv_initline(self):
         """Create line like:
-        init(yaw1)   := 0;
-        init(pitch2) := 0;
+        -- link1
+        L1  := 10;
+        yaw1:= 0;
         """
-        return f"init({self.__get_angle_type()})\t:= 0;"
-
-    def get_nusmv_nextline(self):
-        """Create line like
-        next(yaw1)   := {
-                        yaw1,               -- stays the same
-                        (yaw1+1) mod 36,    -- + 10 degrees
-                        (yaw1+35) mod 36    -- - 10 degrees
-                        };
-        """
-        angle = self.__get_angle_type()
-
-        # "next(pitch2)   := {\n\t\tpitch2,\n\t\t(pitch2+1) mod 36,\n\t\t(pitch2+35) mod 36\n\t\t};\t\t-- generated\n"
-        return f"next({angle})\t:= {{\n\t\t{angle},\n\t\t({angle}+1) mod 36,\n\t\t({angle}+35) mod 36\n\t\t}};\t\t-- generated\n"
+        if self.number == 0 and self.type == "base":
+            return ""
+        else:
+            return f"\t-- link1\t\nL{self.number}\t:= {self.length};\n\t{self.__get_angle()}\t:= 0;\n"
 
     def get_nusmv_endblock(self):
         """
         Create line like:
-        "endX := block_5.x_end;\nendY := block_5.y_end;\nendZ := block_5.z_end;\n"
+        "endX := block5.px2;\nendY := block5.py2;\nendZ := block5.pz2;\n"
         """
-        return f"endX := block_{self.number}.x_end;\nendY := block_{self.number}.y_end;\nendZ := block_{self.number}.z_end;\n"
+        return f"endX := block{self.number}.px2;\nendY := block{self.number}.py2;\nendZ := block{self.number}.pz2;\n"

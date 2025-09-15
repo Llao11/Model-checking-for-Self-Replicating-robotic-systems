@@ -337,7 +337,8 @@ class App(tk.Tk):
         print(smv_var_angles)
         print(end_block.get_nusmv_endblock_definition)
 
+        # ---------------------------------------------------------------------------
 
-# ---------------------------------------------------------------------------
+
 if __name__ == "__main__":
     App().mainloop()
