@@ -1,97 +1,18 @@
-\chapter{Implementation}
+
+\section{Model checking based control in local space}
 
 
-
-    TODO: plan experiments: 
-    Criteria: success rate, average time, \\
-    1. Test with predefined assembly process (search, move, repeat) 
-    with random distribution of the parts\\
-    2. Test with predefined assembly process (...) with 
-    , criteria and analysis 
-
-
-
-% \subsubsection{Generation of a model and specifications for formal-verification}
-% A custom program has to be written in Python, that parses the Xacro files and ROS2 Nodes controller to generate a NuSMV model:
-%
-  % - a Boolean occupancy matrix representing the neighbourhood on a field relevant to the current replication.
-%
-  % - replication program-counter plus local flags (gripper-occupied, block -held, etc.).
-%
-  % The liveness and safety properties has to be defined independent from the simulation, in a form close to the following:
-  % \begin{itemize}
-    % 
-      % \item Liveness. $G (start \rightarrow F (Robot_1==ready \land Robot_2==ready))$ — once replication starts, eventually both robots are able to function independently.
-%
-      % \item Collision-free safety. $G \neg collision$ (or $AG \neg collision$ for CTL).
-%
-% \end{itemize}
-
-
-\section{Overview}
-
-As a subject of a research a simple robot will be taken, with two grippers 
-and an elbow joint that can manipulate blocks (cuboctahedral voxels) one at a time.
-An experimental platform will be realised as a simulation in Gazebo environment 
-with control from ROS2 nodes. The  blocks and environment geometry robot joints 
-and sensors and conections will be defined in Xacro/URDF files. 
-
-\begin{figure}[h!]
-    \centering
-    \includegraphics[width=10cm]{RobotStructureGazebo.png} 
-    \caption{Robot structure in Gazebo simulation environment}
-    \label{fig:RobotStructureGazebo}
-\end{figure}
-
-TODO: Add individual block geometry figure
-
-Analysis of R in R + M + E:
-
-1. Control system (algorithm)
-2. Robot structure (geometry, kinematic reachability)
-3. Robot+Environmental reachability checking
-
-Robot configurations synthesis for some objective function
-(defined reachability or for defined environment)
-
-1. Kinematic robot configuration checking
-
-Search of the optimal robot configuration for defined environment.
-Create a set of configurations combining blocks: 3,4,5,6,7 of different types ()
-Model check reachability of some field (e.g.+-1) for each configuration
-
-Advantage: optimal configuration for a new robot
-
-2. Model checking of a overall system (control+robot-configuration+
-
-3. Counterexample based pathfinding in-place assembly
-
-4. Counterexample based pathfinding in local space
-
-Envitonment:
-Finite (infinite), countable space
-
-
-
-
-\section{Robot configuration model checking}
-
+% \section{Evaluation}
 \subsection{Overview}
+Input: Initial position, target position, set of obstacles
+Robot structure (xacro) -> Generate NuSMV -> check model, get counterexample -> 
+derive path -> compare with shortest path algorithm (implement Deikstra/ A*)
 
-Block types -> NuSMV block modules structure -> NuSMV template\\
-Border conditions:
-    - Base blocks on the end
-    - initial block position
-    - connect only from upper side
-
-python script -> Generate NuSMV -> check reachability border
+Evaluation: comparison, 
+Validation: assembly simulation in Gazebo
 
 
-Criteria: reachability of the random distributed blocks, given base block position
-Validation: 
-optimal structure -> generate xacro, check assembly
-
-\subsection{Robot model with defined configurations}
+\subsection{Robot NuSMV model}
 
 The robot structure as it shown in Figure \ref{fig:RobotStructureGazebo}
 is represented as a modular composition of three distinct block types: a fixed 
@@ -108,8 +29,9 @@ scalable manner, independent of the number of blocks.
     \label{fig:RobotConfiguration}
 \end{figure}
 
-As the lowest level of a system, we define a block (TODO: enter figure reference).
-Each block has a certain type, in this work i consider three types of blocks: TODO: describe block types. 
+As the lowest level of a system, as it shown in Figure \ref{fig:RobotConfiguration} we define a block.
+Each subsequent block introduces a transformation of the block end position according to its type.
+Each block has a certain type, in this work i consider three types of blocks: \\ 
 The $block\_base$ defines the 
 fixed starting point of the robot. It receives as input the global origin coordinates 
 $ (x\_orig,y\_orig,z\_orig) $
@@ -121,7 +43,7 @@ $ (x\_end,y\_end,z\_end) $
  and orientation values that are propagated forward to the next block in the sequence.
 
 
-Each subsequent block introduces a transformation of the block end position according to its type.
+Block types block\_yaw realise rotation around local axis Z, that oriented along the parent block
 The $block\_yaw$ represents a joint capable of rotating around the vertical axis. 
 Internally, the block maintains a discrete variable 
 $ \phi $, which denotes the yaw angle. 
@@ -133,7 +55,6 @@ continuous rotation in both clockwise and counterclockwise directions.
 The block takes as input the parent coordinates 
 $ (x\_par,y\_par,z\_par) $ and orientation $ (yaw\_par,pitch\_par) $,
 applies the yaw rotation, and produces updated endpoint coordinates.
-
 \begin{equation}
     \begin{cases}
         \phi \rightarrow \phi\\
@@ -142,6 +63,8 @@ applies the yaw rotation, and produces updated endpoint coordinates.
     \end{cases}
 \end{equation}
 
+Block types block\_pitch realise rotation around local axis Y, that is perpendicular to Z often
+the parent block.
 Similarly, the $block\_pitch$ encodes a joint that rotates around the lateral axis 
 of the preceding link. Its discrete state variable $\theta$:
 \begin{equation}
@@ -151,15 +74,15 @@ of the preceding link. Its discrete state variable $\theta$:
         \theta\rightarrow(\theta-1)\ mod\ 36 \\
     \end{cases} 
 \end{equation}
+In combination, these transitions capture the continuous ability to rotate up 
+or down by discrete steps. 
+
 \begin{figure}[h!]
     \centering
     \includegraphics[width=15cm]{Block transition system.png} 
-    \caption{Robot block transision system }
+    \caption{Robot block transition system for angle $\phi$}
     \label{fig:BlockTS}
 \end{figure}
-
-In combination, these transitions capture the continuous ability to rotate up 
-or down by discrete steps. 
 
 At the system level, the robot is built as a chain of such blocks. After the 
 base block, one may attach any sequence of yaw and pitch blocks in arbitrary order, depending 
@@ -171,6 +94,25 @@ $ (x\_end,y\_end,z\_end) $ and updated orientation values.
 Each block is parameterized by the output of its predecessor, creating a cascading 
 dependency structure.
 
+Thus, on the NuSMV model description level we have:
+\begin{itemize}
+    \item main block module - that describes a robot structure as a sequence of 
+        block types as variables in VAR section.
+    \item block\_base module - describing initial block of a sequence and locating on a ground plane.
+    \item block\_yaw module - describing rotation around the parent Z axis (along the block)
+        and changing the yaw angle.
+    \item block\_pitch module - describing rotation around the parent Y axis (perpendicular to 
+        the block) and changing the pitch angle.
+\end{itemize}
+
+
+In NuSMV block rotating around Z represented by module block\_yaw, and shown in 
+Listing \ref{lst:NuSMVyawblock}
+\lstinputlisting[language=NuSMV, basicstyle=\ttfamily\scriptsize, 
+numbers=left, firstline=57, lastline=90, float,
+caption={NuSMV code for block\_yaw module}, label={lst:NuSMVyawblock}]{code/robot_structure.smv}
+
+MuSMV modules block\_base, block\_pitch sin, and cos NuSMV modules shown in Appendix A.
 This design supports a natural inductive description of 
 the robot in NuSMV: the same block type can be instantiated repeatedly, 
 with only the input-output connections altered.
@@ -212,7 +154,8 @@ formulas, it fully captures the contribution of the block to the robot’s kinem
 This transitions and angle changing for each block reflected by the following part  
 of assign block, shown in Listing \ref{lst:AssignPart}.
 
-\begin{lstlisting}[language=NuSMV, caption={Assign part of code for block transitions}, label={lst:AssignPart}]
+\begin{lstlisting}[language=NuSMV, caption={Assign part of code 
+    for block transitions}, label={lst:AssignPart}, float]
 ASSIGN
     ...
     init(yaw)   := 0;
@@ -221,12 +164,13 @@ ASSIGN
                     (yaw+1) mod 36,    
                     (yaw+35) mod 36    
                     };
-    ...
 \end{lstlisting}
 For each block in a sequence of robot structure the initial value is assigned, and next state 
 can be chosen nondeterministically from three possible transitions.
 
-\subsubsection{Reachability checking specifications:}
+The full NuSMV model for modules: block\_base, block\_yaw, block\_pitch and main presented in Appendix A.
+
+\subsubsection{Point reachability checking specifications:}
 
 In order to verify whether the robot is capable of reaching a desired target point 
 with its free end-effector, in three-dimensional space, we formalize the reachability 
@@ -239,7 +183,9 @@ delta calculated based on descritization value for angle.
 
 The relevant fragment of code is shown in Listing \ref{lst:CheckPreparation}.
 
-\begin{lstlisting}[language=NuSMV, caption={End effector and target point coincidence condition}, label={lst:CheckPreparation}]
+\begin{lstlisting}[language=NuSMV, 
+    caption={End effector and target point coincidence condition}, 
+    label={lst:CheckPreparation}, float]
 DEFINE
 ...
 error  := 1;
@@ -263,7 +209,8 @@ small interval around the corresponding target value, effectively
 defining a cube of side length 2*error centered at the target.\\
 The formal property is expressed in Linear Temoporal Logic (LTL) in Listing \ref{lst:LTLSpec}.
 
-\begin{lstlisting}[language=NuSMV, caption={Reachability condition in LTL specification}, label={lst:LTLSpec}]
+\begin{lstlisting}[language=NuSMV, caption={Reachability condition in LTL specification}, 
+    label={lst:LTLSpec}, float]
 LTLSPEC 
 G !(endX_inside_limits & endY_inside_limits & endZ_inside_limits)
 \end{lstlisting}
@@ -274,7 +221,9 @@ the target point. In other words, the property enforces that the end-effector in
 leaves the target zone, meaning the robot cannot remain in that region permanently.\\
 The formal property is expressed in Computation Tree Logic (CTL) in Listing \ref{lst:CTLSpec}.
 
-\begin{lstlisting}[language=NuSMV, caption={Reachability condition in CTL specification}, label={lst:CTLSpec}]
+\begin{lstlisting}[language=NuSMV, 
+    caption={Reachability condition in CTL specification}, 
+    label={lst:CTLSpec}, float]
 CTLSPEC 
 AG !(endX_inside_limits & endY_inside_limits & endZ_inside_limits)
 \end{lstlisting}
@@ -297,95 +246,44 @@ a specific sequence of joint configurations leading the end
 counterexample can be directly interpreted as a feasible motion 
 plan achieving the desired reachability.
 
-This specification therefore provides a rigorous, formally verifiable 
+\subsubsection{Region reachability checking specifications:}
+
+We can check reachability of some 3D region, in our case a box by defining the 
+variables checkX, checkY and checkZ as FROZENVAR. 
+FROZENVAR declares parameters that are chosen nondeterministically at starting time 
+and then never change along a run for an entire execution (trace).
+The Listing \ref{lst:RegionDefinition}  represents an example 
+of a region: \\ $x=[-10,10],y=[-10,10],z=[0,20]$.
+
+\begin{lstlisting}[language=NuSMV, caption={Region definition for a reachability checking}, label={lst:RegionDefinition}, float]
+FROZENVAR
+    checkX : -10..10;
+    checkY : -10..10;
+    checkZ : 0..20;
+\end{lstlisting}
+
+Changing in the specification for the region checking using CTL logic 
+shown in Listing \ref{lst:CTLSpecRegion}.
+$EF$ means "there exists a path along which eventually holds following condition". 
+With the frozen variable region, the formula states: from every initial state (
+for every admissible target chosen at t=0), there exists a sequence 
+of moves that eventually places the end-effector inside the region.
+
+Because NuSMV checks CTL properties over all initial states
+, this specification proves reachability for every target in the declared 
+ranges (universal over targets, existential over paths). 
+\begin{lstlisting}[language=NuSMV, caption={Reachability condition of a
+    region with CTL specification}, label={lst:CTLSpecRegion}, float]
+CTLSPEC 
+   EF (endX_inside_limits & endY_inside_limits & endZ_inside_limits ) 
+\end{lstlisting}
+
+These specifications therefore provides a rigorous, formally verifiable 
 mechanism to test spatial reachability of robotic manipulators in 
 discrete state-space models. It can be 
 generalized by altering the checkX, checkY, and 
-checkZ parameters, or by varying the tolerance error
-, to systematically analyze the reachable workspace of the system.
-
-
-\subsection{Searching for relevant robot configurations}
-\subsubsection{Individual robot configuration checking}
-In order to systematically evaluate which robot structures are capable 
-of achieving a given task, implemented an automated configuration checking 
-procedure that integrates model generation, model checking with NuSMV, and 
-result filtering. The overall workflow is illustrated in Figure 
-\ref{fig:SearchingRelevantConfigurations}.
-
-\begin{figure}[h!]
-    \centering
-    \includegraphics[height=15cm]{SearchingRelevantConfigurations.png} 
-    \caption{Activity diagram of searching for relevant configurations}
-    \label{fig:SearchingRelevantConfigurations}
-\end{figure}
-
-The process of checking robot configurations is performed by integrating Python
--based model generation with the NuSMV model checker. The workflow begins 
-with two primary inputs: the set of available block types, such as 
-base, yaw-rotating, and pitch-rotating blocks, and the maximum robot length expressed as 
-the number of blocks. These inputs are used to generate the complete set 
-of allowed configurations of length $N$, ensuring that every possible arrangement 
-of building blocks within the specified limit is considered. 
-Each configuration is represented as an ordered sequence 
-of blocks, starting with the mandatory base block and followed by a 
-selection of yaw and pitch blocks.
-Once the set of configurations is created, the process iterates over 
-each configuration individually. \\
-The block sequence is extracted and combined with:
-\begin{itemize}
-\item coordinates of an initial block of a robot ($x_{orig}$,$y_{orig}$,$z_{orig}$)
-\item assembly site coordinates  relative to a robot($x_{asm}$,$y_{asm}$,$z_{asm}$)
-\item target block coordinates relative to a robot:
- [Block($x_{1}$,$y_{1}$,$z_{1}$), Block2($x_{2}$,$y_{2}$,$z_{2}$), ...]
-\end{itemize}
-This information forms the basis for generating 
-a concrete NuSMV model through a Python script. The script instantiates the 
-appropriate modules corresponding to each block type, establishes the 
-connections between their input and output variables, and integrates the 
-positional and orientation parameters across the robot chain. In addition
-, the script embeds the temporal logic specifications provided as LTL 
-or CTL formulas. These specifications define the verification goals, 
-such as whether the end-effector can reach a given target coordinates and 
-avoids certain unsafe areas.
-
-The generated model is then passed to NuSMV, which executes symbolic model 
-checking to evaluate whether the specifications are satisfied. The model 
-checker systematically explores the entire state space of the configuration, 
-taking into account the discrete transitions of yaw and pitch blocks as 
-well as the coordinate propagation along the chain. \\ 
-If the specification is not satisfied, the algorithm discards the configuration and proceeds to 
-the next candidate in the sequence. \\ 
-If the specification is satisfied, 
-the configuration is stored in a set of relevant configurations, which 
-represents the final output of the process.
-
-The overall workflow combines automatic model generation, model checking,
-and storing of satisfiable robot configurations. 
-By using a Python script to handle tasks 
-of configuration expansion and NuSMV code generation, the approach ensures 
-scalability and reduces the potential errors. The inclusion of 
-temporal logic specifications provides a basis for determining whether 
-a configuration is functionally capable of achieving the task requirements. 
-The final set of relevant configurations captures only those robot 
-designs that satisfy the given conditions, providing a reliable foundation 
-for further analysis or deployment in robotic applications.
-
-
-
-\subsubsection{Aggregated robot configuration checking in NuSMV}
-
-\newpage
-\section{Model checking based control in local space}
-
-% \section{Evaluation}
-\subsection{Overview}
-Input: Initial position, target position, set of obstacles
-Robot structure (xacro) -> Generate NuSMV -> check model, get counterexample -> 
-derive path -> compare with shortest path algorithm (implement Deikstra/ A*)
-
-Evaluation: comparithon, 
-Validation: assembly simulation in Gazebo
+checkZ parameters, and by varying the tolerance error,
+to systematically analyze the reachable workspace of the system.
 
 \subsection{Experimental setup}
 TODO: plan experiments: 
@@ -399,12 +297,6 @@ Subject: local assembly with shortest path control algorighm\\
 Setup: random distribution of blocks and obstacles in 3D (for 0-15 obstacles) 
 Measure values: average assembly time, average success rate
 
-\begin{figure}[h!]
-    \centering
-    \includegraphics[width=10cm]{LocalAssembly.png} 
-    \caption{Local assembly process without model checking}
-    \label{fig:LocalAssembly}
-\end{figure}
 
 Experiment 2:\\ 
 Subject: local assembly with path control algorighm and runtime verification \\
@@ -413,8 +305,8 @@ Measure values: average assembly time, average success rate
 
 \begin{figure}[h!]
     \centering
-    \includegraphics[width=10cm]{LocalAssemblyWithRMC.png} 
-    \caption{Local assembly process without model checking}
+    \includegraphics[height=14cm]{LocalAssemblyWithRMC.png} 
+    \caption{Self-replication process with potential model checking stages}
     \label{fig:LocalAssemblyWithRMC}
 \end{figure}
 
@@ -434,36 +326,4 @@ Measure values: average assembly time, average success rate
 
 
 
-\section{Model checking based control in global space}
 
-% \section{Evaluation}
-\subsection{Overview}
-Input: Initial position, target position, set of obstacles
-Robot structure (xacro) -> Define step algorithm -> optimal step?-> Generate NuSMV -> check model, get counterexample -> 
-derive path -> compare with shortest path algorithm (implement Deikstra/ A* in 2D)
-
-Evaluation: comparithon with shortest path algorithms
-Validation: assembly simulation in global space in Gazebo
-\subsection{Evaluation}
-
-
-
-
-\section{General System Model checking }
-
-% \section{Evaluation}
-\subsection{Overview}
-Input: Initial position, target position, set of obstacles
-Robot structure (xacro) -> Define step algorithm -> optimal step?-> Generate NuSMV -> check model, get counterexample -> 
-derive path -> compare with shortest path algorithm (implement Deikstra/ A* in 2D)
-
-Evaluation: comparithon with shortest path algorithms
-Validation: assembly simulation in global space in Gazebo
-\subsection{Evaluation}
-
-\section{Collective behavior model checking}
-
-\subsection{Overview}
-
-
-\chapter{Evaluation}

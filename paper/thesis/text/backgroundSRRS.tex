@@ -125,6 +125,7 @@ specialize in operational tasks, environmental sensing, or resource collection.
 \end{figure}
 
 \subsubsection{Population Composition Classification}
+\label{ch:HomoHeteroClassification}
  
 The composition of robot types within an SRRS fundamentally influences system 
 behavior, specialization potential, and adaptive capacity. 
@@ -250,6 +251,7 @@ a specialized environment that facilitates replication. Indirect replication str
 
 
 \subsection{Self-replication models}
+\label{ch:srrsModels}
 The concept of self-replicating systems originates from the foundational work of 
 \citeauthor{vonNeumann1962Theory}, who in \citeyear{vonNeumann1962Theory} proposed 
 the first theoretical model of a self-reproducing automaton \cite{vonNeumann1962Theory}. 
@@ -275,26 +277,25 @@ To address these limitations, a more general and physically grounded model was p
 be written as
 
 \begin{equation}
-    \label{eq:1}
+    \label{eq:formalModel2arrow}
     (R, M, E) \rightarrow (R' , M' , E' ) 
 \end{equation}
 where: \\
 $M$ is a multiset of available parts to be used for building replicas by an initial system \\
-$R$ is a multiset of an initial functional system to be reproduced. $R \neq 0$; to be a replicating system. \\ 
-$E$ is a multiset of environmental structures and/or elements involved in the replication process (but not 
-replicated). \\
-$R', M', E'$, the replicated entities, the remaining or altered material and the possibly changed environment respectively.
+$R$ is a multiset of an initial functional system to be reproduced. 
+$R \neq 0$; to be a replicating system. \\ 
+$E$ is a multiset of environmental structures and/or elements involved in 
+the replication process (but not replicated). \\
+$R', M', E'$, the replicated entities, the remaining or altered material 
+and the possibly changed environment respectively.
 
 In this model $R$ describes the whole replicator $ A+B+C+D $  from Von Neumann's model.
 
 This transformation can also be expressed functionally as:
 
-
-
-
 \begin{equation}
-    \label{eq:2}
-    (R' , M' , E' ) = Phi(R, M, E, t) 
+    \label{eq:formalModel2phi}
+    (R' , M' , E' ) = \Phi(R, M, E, t) 
 \end{equation}
 
 Where $\Phi$ denotes the replication function and $t$ is time. 
@@ -427,6 +428,7 @@ sensors, assembly station and wall,  used to align the robot during reversing, e
     \includegraphics[width=11cm]{ExampleSRRS-2D-2.png} 
     \caption{The process of self-replication \cite{Lee2007Robotic}}
     \label{fig:class2}
+
 \end{figure}
 The robot has six states, see Figure \ref{fig:Example2D-diagram2} and three distinctive behaviors
 for each state: forward line-tracking (line-tracking mode),
@@ -537,7 +539,7 @@ consist of passive structural lattice voxels
 which form a substrate for the locomotion of purpose-built
 inchworm modular robots build from active voxels, 
 and capable of rearranging and placing additional
-voxels. 
+voxels, see Figure \ref{fig:VoxelAndRobotOriginal}. 
 
 The combination of voxels and robots forms a 
 system, enabling precise assembly of large structures with
@@ -551,7 +553,7 @@ The active voxels which form the basis of the structural-robotic
 system are a cuboctahedral (Cuboct) unit cell which offers superior
 structural properties such as high stiffness at low density with
 geometric characteristics suited for robotic assembly and
-fabrication. Specifically the ﬂlat Cuboct faces enable fully-
+fabrication. Specifically the flat Cuboct faces enable fully-
 constrained connections between single-voxel pairs with four points
 of contact, as well as a useful decomposition for voxel fabrication.
 
@@ -560,6 +562,7 @@ of contact, as well as a useful decomposition for voxel fabrication.
     \subfloat[Cell]{ \includegraphics[width=6cm]{Material-robot_cell.png}}
     \subfloat[Modular robot]{ \includegraphics[width=10cm]{Material-robot_robot.png}}\\
 \caption{Material-robot system  \cite{AbdelRahman2022Hierarchical}}
+    \label{fig:VoxelAndRobotOriginal}
 \end{figure}
 
 Combining these active voxels with
@@ -575,12 +578,12 @@ material throughput for a given target geometry.
     \centering
     \includegraphics[width=15cm]{Material-robot-assembly.png} 
     \caption{Self-replication process \cite{AbdelRahman2022Hierarchical}}
-    \label{fig:1}
+    \label{fig:SelfReplicationOriginal}
 \end{figure}
 
 One of possible variations of assembler robots, designed
 to carry voxel cubes, and a process of self-replication 
-from a set of modules is shown in Figure \ref{fig:1}.
+from a set of modules is shown in Figure \ref{fig:SelfReplicationOriginal}.
 
 To perform self-replication, an initial “parent” robot uses its manipulators to pick 
 and place voxels from a nearby pickup station. The parent robot builds a copy 

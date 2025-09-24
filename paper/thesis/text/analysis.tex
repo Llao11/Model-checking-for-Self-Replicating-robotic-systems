@@ -1,0 +1,203 @@
+
+\section{Overview}
+\label{ch:overview}
+In this research we will consider a simplified model of a relative modular robot 
+and corresponding environment, designed with a potential for self-replication 
+and based on the design, and material-robot principle, 
+developed by  \citeauthor{Jenett2019MaterialRobot} 
+and  \citeauthor{AbdelRahman2022Hierarchical}. 
+
+In our model, as in the original work, robot Figure \ref{fig:VoxelAndRobotOriginal}b 
+operates by manipulating and connecting blocks Figure \ref{fig:VoxelAndRobotOriginal}a 
+of the same type as its own building blocks. 
+These blocks can be considered as material for assembling different structures
+and are distributed in the environment in ordered or arbitrary manner. 
+At any given time, robot in our model is capable of handling a single block, 
+aligning it with the existing discrete environment and attaching it to some structure 
+or new robot. 
+Through repeated execution of this process, the robot can in principle assemble a 
+replica of itself, thereby demonstrating the fundamental task of self-replication. 
+
+The robot is composed of a sequence of blocks of different functional types. 
+The first and the last blocks of the sequence serve as end-effectors equipped with 
+grippers, enabling the robot to interact with its environment. The intermediate 
+blocks act as joints, which may provide rotations around different axis,
+for example changing yaw or pitch angles. Despite their functional diversity, all blocks 
+are geometrically identical and take the form of cuboctahedral voxels,
+general view of it is shown in Figure \ref{fig:RobotStructureGazebo}.
+This uniform geometry facilitates a modular construction paradigm, 
+where the same physical units can be rearranged to produce different structures and
+robot morphologies.
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=10cm]{RobotStructureGazebo.png} 
+    \caption{Robot structure in Gazebo simulation environment}
+    \label{fig:RobotStructureGazebo}
+\end{figure}
+
+The robot operates within a structured environment defined as a lattice 
+field that is geometrically compatible with the cuboctahedral voxel design. 
+This lattice representation constrains both the robot and the individual 
+building blocks to occupy discrete positions, ensuring that all spatial 
+relations, movements, and connections can be described in terms of 
+transitions between well-defined integer coordinates. Such discretization not 
+only simplifies the modeling of robot kinematics and assembly operations but also provides 
+a natural basis for formal verification, since the system state space 
+becomes finite and directly available for exploration by model-checking techniques.
+
+In this chapter, we focus on methods to formally analyze the behavior of 
+such systems. Model checking provides a rigorous framework for verifying 
+whether the system satisfies specific properties of interest. In particular, 
+we investigate the use of symbolic model checker - NuSMV, to evaluate 
+both safety and liveness conditions in the modular robot. Safety properties 
+ensure that undesirable states, such as collisions or inconsistent connections, 
+are never reached. Liveness properties, on the other hand, guarantee that 
+the system is always capable of making progress, for example, that a 
+new block can eventually be attached to a target or that a new robot 
+can continue self-replication process.
+
+Beyond simple verification, we also explore the potential of using NuSMV
+counterexample generation as a decision-making strategy. Counterexamples provided 
+by the model checker correspond to concrete sequences of state transitions that 
+lead to a violation of a property. Interpreted constructively, such sequences 
+can serve as action plans or decision sequences for the robot, 
+indicating feasible operations that allow it to achieve its objectives. 
+This approach establishes a bridge between formal verification and automated planning
+and can increase the reliability and effectiveness of the system, as well 
+as add flexibility to decision-making in complex and dynamic conditions. 
+
+\textcolor{red}{ TODO: Add individual block geometry figure }
+
+\section{Analysis of the system}
+
+The self-replicating system under consideration \ref{ch:overview} for 
+the general configuration of a robot can be classified as active system with 
+hierarchical type of replication and capability for direct and indirect replications. 
+
+It is hierarchical because it can produce robots capable of self-replication 
+as well as robots or mechanical structures lacking of replication capability.
+It is active since it is engaged in constructing child robots and 
+
+The system can be homogeneous or heterogeneous based on initial conditions and programmed 
+behavior. As described in \ref{ch:HomoHeteroClassification} homogeneous type 
+of SRRS consist of robotically identical units, whereas heterogeneous 
+enables generation of multiple robot types, 
+each potential for specialization depending on environmental conditions.
+
+For the sake of simplicity, we will assume the system is homogeneous but will 
+analyze effect of different types or configuration of robots in different environments
+on the properties of a system.
+
+Using model proposed by \citeauthor{Lee2007Robotic} in \cite{Lee2007Robotic} 
+and described in \ref{ch:srrsModels} our self-replicating system can be formally 
+represented as Formula \ref{eq:formalRepresentation}.
+\begin{equation}
+    \label{eq:formalRepresentation}
+    (R' , M' , E ) = \Phi(R, M, E, t) 
+\end{equation}
+
+Where:\\
+$M$ -- multiset (set with repetitions) of available parts of a robot parts located on the base
+to be used for building replicas robots by an initial system.\\
+$R$ --  a multiset of initial robots to be reproduced. In our case one robot with predefined 
+configuration. This includes robot structure in form of sequence of blocks, geometry, kinematic limitations 
+and robot control system -- software and hardware parts.\\
+$E$ -- is a multiset of environmental structures and/or elements involved in the replication
+process (but not replicated). In our experiment is represented by base and optional obstacles.\\
+$R',M'$ -- the original and build entities, the remaining and altered material respectively.\\
+$\Phi$ -- the replication function of time $t$.\\
+
+This model is a special case of a Formula \ref{eq:formalModel2phi} for completely structured
+environment. Because every element of the environment is either fixed at a precise  location,
+or described in integer coordinates and there will be  no modification or change 
+in any structures during the self-replication process.
+
+This formulation enables modeling dynamic replication scenarios over time and accounts 
+for state changes in materials and set of robots.
+
+To sum up the  description above we have a material-robot system, 
+where the environment material unit introduced by the robot part, modular robot structure 
+with small amount of block types, and completely structured discrete environment.
+
+Such systems can be described as transition systems and is therefore suitable 
+for model checking. 
+It can be checked for specific requirements, written in form of temporal logic.
+
+As a central process of the system we will consider an act of self-replication --
+an assembly of a replica of itself by the initial robot from a set of parts located on a base.
+This process shown in state chart on Figure \ref{fig:LocalAssembly}.
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[height=14cm]{LocalAssembly.png} 
+    \caption{State chart of self-replication assembly process}
+    \label{fig:LocalAssembly}
+\end{figure}
+
+In this self-replication process we can derive following actions:
+\begin{enumerate}
+    \item Connection and disconnection of the end-effector to and from the block or base.
+    \item Localization of the part, or receiving of part coordinates from the sensors. 
+        This action is a part of "Checking assembly state" and "Searching block in local area"
+        in state chart.
+    \item Movement of the end-effector from one point to another, with or without connected parts.
+\end{enumerate}
+
+Implementation of connection and disconnection actions is platform dependent 
+be represented in a control system as boolean state.
+Implementation of parts localization actions also depends on specific sensors configuration and  
+similarly could be a represented as a boolean array.
+Movement action depends mainly on the robot blocks configuration, blocks parameters, 
+environmental limitations, initial and target points. 
+As a result, model checking of generalized movement has a potential to substantially 
+improve the overall system self-replication process and adapt it for different 
+environment conditions.
+In the following sections we will model robot, translate self-replication process 
+in transition system and check following properties using NuSMV:
+\begin{itemize}
+    \item  Check local reachability of some point or a set of points (region) 
+        by the robot end-effector. 
+    \item Generate a command sequence for a robot to move the end-effector to
+        target point, based on counterexamples.
+    \item  Research global reachability of some point or region by robot end-effector 
+        using the walking form of movements.
+    \item Generate a path to a point using walking based on counterexamples.
+    \item Analyze set of robot configurations -- check existing configuration or find 
+        relevant  configurations of blocks based on counterexamples. 
+\end{itemize}
+
+% Analysis of R in R + M + E:
+%
+% 3. Robot+Environmental reachability checking
+%
+% Robot configurations synthesis for some objective function
+% (defined reachability or for defined environment)
+%
+% 1. Kinematic robot configuration checking
+%
+% Search of the optimal robot configuration for defined environment.
+% Create a set of configurations combining blocks: 3,4,5,6,7 of different types ()
+% Model check reachability of some field (e.g.+-1) for each configuration
+%
+% Advantage: optimal configuration for a new robot
+%
+% 2. Model checking of a overall system (control+robot-configuration+
+%
+% 3. Counterexample based pathfinding in-place assembly
+%
+% 4. Counterexample based pathfinding in local space
+%
+% Envitonment:
+
+
+
+
+plan experiments: 
+    Criteria: success rate, average time, \\
+    1. Test with predefined assembly process (search, move, repeat) 
+    with random distribution of the parts\\
+    2. Test with predefined assembly process (...) with 
+    , criteria and analysis 
+
+    \textcolor{red}{TODO: 2. Correct diagram to SYSML block connection diagram. remove transition system}

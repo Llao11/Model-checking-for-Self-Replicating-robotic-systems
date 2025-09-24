@@ -1,0 +1,184 @@
+% \subsubsection{Generation of a model and specifications for formal-verification}
+% A custom program has to be written in Python, that parses the Xacro files and ROS2 Nodes controller to generate a NuSMV model:
+%
+  % - a Boolean occupancy matrix representing the neighbourhood on a field relevant to the current replication.
+%
+  % - replication program-counter plus local flags (gripper-occupied, block -held, etc.).
+%
+  % The liveness and safety properties has to be defined independent from the simulation, in a form close to the following:
+  % \begin{itemize}
+    % 
+      % \item Liveness. $G (start \rightarrow F (Robot_1==ready \land Robot_2==ready))$ — once replication starts, eventually both robots are able to function independently.
+%
+      % \item Collision-free safety. $G \neg collision$ (or $AG \neg collision$ for CTL).
+%
+% \end{itemize}
+
+\newpage
+\section{Robot configuration model checking}
+
+\subsection{Overview}
+
+In this part we will check the model of the robot of the certain configuration 
+for the reachability property introduced in 
+
+Block types -> NuSMV block modules structure -> NuSMV template\\
+Border conditions:
+    - Base blocks on the end
+    - initial block position
+    - connect only from upper side
+
+python script -> Generate NuSMV -> check reachability border
+
+
+Criteria: reachability of the random distributed blocks, given base block position
+Validation: 
+optimal structure -> generate xacro, check assembly
+
+
+\subsection{Searching for relevant robot configurations}
+\subsubsection{Individual robot configuration checking}
+In order to systematically evaluate which robot structures are capable 
+of reaching a target coordinates, implemented an automated configuration checking 
+procedure that integrates model generation, model checking with NuSMV, and 
+result filtering. The overall workflow is illustrated in Figure 
+\ref{fig:SearchingRelevantConfigurations}.
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[height=15cm]{SearchingRelevantConfigurations.png} 
+    \caption{Activity diagram of searching for relevant configurations}
+    \label{fig:SearchingRelevantConfigurations}
+\end{figure}
+
+The process of checking robot configurations is performed by integrating Python
+-based model generation with the NuSMV model checker. The workflow begins 
+with two primary inputs: the set of available block types, such as 
+base, yaw-rotating, and pitch-rotating blocks, and the maximum robot length expressed as 
+the number of blocks. These inputs are used to generate the complete set 
+of allowed configurations of length $N$, ensuring that every possible arrangement 
+of building blocks within the specified limit is considered. 
+Each configuration is represented as an ordered sequence 
+of blocks, starting with the mandatory base block and followed by a 
+selection of yaw and pitch blocks.
+Once the set of configurations is created, the process iterates over 
+each configuration individually. \\
+The block sequence is extracted and combined with:
+\begin{itemize}
+\item coordinates of an initial block of a robot ($x_{orig}$,$y_{orig}$,$z_{orig}$)
+\item assembly site coordinates  relative to a robot($x_{asm}$,$y_{asm}$,$z_{asm}$)
+\item target block coordinates relative to a robot:
+ [Block($x_{1}$,$y_{1}$,$z_{1}$), Block2($x_{2}$,$y_{2}$,$z_{2}$), ...]
+\end{itemize}
+This information forms the basis for generating 
+a concrete NuSMV model through a Python script. The script instantiates the 
+appropriate modules corresponding to each block type, establishes the 
+connections between their input and output variables, and integrates the 
+positional and orientation parameters across the robot chain. In addition
+, the script embeds the temporal logic specifications provided as LTL 
+or CTL formulas. These specifications define the verification goals, 
+such as whether the end-effector can reach a given target coordinates and 
+avoids certain unsafe areas.
+
+The generated model is then passed to NuSMV, which executes symbolic model 
+checking to evaluate whether the specifications are satisfied. The model 
+checker systematically explores the entire state space of the configuration, 
+taking into account the discrete transitions of yaw and pitch blocks as 
+well as the coordinate propagation along the chain. \\ 
+If the specification is not satisfied, the algorithm discards the configuration and proceeds to 
+the next candidate in the sequence. \\ 
+If the specification is satisfied, 
+the configuration is stored in a set of relevant configurations, which 
+represents the final output of the process.
+
+
+\subsubsection{Implementation in Python}
+The implementation of the  workflow described in 
+Figure \ref{fig:SearchingRelevantConfigurations} is presented in three-class Python design.
+The architecture of the design corresponds directly to the class diagram shown on the 
+Figure \ref{fig:RobotConfigCheckingClassDiagram}, where the 
+class \textit{Configuration\_checking} orchestrates the process, the class \textit{Robot} 
+assembles a sequence of blocks, and the class \textit{Block} encapsulates the 
+description of an individual block.
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[height=10cm]{RobotConfigCheckingClassDiagram.png} 
+    \caption{Class diagram of searching for relevant configurations}
+    \label{fig:RobotConfigCheckingClassDiagram}
+\end{figure}
+A \textit{Block} class is the minimal self-contained representation of a kinematic segment 
+in the robot block sequence. Each block is identified by an integer number and 
+a  type such as “base”, “yaw”, or “pitch”, and it stores the 
+index of its parent block in order to define the topology and orientation.
+Geometric information is reduced to a single parameter length, while all 
+pose and orientation information is described later through the NuSMV model.
+The block provides three critical outputs in the form of NuSMV code 
+fragments: a structure line that instantiates the variable with appropriate block module and 
+wires it to its parent, an initialisation line that sets link length and 
+default joint angle values, and, for the final block, assignment lines 
+that expose the end-effector coordinates. For non-base blocks, angle variable 
+names are generated systematically (e.g., yaw2, pitch3), guaranteeing uniqueness 
+and readability. In this way, each block fully describes its structural role 
+without knowledge of the entire robot, making the class simple and robust.
+
+The Robot class acts as a container and assembler for blocks. Constructed from 
+a list of block types, it automatically creates a chain of Block instances
+, numbers them, and links each to its parent. It maintains the list of 
+blocks as well as a handle to the final block, which represents the 
+robot’s end-effector. The Robot then concatenates the fragments provided 
+by its blocks into complete sections suitable for insertion into a 
+NuSMV model. It can return the structure of the chain as a sequence of 
+module instantiations, the initialisation of link lengths and angles, 
+and the assignment of global end-effector coordinates. Additionally, 
+it encodes the configuration in a readable name such as “base\_yaw\_pitch\_yaw”, 
+which is used both in logging and file management. The Robot therefore translates 
+an abstract sequence of types into a structured collection of blocks, 
+and from there into concrete model code that describes the robot in full.
+
+The third class, Configuration\_checking, governs the entire process. 
+Its role is to generate and test all possible configurations of a 
+specified chain length composed of a given set of block types. The first 
+block is always fixed to a base, and the remaining positions are filled 
+with every possible combination of the admissible types. This results in 
+an exponential search space, for example two types and four positions yielding 
+sixteen unique robots. Configuration\_checking takes as additional input 
+a target point in space and stores both this point and the error tolerance 
+around it, against which reachability is later checked. For each generated 
+morphology, the class constructs a Robot, retrieves its NuSMV code, 
+and splices it into a template file. The method create\_nusmv\_from\_template searches 
+for the region between “MODULE main” and a predefined end marker, 
+replaces that region with a new main module generated for the current robot
+, and leaves the rest of the file untouched. This ensures that all library 
+code, specifications, and fairness constraints in the template remain intact
+. The new module contains the structure lines from the robot, the initialisation 
+of lengths and angles, the fixed base pose and basis vectors, the end
+-effector definitions, and the error-band predicates that compare the 
+end coordinates to the desired target.
+ This layering is explicit in the class diagram Figure\ref{fig:RobotConfigCheckingClassDiagram}: 
+Configuration\_checking depends on Robot, which is composed of Block instances.
+
+Instead of hard-coding a complete NuSMV 
+model, the system rewrites  the MAIN module fragment inside a 
+reusable template file. This makes the pipeline resilient to changes in 
+property specifications or library modules—the template remains the 
+source of truth, while the classes inject only the structure and constants.
+
+
+The overall workflow combines automatic model generation, model checking,
+and storing of satisfiable robot configurations. 
+By using a Python script to handle tasks 
+of configuration expansion and NuSMV code generation, the approach ensures 
+scalability and reduces the potential errors. The inclusion of 
+temporal logic specifications provides a basis for determining whether 
+a configuration is functionally capable of achieving the task requirements. 
+The final set of relevant configurations captures only those robot 
+designs that satisfy the given conditions, providing a reliable foundation 
+for further analysis or deployment in robotic applications.
+
+
+
+
+\subsubsection{Aggregated robot configuration checking in NuSMV}
+
+\newpage
