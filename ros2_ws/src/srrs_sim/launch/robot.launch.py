@@ -269,7 +269,8 @@ def generate_launch_description():
     # PARTS SPAWN ==============================================================================================================
     # spawn parts locations:
     step = 0.134
-    part_coordinates_int = [[5, 6, 1], [3, 6, 1], [5, 1, 1]]
+    # part_coordinates_int = [[5, 6, 1], [3, 6, 1], [5, 1, 1]]
+    part_coordinates_int = [[5, 6, 1]]  # , [3, 6, 1], [5, 1, 1]]
     part_coordinates = [[elem * step for elem in row] for row in part_coordinates_int]
     bridge_topics = []
     part_xacro_path = PathJoinSubstitution(

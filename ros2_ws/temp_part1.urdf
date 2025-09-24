@@ -24,6 +24,14 @@
       <inertia ixx="1.0" ixy="0.0" ixz="0.0" iyy="1.0" iyz="0.0" izz="1.0"/>
     </inertial>
   </link>
+  <gazebo reference="part">
+    <visual>
+      <material>
+        <ambient>1 1 0 1</ambient>
+        <diffuse>1 1 0 1</diffuse>
+      </material>
+    </visual>
+  </gazebo>
   <gazebo>
     <!-- <plugin filename="gz_ros2_control-system" name="gz_ros2_control::GazeboSimROS2ControlPlugin">
       <parameters>$(find srrs_sim)/config/robot_controller.yaml</parameters>

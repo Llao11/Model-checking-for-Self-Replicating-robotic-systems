@@ -215,16 +215,16 @@ VAR
                       block2.yhx2, block2.yhy2, block2.yhz2,
                       block2.zhx2, block2.zhy2, block2.zhz2,
                       L3, pitch3);
-    block4 : block_yaw(block3.px2, block3.py2, block3.pz2,
-                        block3.xhx2, block3.xhy2, block3.xhz2,
-                        block3.yhx2, block3.yhy2, block3.yhz2,
-                        block3.zhx2, block3.zhy2, block3.zhz2,
-                        L4, yaw4 );
-    block5 : block_pitch(block4.px2, block4.py2, block4.pz2,
-                      block4.xhx2, block4.xhy2, block4.xhz2,
-                      block4.yhx2, block4.yhy2, block4.yhz2,
-                      block4.zhx2, block4.zhy2, block4.zhz2,
-                      L5, pitch5);
+    -- block4 : block_yaw(block3.px2, block3.py2, block3.pz2,
+    --                     block3.xhx2, block3.xhy2, block3.xhz2,
+    --                     block3.yhx2, block3.yhy2, block3.yhz2,
+    --                     block3.zhx2, block3.zhy2, block3.zhz2,
+    --                     L4, yaw4 );
+    -- block5 : block_pitch(block4.px2, block4.py2, block4.pz2,
+    --                   block4.xhx2, block4.xhy2, block4.xhz2,
+    --                   block4.yhx2, block4.yhy2, block4.yhz2,
+    --                   block4.zhx2, block4.zhy2, block4.zhz2,
+    --                   L5, pitch5);
 DEFINE
 
 -- link1
@@ -250,9 +250,9 @@ DEFINE
     base_yhx := 0;      base_yhy := 100;    base_yhz := 0;
     base_zhx := 0;      base_zhy := 0;      base_zhz := 100;
 
-    endX := block5.px2;  
-    endY := block5.py2;  
-    endZ := block5.pz2;
+    endX := block3.px2;  
+    endY := block3.py2;  
+    endZ := block3.pz2;
 
 --Error calculation
 -- 2D CASE: y - up
@@ -262,16 +262,16 @@ DEFINE
     error := 1; -- +-1 (error=2) endX and endY coordinates error while checking reachability
     checkX := 0;
     checkY := 0;
-    checkZ := 30;
+    checkZ := 20;
     endX_inside_limits := (endX <= (checkX + error) & endX >= (checkX - error));
     endY_inside_limits := (endY <= (checkY + error) & endY >= (checkY - error));
     endZ_inside_limits := (endZ <= (checkZ + error) & endZ >= (checkZ - error));
 
 --main end
 -- ---------- Reachability specification------------------------------------------
--- LTLSPEC 
---     G F !(endX_inside_limits & endY_inside_limits & endZ_inside_limits)
-CTLSPEC 
-      AG !(endX_inside_limits & endY_inside_limits & endZ_inside_limits ) --& blocks_above_serface)
+LTLSPEC 
+    G  !(endX_inside_limits & endY_inside_limits & endZ_inside_limits)
+-- CTLSPEC 
+--       AG !(endX_inside_limits & endY_inside_limits & endZ_inside_limits ) --& blocks_above_serface)
 
 

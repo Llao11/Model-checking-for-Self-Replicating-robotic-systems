@@ -35,7 +35,7 @@ block3: block_pitch(block2.px2, block2.py2, block2.pz2,
                         block2.zhx2, block2.zhy2, block2.zhz2,
                         L3, pitch3);\n"""
     robot1 = Robot(block_types)
-    assert robot1.get_nusmv_robot_structure() == robot1_struct
+    assert robot1.get_nusmv_robot_structure_part() == robot1_struct
 
 
 def test_get_nusmv_end_block():

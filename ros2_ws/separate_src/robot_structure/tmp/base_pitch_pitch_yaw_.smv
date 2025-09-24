@@ -94,10 +94,29 @@ DEFINE
 
 
 --=========================================
-MODULE segment_yaw(px, py, pz,
+MODULE block_base(px, py, pz, xhx, xhy, xhz, yhx, yhy, yhz, zhx, zhy, zhz, L)
+DEFINE
+  xhx2 := xhx;
+  xhy2 := xhx;
+  xhz2 := xhz;
+
+  yhx2 := yhx;
+  yhy2 := yhx;
+  yhz2 := yhz;
+
+  zhx2 := zhx;
+  zhy2 := zhy;
+  zhz2 := zhz;
+
+  -- advance along (updated) local ẑ
+  px2 := px;
+  py2 := py;
+  pz2 := pz;
+
+--=========================================
+MODULE block_yaw(px, py, pz,
                    xhx, xhy, xhz, yhx, yhy, yhz, zhx, zhy, zhz,
                    L, initYaw)
-
 VAR
   yaw : 0..35;
   cy : cos(yaw);
@@ -135,7 +154,7 @@ ASSIGN
 
 
 --=========================================
-MODULE segment_pitch(px, py, pz,
+MODULE block_pitch(px, py, pz,
                      xhx, xhy, xhz, yhx, yhy, yhz, zhx, zhy, zhz,
                      L, initPitch)
 VAR
@@ -172,102 +191,66 @@ ASSIGN
   next(pitch) := { pitch, (pitch+1) mod 36, (pitch+35) mod 36 };
 
 
-
---========================================
-MODULE block(type, 
-                px, py, pz,
-                xhx, xhy, xhz,
-                yhx, yhy, yhz,
-                zhx, zhy, zhz,
-                L, angle)
-    -- joint angles (nondet. for exploration)
-    
-    -- block2:{block_yaw, block_pitch};
-
-VAR
-    seg_yaw : segment_yaw(px, py, pz,
-                        xhx, xhy, xhz,
-                        yhx, yhy, yhz,
-                        zhx, zhy, zhz,
-                        L, angle);
-
-    seg_pitch : segment_pitch(px, py, pz,
-                        xhx, xhy, xhz,
-                        yhx, yhy, yhz,
-                        zhx, zhy, zhz,
-                        L, angle );
-DEFINE
-    
-    seg:= case 
-                type = block_yaw   : seg_yaw;
-                type = block_pitch : seg_pitch;
-            esac;
-
 --========================================
 MODULE main
-    -- joint angles (nondet. for exploration)
-    
-    -- block2:{block_yaw, block_pitch};
+        VAR
+        	block0: block_base(base_px, base_py, base_pz,
+                                	base_xhx, base_xhy, base_xhz,
+                                	base_yhx, base_yhy, base_yhz,
+                                	base_zhx, base_zhy, base_zhz,
+                                	L1);
+	block1: block_pitch(block0.px2, block0.py2, block0.pz2,
+                        	block0.xhx2, block0.xhy2, block0.xhz2,
+                        	block0.yhx2, block0.yhy2, block0.yhz2,
+                        	block0.zhx2, block0.zhy2, block0.zhz2,
+                        	L1, pitch1);
+	block2: block_pitch(block1.px2, block1.py2, block1.pz2,
+                        	block1.xhx2, block1.xhy2, block1.xhz2,
+                        	block1.yhx2, block1.yhy2, block1.yhz2,
+                        	block1.zhx2, block1.zhy2, block1.zhz2,
+                        	L2, pitch2);
+	block3: block_yaw(block2.px2, block2.py2, block2.pz2,
+                        	block2.xhx2, block2.xhy2, block2.xhz2,
+                        	block2.yhx2, block2.yhy2, block2.yhz2,
+                        	block2.zhx2, block2.zhy2, block2.zhz2,
+                        	L3, yaw3);
 
-VAR
-    block:{block_yaw, block_pitch};
-    seg1 : block(   block_yaw,
-                    base_px, base_py, base_pz,
-                    base_xhx, base_xhy, base_xhz,
-                    base_yhx, base_yhy, base_yhz,
-                    base_zhx, base_zhy, base_zhz,
-                    L1, yaw1 );
+        DEFINE
 
-
-    seg2 : block(   block_pitch,
-                    seg1.seg.px2, seg1.seg.py2, seg1.seg.pz2,
-                    seg1.seg.xhx2, seg1.seg.xhy2, seg1.seg.xhz2,
-                    seg1.seg.yhx2, seg1.seg.yhy2, seg1.seg.yhz2,
-                    seg1.seg.zhx2, seg1.seg.zhy2, seg1.seg.zhz2,
-                    L2, pitch2);
-DEFINE
-    -- POS_MAX := 100;
-    L1 := 10;   L2 := 10;    L3 := 10;    L4 := 10;  -- lengths (world units)
--- link1
-    yaw1    := 0;
-    pitch1  := 0;
--- link2
-    yaw2    := 0;
-    pitch2  := 0;
-
-    -- constant base pose and world-aligned basis (×100)
-    base_px := 0;       base_py := 0;       base_pz := 0;
-
-    base_xhx := 100;    base_xhy := 0;      base_xhz := 0;
-    base_yhx := 0;      base_yhy := 100;    base_yhz := 0;
-    base_zhx := 0;      base_zhy := 0;      base_zhz := 100;
+        	-- link1	
+L1	:= 10;
+	pitch1	:= 0;
+	-- link1	
+L2	:= 10;
+	pitch2	:= 0;
+	-- link1	
+L3	:= 10;
+	yaw3	:= 0;
 
 
-    endX := seg2.px2;  
-    endY := seg2.py2;  
-    endZ := seg2.pz2;
+            -- constant base pose and world-aligned basis (×100)
+            base_px := 0;       base_py := 0;       base_pz := 0;
+
+            base_xhx := 100;    base_xhy := 0;      base_xhz := 0;
+            base_yhx := 0;      base_yhy := 100;    base_yhz := 0;
+            base_zhx := 0;      base_zhy := 0;      base_zhz := 100;
+        endX := block3.px2;
+endY := block3.py2;
+endZ := block3.pz2;
 
 
+        --Error calculation
+        -- 2D CASE: y - up
+            -- discretization_angle := 10;
+            -- error := LEN*sin10 = 10 * 0,173 = 1,73;
 
---Error calculation
--- 2D CASE: y - up
-    -- discretization_angle := 10;
-    -- error := LEN*sin10 = 10 * 0,173 = 1,73;
-
-    error := 1; -- +-1 (error=2) endX and endY coordinates error while checking reachability
-    checkX := 10;
-    checkY := 0;
-    checkZ := 0;
-    endX_inside_limits := (endX <= (checkX + error) & endX >= (checkX - error));
-    endY_inside_limits := (endY <= (checkY + error) & endY >= (checkY - error));
-    endZ_inside_limits := (endZ <= (checkZ + error) & endZ >= (checkZ - error));
-
--- TRANS
---     next(block1)=block1;
--- ASSIGN
---   init(block1) := {block_yaw, block_pitch};
---   next(block1) := block1;
-
+            error := 1; -- +-1 (error=2) endX and endY coordinates error while checking reachability
+            checkX := 10;
+            checkY := 10;
+            checkZ := 0;
+            endX_inside_limits := (endX <= (checkX + error) & endX >= (checkX - error));
+            endY_inside_limits := (endY <= (checkY + error) & endY >= (checkY - error));
+            endZ_inside_limits := (endZ <= (checkZ + error) & endZ >= (checkZ - error));--main end
 -- ---------- Reachability specification------------------------------------------
 -- LTLSPEC 
 --     G F !(endX_inside_limits & endY_inside_limits & endZ_inside_limits)
