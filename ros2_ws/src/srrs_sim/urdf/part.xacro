@@ -10,7 +10,8 @@
     <xacro:property name="blue" value="0 0 0.8 1" />
     <xacro:property name="yellow" value="1 1 0 1" />
     <xacro:property name="white" value="1 1 1 1" />
-    <xacro:property name="black" value="0 0 0 0" />
+    <xacro:property name="grey" value="0.2 0.2 0.2 1" />
+    <xacro:property name="black" value="0 0 0 1" />
 
     <link name="part">
         <visual>
@@ -34,8 +35,8 @@
     <gazebo reference="part">
         <visual>
             <material>
-                <ambient>${yellow}</ambient>
-                <diffuse>${yellow}</diffuse>
+                <ambient>${black}</ambient>
+                <diffuse>${black}</diffuse>
             </material>
         </visual>
 
