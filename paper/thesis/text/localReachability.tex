@@ -4,13 +4,25 @@
 
 % \section{Evaluation}
 \subsection{Overview}
-Input: Initial position, target position, set of obstacles
-Robot structure (xacro) -> Generate NuSMV -> check model, get counterexample -> 
-derive path -> compare with shortest path algorithm (implement Deikstra/ A*)
-
-Evaluation: comparison, 
-Validation: assembly simulation in Gazebo
-
+% Input: Initial position, target position, set of obstacles
+% Robot structure (xacro) -> Generate NuSMV -> check model, get counterexample -> 
+% derive path -> compare with shortest path algorithm (implement Deikstra/ A*)
+%
+% Evaluation: comparison, 
+% Validation: assembly simulation in Gazebo
+Potential stages in the assembly process shown in Figure \ref{fig:LocalAssemblyWithRMC} can be:
+\begin{itemize}
+    % \item during active searching of a part on surrounding area using camera or another sensor
+    \item move robot end-effector from current point to a found part 
+    \item transportation of the part to the assembly point
+    \item movement of new robot end-effector to connect to the last necessary part
+\end{itemize}
+\begin{figure}[h!]
+    \centering
+    \includegraphics[height=14cm]{LocalAssemblyWithRMC.png} 
+    \caption{Self-replication process with potential model checking stages}
+    \label{fig:LocalAssemblyWithRMC}
+\end{figure}
 
 \subsection{Robot NuSMV model}
 
@@ -28,6 +40,8 @@ scalable manner, independent of the number of blocks.
     \caption{Robot configuration NuSMV model}
     \label{fig:RobotConfiguration}
 \end{figure}
+
+\textcolor{red}{TODO: 2. Correct diagram to SYSML block connection diagram. remove transition system}
 
 As the lowest level of a system, as it shown in Figure \ref{fig:RobotConfiguration} we define a block.
 Each subsequent block introduces a transformation of the block end position according to its type.
@@ -100,14 +114,12 @@ Thus, on the NuSMV model description level we have:
         block types as variables in VAR section.
     \item block\_base module - describing initial block of a sequence and locating on a ground plane.
     \item block\_yaw module - describing rotation around the parent Z axis (along the block)
-        and changing the yaw angle.
+        and changing the yaw angle, the NuSMV code for this module is shown in 
+        Listing \ref{lst:NuSMVyawblock}.
     \item block\_pitch module - describing rotation around the parent Y axis (perpendicular to 
         the block) and changing the pitch angle.
 \end{itemize}
 
-
-In NuSMV block rotating around Z represented by module block\_yaw, and shown in 
-Listing \ref{lst:NuSMVyawblock}
 \lstinputlisting[language=NuSMV, basicstyle=\ttfamily\scriptsize, 
 numbers=left, firstline=57, lastline=90, float,
 caption={NuSMV code for block\_yaw module}, label={lst:NuSMVyawblock}]{code/robot_structure.smv}
@@ -255,7 +267,8 @@ and then never change along a run for an entire execution (trace).
 The Listing \ref{lst:RegionDefinition}  represents an example 
 of a region: \\ $x=[-10,10],y=[-10,10],z=[0,20]$.
 
-\begin{lstlisting}[language=NuSMV, caption={Region definition for a reachability checking}, label={lst:RegionDefinition}, float]
+\begin{lstlisting}[language=NuSMV, caption={Region definition for a reachability checking}, 
+    label={lst:RegionDefinition}, float]
 FROZENVAR
     checkX : -10..10;
     checkY : -10..10;
@@ -285,7 +298,15 @@ generalized by altering the checkX, checkY, and
 checkZ parameters, and by varying the tolerance error,
 to systematically analyze the reachable workspace of the system.
 
-\subsection{Experimental setup}
+\subsection{Counterexample based control}
+\begin{figure}[h!]
+    \centering
+    \includegraphics[height=16cm]{LocalAssemblyWithRMCandCE.png} 
+    \caption{Local assembly process without model checking}
+    \label{fig:LocalAssemblyWithRMCandCE}
+\end{figure}
+
+\subsection{Evaluation}
 TODO: plan experiments: 
 1. Test with predefined assembly process (search, move, repeat) 
 with random distribution of the parts\\
@@ -303,24 +324,12 @@ Subject: local assembly with path control algorighm and runtime verification \\
 Setup: random distribution of blocks and obstacles in 3D (for 0-15 obstacles) 
 Measure values: average assembly time, average success rate
 
-\begin{figure}[h!]
-    \centering
-    \includegraphics[height=14cm]{LocalAssemblyWithRMC.png} 
-    \caption{Self-replication process with potential model checking stages}
-    \label{fig:LocalAssemblyWithRMC}
-\end{figure}
 
 Experiment 3:\\ 
 Subject: local assembly with runtime verification and counterexample based control algorighm\\
 Setup: random distribution of blocks and obstacles in 3D (for 0-15 obstacles) 
 Measure values: average assembly time, average success rate
 
-\begin{figure}[h!]
-    \centering
-    \includegraphics[width=10cm]{LocalAssemblyWithRMCandCE.png} 
-    \caption{Local assembly process without model checking}
-    \label{fig:LocalAssemblyWithRMCandCE}
-\end{figure}
 
 \newpage
 

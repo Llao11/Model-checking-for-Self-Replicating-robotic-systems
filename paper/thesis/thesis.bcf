@@ -2436,9 +2436,11 @@
     <bcf:citekey order="73" intorder="1">AbdelRahman2022Hierarchical</bcf:citekey>
     <bcf:citekey order="74" intorder="1">AbdelRahman2022Hierarchical</bcf:citekey>
     <bcf:citekey order="75" intorder="1">Jenett2019MaterialRobot</bcf:citekey>
-    <bcf:citekey order="76" intorder="1">AbdelRahman2022Hierarchical</bcf:citekey>
-    <bcf:citekey order="77" intorder="1">Lee2007Robotic</bcf:citekey>
-    <bcf:citekey order="78" intorder="1">Lee2007Robotic</bcf:citekey>
+    <bcf:citekey order="76" intorder="1">Jenett2019MaterialRobot</bcf:citekey>
+    <bcf:citekey order="77" intorder="1">AbdelRahman2022Hierarchical</bcf:citekey>
+    <bcf:citekey order="78" intorder="1">AbdelRahman2022Hierarchical</bcf:citekey>
+    <bcf:citekey order="79" intorder="1">Lee2007Robotic</bcf:citekey>
+    <bcf:citekey order="80" intorder="1">Lee2007Robotic</bcf:citekey>
   </bcf:section>
   <!-- SORTING TEMPLATES -->
   <bcf:sortingtemplate name="ynt">

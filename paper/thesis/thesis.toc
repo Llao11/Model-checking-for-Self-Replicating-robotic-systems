@@ -33,37 +33,38 @@
 \contentsline {section}{\numberline {4.2}Proposed approach}{37}{section.4.2}%
 \contentsline {chapter}{\numberline {5}Implementation of model checking in SRRS}{39}{chapter.5}%
 \contentsline {section}{\numberline {5.1}Overview}{39}{section.5.1}%
-\contentsline {section}{\numberline {5.2}Analysis of the system}{41}{section.5.2}%
-\contentsline {section}{\numberline {5.3}Model checking based control in local space}{44}{section.5.3}%
-\contentsline {subsection}{\numberline {5.3.1}Overview}{44}{subsection.5.3.1}%
-\contentsline {subsection}{\numberline {5.3.2}Robot NuSMV model}{44}{subsection.5.3.2}%
-\contentsline {subsubsection}{\nonumberline Point reachability checking specifications:}{49}{subsubsection*.46}%
-\contentsline {subsubsection}{\nonumberline Region reachability checking specifications:}{50}{subsubsection*.51}%
-\contentsline {subsection}{\numberline {5.3.3}Experimental setup}{51}{subsection.5.3.3}%
-\contentsline {section}{\numberline {5.4}Robot configuration model checking}{53}{section.5.4}%
-\contentsline {subsection}{\numberline {5.4.1}Overview}{53}{subsection.5.4.1}%
-\contentsline {subsection}{\numberline {5.4.2}Searching for relevant robot configurations}{54}{subsection.5.4.2}%
-\contentsline {subsubsection}{\nonumberline Individual robot configuration checking}{54}{subsubsection*.57}%
-\contentsline {subsubsection}{\nonumberline Implementation in Python}{55}{subsubsection*.60}%
-\contentsline {subsubsection}{\nonumberline Aggregated robot configuration checking in NuSMV}{58}{subsubsection*.63}%
-\contentsline {section}{\numberline {5.5}Model checking based control in global space}{59}{section.5.5}%
-\contentsline {subsection}{\numberline {5.5.1}Overview}{59}{subsection.5.5.1}%
-\contentsline {subsection}{\numberline {5.5.2}Evaluation}{59}{subsection.5.5.2}%
-\contentsline {section}{\numberline {5.6}General System Model checking}{59}{section.5.6}%
-\contentsline {subsection}{\numberline {5.6.1}Overview}{59}{subsection.5.6.1}%
-\contentsline {subsection}{\numberline {5.6.2}Evaluation}{59}{subsection.5.6.2}%
-\contentsline {section}{\numberline {5.7}Collective behavior model checking}{59}{section.5.7}%
-\contentsline {subsection}{\numberline {5.7.1}Overview}{59}{subsection.5.7.1}%
-\contentsline {chapter}{\numberline {6}Validation and simulation}{60}{chapter.6}%
-\contentsline {chapter}{\numberline {7}Evaluation}{61}{chapter.7}%
-\contentsline {chapter}{\nonumberline Bibliography}{62}{chapter*.64}%
-\contentsline {chapter}{\numberline {A}Appendix}{65}{appendix.A}%
-\contentsline {section}{\numberline {A.1}NuSMV models}{65}{section.A.1}%
-\contentsline {subsection}{\numberline {A.1.1}robot\_structure.smv}{65}{subsection.A.1.1}%
-\contentsline {subsubsection}{\nonumberline Trigonometric modules}{65}{subsubsection*.66}%
-\contentsline {subsubsection}{\nonumberline block\_base module}{66}{subsubsection*.68}%
-\contentsline {subsubsection}{\nonumberline block\_yaw module}{66}{subsubsection*.70}%
-\contentsline {subsubsection}{\nonumberline block\_pitch module}{67}{subsubsection*.72}%
-\contentsline {subsubsection}{\nonumberline main module}{67}{subsubsection*.74}%
-\contentsline {chapter}{\numberline {B}Appendix}{69}{appendix.B}%
+\contentsline {section}{\numberline {5.2}Analysis of the system}{42}{section.5.2}%
+\contentsline {section}{\numberline {5.3}Model checking based control in local space}{45}{section.5.3}%
+\contentsline {subsection}{\numberline {5.3.1}Overview}{45}{subsection.5.3.1}%
+\contentsline {subsection}{\numberline {5.3.2}Robot NuSMV model}{46}{subsection.5.3.2}%
+\contentsline {subsubsection}{\nonumberline Point reachability checking specifications:}{51}{subsubsection*.48}%
+\contentsline {subsubsection}{\nonumberline Region reachability checking specifications:}{52}{subsubsection*.53}%
+\contentsline {subsection}{\numberline {5.3.3}Counterexample based control}{53}{subsection.5.3.3}%
+\contentsline {subsection}{\numberline {5.3.4}Evaluation}{53}{subsection.5.3.4}%
+\contentsline {section}{\numberline {5.4}Robot configuration model checking}{55}{section.5.4}%
+\contentsline {subsection}{\numberline {5.4.1}Overview}{55}{subsection.5.4.1}%
+\contentsline {subsection}{\numberline {5.4.2}Searching for relevant robot configurations}{55}{subsection.5.4.2}%
+\contentsline {subsubsection}{\nonumberline Individual robot configuration checking}{55}{subsubsection*.58}%
+\contentsline {subsubsection}{\nonumberline Implementation in Python}{57}{subsubsection*.61}%
+\contentsline {subsubsection}{\nonumberline Aggregated robot configuration checking in NuSMV}{59}{subsubsection*.64}%
+\contentsline {section}{\numberline {5.5}Model checking based control in global space}{60}{section.5.5}%
+\contentsline {subsection}{\numberline {5.5.1}Overview}{60}{subsection.5.5.1}%
+\contentsline {subsection}{\numberline {5.5.2}Evaluation}{60}{subsection.5.5.2}%
+\contentsline {section}{\numberline {5.6}General System Model checking}{60}{section.5.6}%
+\contentsline {subsection}{\numberline {5.6.1}Overview}{60}{subsection.5.6.1}%
+\contentsline {subsection}{\numberline {5.6.2}Evaluation}{60}{subsection.5.6.2}%
+\contentsline {section}{\numberline {5.7}Collective behavior model checking}{60}{section.5.7}%
+\contentsline {subsection}{\numberline {5.7.1}Overview}{60}{subsection.5.7.1}%
+\contentsline {chapter}{\numberline {6}Validation and simulation}{61}{chapter.6}%
+\contentsline {chapter}{\numberline {7}Evaluation}{62}{chapter.7}%
+\contentsline {chapter}{\nonumberline Bibliography}{63}{chapter*.65}%
+\contentsline {chapter}{\numberline {A}Appendix}{66}{appendix.A}%
+\contentsline {section}{\numberline {A.1}NuSMV models}{66}{section.A.1}%
+\contentsline {subsection}{\numberline {A.1.1}robot\_structure.smv}{66}{subsection.A.1.1}%
+\contentsline {subsubsection}{\nonumberline Trigonometric modules}{66}{subsubsection*.67}%
+\contentsline {subsubsection}{\nonumberline block\_base module}{67}{subsubsection*.69}%
+\contentsline {subsubsection}{\nonumberline block\_yaw module}{67}{subsubsection*.71}%
+\contentsline {subsubsection}{\nonumberline block\_pitch module}{68}{subsubsection*.73}%
+\contentsline {subsubsection}{\nonumberline main module}{68}{subsubsection*.75}%
+\contentsline {chapter}{\numberline {B}Appendix}{70}{appendix.B}%
 \providecommand \tocbasic@end@toc@file {}\tocbasic@end@toc@file 

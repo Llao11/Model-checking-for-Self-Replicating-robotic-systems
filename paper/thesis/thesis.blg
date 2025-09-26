@@ -1,18 +1,18 @@
 [0] Config.pm:307> INFO - This is Biber 2.19
 [0] Config.pm:310> INFO - Logfile is 'thesis.blg'
-[54] biber:340> INFO - === Wed Sep 24, 2025, 16:32:54
-[65] Biber.pm:419> INFO - Reading 'thesis.bcf'
-[107] Biber.pm:979> INFO - Found 24 citekeys in bib section 0
-[114] Biber.pm:4419> INFO - Processing section 0
-[122] Biber.pm:4610> INFO - Looking for bibtex file 'literature.bib' for section 0
-[124] bibtex.pm:1713> INFO - LaTeX decoding ...
-[145] bibtex.pm:1519> INFO - Found BibTeX data source 'literature.bib'
-[291] UCollate.pm:68> INFO - Overriding locale 'en-US' defaults 'variable = shifted' with 'variable = non-ignorable'
-[291] UCollate.pm:68> INFO - Overriding locale 'en-US' defaults 'normalization = NFD' with 'normalization = prenormalized'
-[291] Biber.pm:4239> INFO - Sorting list 'ynt/global//global/global' of type 'entry' with template 'ynt' and locale 'en-US'
-[291] Biber.pm:4245> INFO - No sort tailoring available for locale 'en-US'
-[308] bbl.pm:660> INFO - Writing 'thesis.bbl' with encoding 'UTF-8'
-[314] bbl.pm:763> INFO - Output to thesis.bbl
-[314] Biber.pm:131> WARN - legacy month field 'September' in entry 'Younes2006StatisticalPMC' is not an integer - this will probably not sort properly.
-[314] Biber.pm:131> WARN - legacy month field 'July' in entry 'Suthakorn2003SemiAutonomous' is not an integer - this will probably not sort properly.
-[314] Biber.pm:133> INFO - WARNINGS: 2
+[61] biber:340> INFO - === Fri Sep 26, 2025, 22:23:37
+[75] Biber.pm:419> INFO - Reading 'thesis.bcf'
+[122] Biber.pm:979> INFO - Found 24 citekeys in bib section 0
+[131] Biber.pm:4419> INFO - Processing section 0
+[139] Biber.pm:4610> INFO - Looking for bibtex file 'literature.bib' for section 0
+[141] bibtex.pm:1713> INFO - LaTeX decoding ...
+[166] bibtex.pm:1519> INFO - Found BibTeX data source 'literature.bib'
+[335] UCollate.pm:68> INFO - Overriding locale 'en-US' defaults 'normalization = NFD' with 'normalization = prenormalized'
+[335] UCollate.pm:68> INFO - Overriding locale 'en-US' defaults 'variable = shifted' with 'variable = non-ignorable'
+[335] Biber.pm:4239> INFO - Sorting list 'ynt/global//global/global' of type 'entry' with template 'ynt' and locale 'en-US'
+[336] Biber.pm:4245> INFO - No sort tailoring available for locale 'en-US'
+[355] bbl.pm:660> INFO - Writing 'thesis.bbl' with encoding 'UTF-8'
+[363] bbl.pm:763> INFO - Output to thesis.bbl
+[363] Biber.pm:131> WARN - legacy month field 'September' in entry 'Younes2006StatisticalPMC' is not an integer - this will probably not sort properly.
+[363] Biber.pm:131> WARN - legacy month field 'July' in entry 'Suthakorn2003SemiAutonomous' is not an integer - this will probably not sort properly.
+[363] Biber.pm:133> INFO - WARNINGS: 2

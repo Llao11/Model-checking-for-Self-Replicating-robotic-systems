@@ -584,6 +584,10 @@ INPUT ./img/Gazebo.png
 INPUT ./text/analysis.tex
 INPUT ./text/analysis.tex
 INPUT text/analysis.tex
+INPUT ./img/Voxel.png
+INPUT ./img/Voxel.png
+INPUT ./img/Voxel.png
+INPUT ./img/Voxel.png
 INPUT ./img/RobotStructureGazebo.png
 INPUT ./img/RobotStructureGazebo.png
 INPUT ./img/RobotStructureGazebo.png
@@ -595,6 +599,10 @@ INPUT ./img/LocalAssembly.png
 INPUT ./text/localReachability.tex
 INPUT ./text/localReachability.tex
 INPUT text/localReachability.tex
+INPUT ./img/LocalAssemblyWithRMC.png
+INPUT ./img/LocalAssemblyWithRMC.png
+INPUT ./img/LocalAssemblyWithRMC.png
+INPUT ./img/LocalAssemblyWithRMC.png
 INPUT ./img/Robot NuSMV model.png
 INPUT ./img/Robot NuSMV model.png
 INPUT ./img/Robot NuSMV model.png
@@ -627,10 +635,6 @@ INPUT /usr/share/texlive/texmf-dist/fonts/enc/dvips/libertine/lbtn_dhi6qf.enc
 INPUT /usr/share/texlive/texmf-dist/fonts/tfm/public/libertine/LinLibertineT-tlf-ts1.tfm
 INPUT /usr/share/texlive/texmf-dist/fonts/vf/public/libertine/LinLibertineT-tlf-ts1.vf
 INPUT /usr/share/texlive/texmf-dist/fonts/tfm/public/libertine/LinLibertineT-tlf-ts1--base.tfm
-INPUT ./img/LocalAssemblyWithRMC.png
-INPUT ./img/LocalAssemblyWithRMC.png
-INPUT ./img/LocalAssemblyWithRMC.png
-INPUT ./img/LocalAssemblyWithRMC.png
 INPUT ./img/LocalAssemblyWithRMCandCE.png
 INPUT ./img/LocalAssemblyWithRMCandCE.png
 INPUT ./img/LocalAssemblyWithRMCandCE.png
