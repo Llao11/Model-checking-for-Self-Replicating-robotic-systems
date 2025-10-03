@@ -1,6 +1,6 @@
 <mxfile host="Electron" agent="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/24.7.8 Chrome/128.0.6613.36 Electron/32.0.1 Safari/537.36" version="24.7.8">
   <diagram name="Page-1" id="58cdce13-f638-feb5-8d6f-7d28b1aa9fa0">
-    <mxGraphModel dx="2404" dy="900" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1100" pageHeight="850" background="none" math="0" shadow="0">
+    <mxGraphModel dx="2787" dy="1165" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1100" pageHeight="850" background="none" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -1423,10 +1423,10 @@
         <mxCell id="JKS0jlyyjOcY58wpRYy9-229" value="&lt;span style=&quot;font-weight: 700; text-wrap: nowrap;&quot;&gt;Assembly&amp;nbsp;&lt;/span&gt;&lt;div&gt;&lt;span style=&quot;font-weight: 700; text-wrap: nowrap;&quot;&gt;finished&lt;/span&gt;&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;arcSize=40;fontColor=#000000;fillColor=#ffffc0;strokeColor=#ff0000;" parent="1" vertex="1">
           <mxGeometry x="2949.94" y="235" width="140" height="50" as="geometry" />
         </mxCell>
-        <mxCell id="JKS0jlyyjOcY58wpRYy9-230" value="Runtime check: reachability" style="html=1;whiteSpace=wrap;fillColor=#d5e8d4;strokeColor=#82b366;" parent="1" vertex="1">
+        <mxCell id="JKS0jlyyjOcY58wpRYy9-230" value="Model checking: reachability" style="html=1;whiteSpace=wrap;fillColor=#d5e8d4;strokeColor=#82b366;" parent="1" vertex="1">
           <mxGeometry x="2974.91" y="384.1999999999998" width="90.06" height="29.9" as="geometry" />
         </mxCell>
-        <mxCell id="JKS0jlyyjOcY58wpRYy9-231" value="Runtime check: reachability" style="html=1;whiteSpace=wrap;fillColor=#d5e8d4;strokeColor=#82b366;" parent="1" vertex="1">
+        <mxCell id="JKS0jlyyjOcY58wpRYy9-231" value="Model checking: reachability" style="html=1;whiteSpace=wrap;fillColor=#d5e8d4;strokeColor=#82b366;" parent="1" vertex="1">
           <mxGeometry x="2724.91" y="492.48" width="90.06" height="29.9" as="geometry" />
         </mxCell>
         <mxCell id="JKS0jlyyjOcY58wpRYy9-234" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0.446;entryY=0.987;entryDx=0;entryDy=0;entryPerimeter=0;" parent="1" source="JKS0jlyyjOcY58wpRYy9-233" target="JKS0jlyyjOcY58wpRYy9-230" edge="1">
@@ -1466,7 +1466,7 @@
             <mxPoint y="24" as="offset" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="JKS0jlyyjOcY58wpRYy9-232" value="Runtime check: reachability" style="html=1;whiteSpace=wrap;fillColor=#d5e8d4;strokeColor=#82b366;" parent="1" vertex="1">
+        <mxCell id="JKS0jlyyjOcY58wpRYy9-232" value="Model checking: reachability" style="html=1;whiteSpace=wrap;fillColor=#d5e8d4;strokeColor=#82b366;" parent="1" vertex="1">
           <mxGeometry x="2724.91" y="616.6499999999996" width="90.06" height="29.9" as="geometry" />
         </mxCell>
         <mxCell id="JKS0jlyyjOcY58wpRYy9-349" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="JKS0jlyyjOcY58wpRYy9-350" target="JKS0jlyyjOcY58wpRYy9-356" edge="1">
@@ -1628,10 +1628,10 @@
         <mxCell id="JKS0jlyyjOcY58wpRYy9-385" value="&lt;span style=&quot;font-weight: 700; text-wrap: nowrap;&quot;&gt;Assembly&amp;nbsp;&lt;/span&gt;&lt;div&gt;&lt;span style=&quot;font-weight: 700; text-wrap: nowrap;&quot;&gt;finished&lt;/span&gt;&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;arcSize=40;fontColor=#000000;fillColor=#ffffc0;strokeColor=#ff0000;" parent="1" vertex="1">
           <mxGeometry x="3808.94" y="262.5" width="140" height="50" as="geometry" />
         </mxCell>
-        <mxCell id="JKS0jlyyjOcY58wpRYy9-386" value="Runtime check: reachability" style="html=1;whiteSpace=wrap;fillColor=#d5e8d4;strokeColor=#82b366;" parent="1" vertex="1">
+        <mxCell id="JKS0jlyyjOcY58wpRYy9-386" value="Model checking: reachability" style="html=1;whiteSpace=wrap;fillColor=#d5e8d4;strokeColor=#82b366;" parent="1" vertex="1">
           <mxGeometry x="3833.91" y="411.6999999999998" width="90.06" height="29.9" as="geometry" />
         </mxCell>
-        <mxCell id="JKS0jlyyjOcY58wpRYy9-387" value="Runtime check: reachability" style="html=1;whiteSpace=wrap;fillColor=#d5e8d4;strokeColor=#82b366;" parent="1" vertex="1">
+        <mxCell id="JKS0jlyyjOcY58wpRYy9-387" value="Model checking: reachability" style="html=1;whiteSpace=wrap;fillColor=#d5e8d4;strokeColor=#82b366;" parent="1" vertex="1">
           <mxGeometry x="3583.91" y="519.98" width="90.06" height="29.9" as="geometry" />
         </mxCell>
         <mxCell id="JKS0jlyyjOcY58wpRYy9-388" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0.446;entryY=0.987;entryDx=0;entryDy=0;entryPerimeter=0;" parent="1" source="JKS0jlyyjOcY58wpRYy9-389" target="JKS0jlyyjOcY58wpRYy9-386" edge="1">
@@ -1668,7 +1668,7 @@
             <mxPoint y="24" as="offset" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="JKS0jlyyjOcY58wpRYy9-396" value="Runtime check: reachability" style="html=1;whiteSpace=wrap;fillColor=#d5e8d4;strokeColor=#82b366;" parent="1" vertex="1">
+        <mxCell id="JKS0jlyyjOcY58wpRYy9-396" value="Model checking: reachability" style="html=1;whiteSpace=wrap;fillColor=#d5e8d4;strokeColor=#82b366;" parent="1" vertex="1">
           <mxGeometry x="3583.91" y="644.1499999999996" width="90.06" height="29.9" as="geometry" />
         </mxCell>
         <mxCell id="IbaJTtH2sUcYyzmCr01B-3" value="Initiate assembly &#xa;parameters" style="swimlane;fontStyle=1;align=center;verticalAlign=middle;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=0;resizeLast=1;container=0;fontColor=#000000;collapsible=0;rounded=1;arcSize=30;strokeColor=#ff0000;fillColor=#ffffc0;swimlaneFillColor=#ffffc0;dropTarget=0;" parent="1" vertex="1">

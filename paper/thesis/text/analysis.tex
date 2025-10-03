@@ -2,20 +2,19 @@
 \section{Overview}
 \label{ch:overview}
 In this research we will consider a simplified model of a relative modular robot 
-and corresponding environment, designed with a potential for self-replication 
+and its corresponding environment, designed with the potential for self-replication 
 and based on the design, and material-robot principle, 
 developed by  \citeauthor{Jenett2019MaterialRobot} \cite{Jenett2019MaterialRobot} 
 and  \citeauthor{AbdelRahman2022Hierarchical} \cite{AbdelRahman2022Hierarchical}.
 
-In our model, as in the original work, robot (see Figure \ref{fig:VoxelAndRobotOriginal}b)
+In our model, as in the original work, the robot (see Figure \ref{fig:VoxelAndRobotOriginal}b)
 operates by manipulating and connecting parts (see Figure \ref{fig:VoxelAndRobotOriginal}a)
-of the same type as its own building blocks. 
-These parts can be considered as material for assembling different structures
-and are distributed in the environment in ordered or arbitrary manner. 
-
+that are of the same type as its own building blocks. 
+These parts serve as material for assembling different structures
+and may be distributed in the environment either in ordered arrangement or arbitrary manner. 
 Despite their functional diversity, all blocks and parts
-are geometrically identical and take the form of cuboctahedral voxels,
-general view of it is shown in Figure \ref{fig:Voxel}.
+are geometrically identical and take the form of cuboctahedral voxels, 
+a general view of it is represented in Figure \ref{fig:Voxel}.
 
 \begin{figure}[h!]
     \centering
@@ -25,22 +24,24 @@ general view of it is shown in Figure \ref{fig:Voxel}.
 \end{figure}
 
 Further in text, we refer to elements attached to the robot as "blocks"
-and call the same entities when distributed in the environment and 
+and to the same entities when distributed in the environment and 
 not connected to the robot as "parts." 
 
 The robot  is composed of a sequence of blocks of
-different functional types, an example of a robot can be seen on 
-Figure \ref{fig:RobotStructureGazebo}, where different types of blocks marked with different colors.
-The first and the last blocks of the sequence serve as end-effectors equipped with 
-grippers, enabling the robot to interact with its environment. The intermediate 
-blocks constitute a rigid structure or act as joints, which may provide rotations 
-around different axis, for example changing yaw or pitch angles. 
+different functional types, an example of a robot is shown in 
+Figure \ref{fig:RobotStructureGazebo}, where different types 
+of blocks are marked with different colors.
 \begin{figure}[h!]
     \centering
     \includegraphics[width=11cm]{RobotStructureGazebo.png} 
     \caption{Robot structure in Gazebo simulation environment}
     \label{fig:RobotStructureGazebo}
 \end{figure}
+
+The first and the last blocks of the sequence serve as end-effectors equipped with 
+grippers, enabling the robot to interact with its environment. The intermediate 
+blocks constitute a rigid structure or act as joints, which may provide rotations 
+around different axis, for example, enabling changing in yaw or pitch angles. 
 
 This uniform geometry facilitates a modular construction paradigm, 
 where the same physical units can be rearranged to produce different structures and
