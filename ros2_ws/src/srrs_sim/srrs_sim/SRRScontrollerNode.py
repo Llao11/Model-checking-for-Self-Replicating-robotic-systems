@@ -249,7 +249,7 @@ class SRRSController(Node):
 
     def joint_state_changed(self, msg):
         joint_angles_current_dict = dict(zip(msg.name, msg.position))
-        sorted_names = ["rev0_1", "rev2_3", "rev5_6", "rev8_9", "rev10_11"]
+        sorted_names = ["rev0_1", "rev2_3", "rev5_6", "rev8_9", "rev9_10"]
         self.joint_angles_current = [joint_angles_current_dict[i] for i in sorted_names]
         # self.get_logger().info(f"sorted: {sorted_names}")
         # self.get_logger().info(f"joint_angles_current: {self.joint_angles_current}")

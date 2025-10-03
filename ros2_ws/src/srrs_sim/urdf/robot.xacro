@@ -6,6 +6,8 @@
     <xacro:property name="yellow" value="1 1 0 1" />
     <xacro:property name="white" value="1 1 1 1" />
     <xacro:property name="cell_step" value="0.134"/>
+    <xacro:property name="grey" value="0.2 0.2 0.2 1" />
+    <xacro:property name="black" value="0 0 0 1" />
 
     <!-- MACROS -->
 
@@ -45,6 +47,17 @@
         </joint>
     </xacro:macro>
 
+    <xacro:macro name="joint_end" params="name parent child origin axis rpy" >
+        <joint name="${name}" type="revolute">
+            <axis xyz="${axis}"/> 
+            <origin xyz="${origin}"/>
+            <parent link="${parent}"/>
+            <child link="${child}"/>
+            <limit lower="0" upper="0" effort="1000" velocity="0.0"/>
+            <dynamics damping="0.1" friction="0.1"/>
+        </joint>
+    </xacro:macro>
+
     <xacro:macro name="joint_revolution" params="name parent child origin axis rpy" >
         <joint name="${name}" type="revolute">
             <axis xyz="${axis}"/> 
@@ -67,19 +80,24 @@
 
     <!-- BLOCK MACKROS -->
 
+    <xacro:macro name="block_end" params="block_number parent_number x y z " >
+        <xacro:voxel name="block${block_number}" origin="${x*cell_step} ${y*cell_step} ${z*cell_step}" color="${red}"/>
+        <xacro:joint_end name="base${parent_number}_${block_number}" parent="block${parent_number}" child="block${block_number}" axis="0 0 1" origin="${x*cell_step} ${y*cell_step} ${(z+1)*cell_step}" rpy="0 0 0"/>
+    </xacro:macro>
+
     <xacro:macro name="block_fix" params="block_number parent_number x y z " >
-        <xacro:voxel name="block${block_number}" origin="${x*cell_step} ${y*cell_step} ${z*cell_step}" color="${blue}"/>
+        <xacro:voxel name="block${block_number}" origin="${x*cell_step} ${y*cell_step} ${z*cell_step}" color="${grey}"/>
         <xacro:joint_fix name="fixed${parent_number}_${block_number}" parent="block${parent_number}" child="block${block_number}"/> 
     </xacro:macro>
 
     <xacro:macro name="block_ver" params="block_number parent_number x y z " >
-        <xacro:voxel name="block${block_number}" origin="${0} ${0} ${0}" color="${red}"/>
+        <xacro:voxel name="block${block_number}" origin="${0} ${0} ${0}" color="${green}"/>
         <xacro:joint_revolution name="rev${parent_number}_${block_number}" parent="block${parent_number}" child="block${block_number}" axis="0 0 1" origin="${x*cell_step} ${y*cell_step} ${(z+1)*cell_step}" rpy="0 0 0"/>
     </xacro:macro>
 
     <xacro:macro name="block_hor" params="block_number parent_number x y z " >
         <xacro:joint_revolution name="rev${parent_number}_${block_number}" parent="block${parent_number}" child="block${block_number}" axis="0 1 0" origin="${x*cell_step} ${y*cell_step} ${(z+0.5)*cell_step}" rpy="1.57 0 0"/>
-        <xacro:voxel name="block${block_number}" origin="${0} ${0} ${-0.5*cell_step}" color="${green}"/>
+        <xacro:voxel name="block${block_number}" origin="${0} ${0} ${-0.5*cell_step}" color="${blue}"/>
     </xacro:macro>
 
 
@@ -206,11 +224,9 @@
 
     <xacro:block_hor block_number="9"  parent_number="8"    x="0"   y="1"    z="1.5" />
 
-    <xacro:block_fix block_number="10" parent_number="9"    x="0"   y="0"    z="0.5" />
+    <xacro:block_ver block_number="10" parent_number="9"    x="0"   y="0"    z="-0.5" />
 
-    <xacro:block_ver block_number="11" parent_number="10"   x="0"   y="0"    z="0.5" />
-
-
+    <xacro:block_end block_number="11" parent_number="10"   x="0"   y="0"    z="0" />
 
 
     <!-- CAMERA PART -->
@@ -247,7 +263,7 @@
             <command_interface name="position"/>
             <state_interface name="position"/>
         </joint>
-        <joint name="rev10_11">
+        <joint name="rev9_10">
             <command_interface name="position"/>
             <state_interface name="position"/>
         </joint>
