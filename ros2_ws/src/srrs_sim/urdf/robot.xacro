@@ -283,8 +283,8 @@
             <parent_link>block0</parent_link>
             <child_model>base</child_model>
             <child_link>base_link</child_link>
-            <attach_topic>attach_link1</attach_topic>
-            <detach_topic>detach_link1</detach_topic>
+            <attach_topic>attach_end1</attach_topic>
+            <detach_topic>detach_end1</detach_topic>
             <output_topic>detachable_link_state1</output_topic>
         </plugin>
 
@@ -294,8 +294,8 @@
             <parent_link>block11</parent_link>
             <child_model>base</child_model>
             <child_link>base_link</child_link>
-            <attach_topic>attach_link2</attach_topic>
-            <detach_topic>detach_link2</detach_topic>
+            <attach_topic>attach_end2</attach_topic>
+            <detach_topic>detach_end2</detach_topic>
             <output_topic>detachable_link_state2</output_topic>
         </plugin>
 

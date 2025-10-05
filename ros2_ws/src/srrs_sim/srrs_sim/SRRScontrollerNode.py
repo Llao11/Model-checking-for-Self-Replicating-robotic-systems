@@ -9,6 +9,7 @@ import math
 import time
 import numpy as np
 from rclpy.duration import Duration
+from .partController import PartController
 
 # TODO: Change timer.sleep() in goto_XYZ() to checking with contact sensor
 # TODO: Write separate class to search for parts around with camera
@@ -19,57 +20,36 @@ class SRRSController(Node):
         super().__init__("robot_controller")
         self.sensorNode = sensorNode
         self.create_publishers()
+        self.create_parts(3)
         self.create_subscribers()
         self.fixed_end = 1
         # threshold difference between target and achivable angles of joint - for waiting while moving in target position
         self.joint_diff_threshold = 2  # [degrees]
         self.joint_angles_current = [0, 0, 0, 0, 0]
 
+    def create_parts(self, amount):
+        self.parts_controller = []
+        for i in range(amount):
+            part_controller = PartController(i + 1)
+            self.parts_controller.append(part_controller)
+
     def create_publishers(self):
         """
         publishers for attach and detach topics: robot to base, voxel to robot ends
         """
-
-        self.attach_publisher_voxel = self.create_publisher(
-            Empty, "/attach_link_voxel", 10
-        )
-        self.detach_publisher_voxel = self.create_publisher(
-            Empty, "/detach_link_voxel", 10
-        )
-
         # ROBOT END 1 and 2 to base
-        self.attach_publisher1 = self.create_publisher(Empty, "/attach_link1", 10)
-        self.detach_publisher1 = self.create_publisher(Empty, "/detach_link1", 10)
-        self.attach_publisher2 = self.create_publisher(Empty, "/attach_link2", 10)
-        self.detach_publisher2 = self.create_publisher(Empty, "/detach_link2", 10)
-
-        # OBJECTS to ROBOT END 1 and 2
-        self.attach1_publisher_obj1 = self.create_publisher(
-            Empty, "/attach_link1_obj_1", 10
-        )
-        self.attach1_publisher_obj2 = self.create_publisher(
-            Empty, "/attach_link1_obj_2", 10
-        )
-        self.attach1_publisher_obj3 = self.create_publisher(
-            Empty, "/attach_link1_obj_3", 10
-        )
-        self.attach2_publisher_obj1 = self.create_publisher(
-            Empty, "/attach_link2_obj_1", 10
-        )
-        self.attach2_publisher_obj2 = self.create_publisher(
-            Empty, "/attach_link2_obj_2", 10
-        )
-        self.attach2_publisher_obj3 = self.create_publisher(
-            Empty, "/attach_link2_obj_3", 10
-        )
+        self.attach_publisher1 = self.create_publisher(Empty, "/attach_end1", 10)
+        self.detach_publisher1 = self.create_publisher(Empty, "/detach_end1", 10)
+        self.attach_publisher2 = self.create_publisher(Empty, "/attach_end2", 10)
+        self.detach_publisher2 = self.create_publisher(Empty, "/detach_end2", 10)
 
         # detauch OBJECTS from ROBOT END 1 and 2
-        self.detach1_publisher_objects = self.create_publisher(
-            Empty, "/detach1_objects", 10
-        )
-        self.detach2_publisher_objects = self.create_publisher(
-            Empty, "/detach2_objects", 10
-        )
+        # self.detach1_publisher_objects = self.create_publisher(
+        #     Empty, "/detach1_objects", 10
+        # )
+        # self.detach2_publisher_objects = self.create_publisher(
+        #     Empty, "/detach2_objects", 10
+        # )
 
         # separate publishers for each joint controller
         self.command_publisher1 = self.create_publisher(
@@ -265,16 +245,16 @@ class SRRSController(Node):
 
     def swap_fix_block(self):
         if self.get_fixed_end() == 1:
-            self.fix_2_to_base()
+            self.fix_end2_base()
         elif self.get_fixed_end() == 2:
-            self.fix_1_to_base()
+            self.fix_end1_base()
 
-    def fix_1_to_base(self, **kwargs):
+    def fix_end1_base(self, **kwargs):
         msg = Empty()
         self.attach_publisher1.publish(msg)
         self.get_logger().info("Published attach1 message.")
         self.fixed_end = 1
-        self.free_2_from_base()
+        self.free_end2_base()
         self.get_logger().info(f"fixed_end=1")
         if "gui" in kwargs:
             gui = kwargs.get("gui", None)
@@ -285,12 +265,12 @@ class SRRSController(Node):
                 self.get_logger().info("Published attach1 message.")
         time.sleep(0.3)
 
-    def fix_2_to_base(self, **kwargs):
+    def fix_end2_base(self, **kwargs):
         msg = Empty()
         self.attach_publisher2.publish(msg)
         self.get_logger().info("Published attach2 message.")
         self.fixed_end = 2
-        self.free_1_from_base()
+        self.free_end1_base()
         self.get_logger().info(f"fixed_end=2")
         if "gui" in kwargs:
             gui = kwargs.get("gui", None)
@@ -298,78 +278,62 @@ class SRRSController(Node):
             gui.btn_fix2_base.config(bg="green")
         time.sleep(0.3)
 
-    def free_1_from_base(self):
+    def free_end1_base(self):
         msg = Empty()
         self.detach_publisher1.publish(msg)
         self.get_logger().info("Published detach1 message.")
 
-    def free_2_from_base(self):
+    def free_end2_base(self):
         msg = Empty()
         self.detach_publisher2.publish(msg)
         self.get_logger().info("Published detach2 message.")
 
-    # Fix objects  ===========================================================================================================================
+    # Fix PARTS to END-EFFECTORS  ===========================================================================================================================
 
     def check_connection():
         # self.sensorNode()
         pass
 
-    def fix_obj_to_block1(self, obj_num, **kwargs):
-        msg = Empty()
-        match obj_num:
-            case 1:
-                self.attach1_publisher_obj1.publish(msg)
-            case 2:
-                self.attach1_publisher_obj2.publish(msg)
-            case 3:
-                self.attach1_publisher_obj3.publish(msg)
-        self.get_logger().info(f"Attach object {obj_num} to block 1")
-        # self.free_obj2()
+    def fix_end1_part(self, part_num, **kwargs):
+        part_index = part_num - 1
+        self.parts_controller[part_index].attach_part_end1()
+        self.parts_controller[part_index].detach_part_base()
+        self.get_logger().info(f"Attach part {part_num} to block 1")
         if "gui" in kwargs:
             gui = kwargs.get("gui", None)
             gui.btn_fix1_obj.config(bg="red")
             gui.btn_free1_obj.config(bg="white")
 
-    def fix_obj_to_block2(self, obj_num, **kwargs):
-        msg = Empty()
-        match obj_num:
-            case 1:
-                self.attach2_publisher_obj1.publish(msg)
-            case 2:
-                self.attach2_publisher_obj2.publish(msg)
-            case 3:
-                self.attach2_publisher_obj3.publish(msg)
-        self.get_logger().info(f"Attach object {obj_num} to block 1")
-        # self.free_obj2()
+    def fix_end2_part(self, part_num, **kwargs):
+        part_index = part_num - 1
+        self.parts_controller[part_index].detach_part_base()
+        self.parts_controller[part_index].attach_part_end2()
+        self.get_logger().info(f"Attach part {part_num} to block 1")
         if "gui" in kwargs:
             gui = kwargs.get("gui", None)
             gui.btn_fix1_obj.config(bg="red")
             gui.btn_free1_obj.config(bg="white")
 
-    # FREE objects from Robot End 1 and 2 ===========================================================================================================================
+    # FREE PARTS from  END-EFFECTORS ===========================================================================================================================
 
-    def free_block1_from_obj(self, **kwargs):
-        msg = Empty()
-        self.detach1_publisher_objects.publish(msg)
-        self.get_logger().info("Detached object to block 1")
-        if "gui" in kwargs:
-            gui = kwargs.get("gui", None)
-            gui.btn_fix1_obj.config(bg="white")
-            gui.btn_free1_obj.config(bg="green")
+    def free_end1_part(self, part_num):
+        part_index = part_num - 1
+        self.parts_controller[part_index].detach_part_end1()
+        self.parts_controller[part_index].attach_part_base()
+        self.get_logger().info(f"Detached part {part_index} from robot end 1")
 
-    def free_block2_from_obj(self, **kwargs):
-        msg = Empty()
-        self.detach2_publisher_objects.publish(msg)
-        self.get_logger().info("Detached object from block 2")
+    def free_end2_part(self, part_num):
+        part_index = part_num - 1
+        self.parts_controller[part_index].detach_part_end2()
+        self.parts_controller[part_index].attach_part_base()
+        self.get_logger().info(f"Detached part {part_index} from robot end 2")
+
+    def free_ends_all_parts(self, **kwargs):
+        for part_controller in self.parts_controller:
+            part_controller.detach_part_end2()
+            part_controller.detach_part_end1()
+        self.get_logger().info("Detach all parts from robot end1 and end2")
         if "gui" in kwargs:
             gui = kwargs.get("gui", None)
             gui.btn_fix2_obj.config(bg="white")
             gui.btn_free2_obj.config(bg="green")
-
-    # ASSEMBLE ===========================================================================================================================
-
-    def start_assemble(self, **kwargs):
-        self.get_logger().info("Start assemble")
-        self.fix_1_to_base()
-        self.free_block1_from_obj()
-        self.free_block2_from_obj()

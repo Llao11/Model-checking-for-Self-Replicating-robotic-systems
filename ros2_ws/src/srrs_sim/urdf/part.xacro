@@ -52,9 +52,9 @@
             <parent_link>part</parent_link>
             <child_model>robot</child_model>
             <child_link>block0</child_link>
-            <attach_topic>attach_link1_obj_${xacro.arg('part_num')}</attach_topic>
-            <detach_topic>detach1_objects</detach_topic>
-            <output_topic>detachable_obj_link1_state${xacro.arg('part_num')}</output_topic>
+            <attach_topic>attach_end1_part${xacro.arg('part_num')}</attach_topic>
+            <detach_topic>detach_end1_part${xacro.arg('part_num')}</detach_topic>
+            <output_topic>detachable_obj_end1_state${xacro.arg('part_num')}</output_topic>
             <suppress_child_warning>true</suppress_child_warning>
         </plugin>
 
@@ -64,23 +64,30 @@
             <parent_link>part</parent_link>
             <child_model>robot</child_model>
             <child_link>block11</child_link>
-            <attach_topic>attach_link2_obj_${xacro.arg('part_num')}</attach_topic>
-            <detach_topic>detach2_objects</detach_topic>
-            <output_topic>detachable_obj_link2_state${xacro.arg('part_num')}</output_topic>
+            <attach_topic>attach_end2_part${xacro.arg('part_num')}</attach_topic>
+            <detach_topic>detach_end2_part${xacro.arg('part_num')}</detach_topic>
+            <output_topic>detachable_obj_end2_state${xacro.arg('part_num')}</output_topic>
             <suppress_child_warning>true</suppress_child_warning>
         </plugin>
 
         <!-- TODO: correct plugin to connect to previous block -->
-        <!-- <plugin -->
-        <!--     filename="libgz-sim8-detachable-joint-system.so" -->
-        <!--     name="gz::sim::systems::DetachableJoint"> -->
-        <!--     <parent_link>part</parent_link> -->
-        <!--     <child_model>${xacro.arg('parent_model')}</child_model> -->
-        <!--     <child_link>${xacro.arg('parent_link')}</child_link> -->
-        <!--     <attach_topic>attach_obj_${xacro.arg('parent_model')}</attach_topic> -->
-        <!--     <output_topic>detachable_obj_state${xacro.arg('parent_model')}</output_topic> -->
-        <!--     <suppress_child_warning>true</suppress_child_warning> -->
-        <!-- </plugin> -->
+        <plugin
+            filename="libgz-sim8-detachable-joint-system.so"
+            name="gz::sim::systems::DetachableJoint">
+            <parent_link>part</parent_link>
+            <child_model>base</child_model>
+            <child_link>base_link</child_link>
+
+            <!-- <child_model>${xacro.arg('parent_model')}</child_model> -->
+            <!-- <child_link>${xacro.arg('parent_link')}</child_link> -->
+
+            <attach_topic>attach_part${xacro.arg('part_num')}_base</attach_topic>
+            <detach_topic>detach_part${xacro.arg('part_num')}_base</detach_topic>
+            <!---->
+            <!-- <output_topic>detachable_obj_state${xacro.arg('parent_model')}</output_topic> -->
+
+            <suppress_child_warning>true</suppress_child_warning>
+        </plugin>
 
         <plugin filename="gz-sim-pose-publisher-system" name="gz::sim::systems::PosePublisher">
             <!-- <publish_model_pose>true</publish_model_pose> -->

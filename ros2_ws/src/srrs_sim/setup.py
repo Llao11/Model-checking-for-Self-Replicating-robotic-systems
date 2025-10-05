@@ -16,6 +16,7 @@ setup(
         (os.path.join("share", package_name, "commands"), glob("commands/*.json")),
         (os.path.join("share", package_name, "urdf"), glob("urdf/*.urdf")),
         (os.path.join("share", package_name, "urdf"), glob("urdf/*.xacro")),
+        (os.path.join("share", package_name, "urdf/parts"), glob("urdf/parts/*.xacro")),
         (os.path.join("share", package_name, "sdf"), glob("sdf/*.sdf")),
         (os.path.join("share", package_name, "meshes"), glob("meshes/*.stl")),
     ],

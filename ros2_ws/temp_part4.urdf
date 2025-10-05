@@ -40,18 +40,18 @@
       <parent_link>part</parent_link>
       <child_model>robot</child_model>
       <child_link>block0</child_link>
-      <attach_topic>attach_end1_part3</attach_topic>
-      <detach_topic>detach_end1_part3</detach_topic>
-      <output_topic>detachable_obj_end1_state3</output_topic>
+      <attach_topic>attach_end1_part4</attach_topic>
+      <detach_topic>detach_end1_part4</detach_topic>
+      <output_topic>detachable_obj_end1_state4</output_topic>
       <suppress_child_warning>true</suppress_child_warning>
     </plugin>
     <plugin filename="libgz-sim8-detachable-joint-system.so" name="gz::sim::systems::DetachableJoint">
       <parent_link>part</parent_link>
       <child_model>robot</child_model>
       <child_link>block11</child_link>
-      <attach_topic>attach_end2_part3</attach_topic>
-      <detach_topic>detach_end2_part3</detach_topic>
-      <output_topic>detachable_obj_end2_state3</output_topic>
+      <attach_topic>attach_end2_part4</attach_topic>
+      <detach_topic>detach_end2_part4</detach_topic>
+      <output_topic>detachable_obj_end2_state4</output_topic>
       <suppress_child_warning>true</suppress_child_warning>
     </plugin>
     <!-- TODO: correct plugin to connect to previous block -->
@@ -61,8 +61,8 @@
       <child_link>base_link</child_link>
       <!-- <child_model>${xacro.arg('parent_model')}</child_model> -->
       <!-- <child_link>${xacro.arg('parent_link')}</child_link> -->
-      <attach_topic>attach_part3_base</attach_topic>
-      <detach_topic>detach_part3_base</detach_topic>
+      <attach_topic>attach_part4_base</attach_topic>
+      <detach_topic>detach_part4_base</detach_topic>
       <!---->
       <!-- <output_topic>detachable_obj_state${xacro.arg('parent_model')}</output_topic> -->
       <suppress_child_warning>true</suppress_child_warning>

@@ -270,14 +270,14 @@ def generate_launch_description():
     # spawn parts locations:
     step = 0.134
     # part_coordinates_int = [[5, 6, 1], [3, 6, 1], [5, 1, 1]]
-    part_coordinates_int = [[5, 6, 1]]  # , [3, 6, 1], [5, 1, 1]]
+    part_coordinates_int = [[5, 6, 1], [3, 6, 1], [4, 8, 1]]
     part_coordinates = [[elem * step for elem in row] for row in part_coordinates_int]
     bridge_topics = []
+    # parent_model = "base"
+    # parent_link = "base_link"
     part_xacro_path = PathJoinSubstitution(
         [FindPackageShare("srrs_sim"), "urdf", "part.xacro"]
     )
-    # parent_model = "base"
-    # parent_link = "base_link"
     for i, (x, y, z) in enumerate(part_coordinates):
         part_name = f"part{i + 1}"
         processed_urdf_path = f"temp_part{i + 1}.urdf"
@@ -302,13 +302,12 @@ def generate_launch_description():
                 part_name,
                 "-file",
                 processed_urdf_path,
-                # Set X, Y, Z coordinates
                 "-x",
                 str(x),
                 "-y",
                 str(y),
                 "-z",
-                str(z),  # Set Yaw (rotation in radians)
+                str(z),
                 "-X",
                 "0.0",
                 "-Y",
@@ -319,31 +318,6 @@ def generate_launch_description():
                 "true",
             ],
         )
-        # bridge topic to attach/detach of PARTS to END Blocks
-        bridge_topics.append(
-            f"/attach_link1_obj_{i + 1}@std_msgs/msg/Empty@gz.msgs.Empty"
-        )
-        bridge_topics.append(
-            f"/detach_link1_obj_{i + 1}@std_msgs/msg/Empty@gz.msgs.Empty"
-        )
-        bridge_topics.append(
-            f"/attach_link2_obj_{i + 1}@std_msgs/msg/Empty@gz.msgs.Empty"
-        )
-        bridge_topics.append(
-            f"/detach_link2_obj_{i + 1}@std_msgs/msg/Empty@gz.msgs.Empty"
-        )
-        # bridge topic to send pose messages (COORDINATES)
-        bridge_topics.append(
-            f"/model/part{i + 1}/pose@geometry_msgs/msg/Pose@gz.msgs.Pose"
-        )
-        # bridge topic to attach/detach to a previous block (or base for the first one)
-        # TODO: implement in control Node
-        # bridge_topics.append(
-        #     f"/attach_link_obj_obj{i + 1}@std_msgs/msg/Empty@gz.msgs.Empty"
-        # )
-        # bridge_topics.append(
-        #     f"/detach_link_obj_obj{i + 1}@std_msgs/msg/Empty@gz.msgs.Empty"
-        # )
         LaunchDescriptionMain.add_action(generate_part_urdf)
         LaunchDescriptionMain.add_action(
             RegisterEventHandler(

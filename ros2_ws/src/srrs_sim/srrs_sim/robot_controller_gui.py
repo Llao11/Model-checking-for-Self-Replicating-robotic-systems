@@ -95,25 +95,23 @@ class GUI:
         self.btn_fix1_base = tk.Button(
             self.root,
             text="Fix block1 to base",
-            command=lambda: self.controller_node.fix_1_to_base(gui=self),
+            command=lambda: self.controller_node.fix_end1_base(gui=self),
         )
         self.btn_fix2_base = tk.Button(
             self.root,
             text="Fix block2 to base",
-            command=lambda: self.controller_node.fix_2_to_base(gui=self),
+            command=lambda: self.controller_node.fix_end2_base(gui=self),
         )
 
         self.btn_fix1_obj = tk.Button(
             self.root,
-            text="Fix object 1 to block 1",
-            command=lambda: self.controller_node.fix_obj_to_block1(
-                1, gui=self),
+            text="Fix part1 to end1",
+            command=lambda: self.controller_node.fix_end1_part(1, gui=self),
         )
         self.btn_fix2_obj = tk.Button(
             self.root,
-            text="Fix object 1 to block 2",
-            command=lambda: self.controller_node.fix_obj_to_block2(
-                1, gui=self),
+            text="Fix part1 to end2",
+            command=lambda: self.controller_node.fix_end2_part(1, gui=self),
         )
 
         # TODO change buttons/elements to fix only connected objects(
@@ -121,15 +119,13 @@ class GUI:
 
         self.btn_free1_obj = tk.Button(
             self.root,
-            text="Free objects from block 1",
-            command=lambda: self.controller_node.free_block1_from_obj(
-                gui=self),
+            text="Free objects from end1",
+            command=lambda: self.controller_node.free_ends_all_parts(gui=self),
         )
         self.btn_free2_obj = tk.Button(
             self.root,
-            text="Free objects from block 2",
-            command=lambda: self.controller_node.free_block2_from_obj(
-                gui=self),
+            text="Free objects from end2",
+            command=lambda: self.controller_node.free_ends_all_parts(gui=self),
         )
         self.btn_start_assemble = tk.Button(
             self.root,
@@ -225,10 +221,8 @@ class GUI:
         btn_joints.grid(row=6, column=4)
 
         # Lables fix blocks:
-        self.fixed_block_var = tk.StringVar(
-            value=self.controller_node.get_fixed_end())
-        self.label_fixed_block = tk.Label(
-            self.root, textvariable=self.fixed_block_var)
+        self.fixed_block_var = tk.StringVar(value=self.controller_node.get_fixed_end())
+        self.label_fixed_block = tk.Label(self.root, textvariable=self.fixed_block_var)
 
         self.label_fix_block1 = tk.Label(
             self.root, text="Block1 fixed - initially lower", bg="red"
@@ -299,16 +293,11 @@ class GUI:
             self.root.after(26, self.poll_queue2)
 
     def update_angles(self):
-        joint1 = tk.StringVar(
-            value=str(int(self.sensor_node.get_joint_angle(0))))
-        joint2 = tk.StringVar(
-            value=str(int(self.sensor_node.get_joint_angle(1))))
-        joint3 = tk.StringVar(
-            value=str(int(self.sensor_node.get_joint_angle(2))))
-        joint4 = tk.StringVar(
-            value=str(int(self.sensor_node.get_joint_angle(3))))
-        joint5 = tk.StringVar(
-            value=str(int(self.sensor_node.get_joint_angle(4))))
+        joint1 = tk.StringVar(value=str(int(self.sensor_node.get_joint_angle(0))))
+        joint2 = tk.StringVar(value=str(int(self.sensor_node.get_joint_angle(1))))
+        joint3 = tk.StringVar(value=str(int(self.sensor_node.get_joint_angle(2))))
+        joint4 = tk.StringVar(value=str(int(self.sensor_node.get_joint_angle(3))))
+        joint5 = tk.StringVar(value=str(int(self.sensor_node.get_joint_angle(4))))
         self.label_joint1_angle.config(textvariable=joint1)
         self.label_joint2_angle.config(textvariable=joint2)
         self.label_joint3_angle.config(textvariable=joint3)
@@ -330,10 +319,8 @@ class GUI:
         contact1, contact2 = self.sensor_node.get_contact_objects()
         self.contact_obj1_var = tk.StringVar(value=str(contact1))
         self.contact_obj2_var = tk.StringVar(value=str(contact2))
-        label_contact1_obj = tk.Label(
-            self.root, textvariable=self.contact_obj1_var)
-        label_contact2_obj = tk.Label(
-            self.root, textvariable=self.contact_obj2_var)
+        label_contact1_obj = tk.Label(self.root, textvariable=self.contact_obj1_var)
+        label_contact2_obj = tk.Label(self.root, textvariable=self.contact_obj2_var)
         label_contact1_obj.grid(row=8, column=5)
         label_contact2_obj.grid(row=7, column=5)
         # schedule next update every 100 ms
@@ -354,9 +341,8 @@ class GUI:
     def start_assemble(self):
         """Main assemble sequence"""
         self.controller_node.get_logger().info("Start assemble")
-        self.controller_node.fix_1_to_base(gui=self)
-        self.controller_node.free_block1_from_obj(gui=self)
-        self.controller_node.free_block2_from_obj(gui=self)
+        self.controller_node.fix_end1_base(gui=self)
+        self.controller_node.free_ends_all_parts(gui=self)
         # set assemble point coordinates
         self.assemble_coordinates = {"x": 2, "y": -2, "z": 0}
 
@@ -364,6 +350,10 @@ class GUI:
         # self.spawn_part(6, 6, 0)
         self.assemble_coordinates["z"] = 1
         self.move_part(num=2, x=-1, y=2)
+        self.assemble_coordinates["z"] = 2
+        self.move_part(num=3, x=0, y=4)
+        # self.assemble_coordinates["z"] = 3
+        # self.move_part(num=4, x=1, y=-3)
 
     def move_part(self, num, x, y):
         """move part number num, from x,y coordinates to assemble_coordinates"""
@@ -381,7 +371,7 @@ class GUI:
             self.assemble_coordinates["y"],
             self.assemble_coordinates["z"] + 1,
         )
-        self.free_part()
+        self.free_part(num)
         self.goto_XYZ(
             self.assemble_coordinates["x"],
             self.assemble_coordinates["y"],
@@ -391,16 +381,16 @@ class GUI:
     def fix_part(self, part_num, end_num=2):
         """Fix part number part_num to end block number end_num"""
         if end_num == 1:
-            self.controller_node.fix_obj_to_block1(part_num)
+            self.controller_node.fix_end1_part(part_num)
         if end_num == 2:
-            self.controller_node.fix_obj_to_block2(part_num)
+            self.controller_node.fix_end2_part(part_num)
 
-    def free_part(self, end_num=2):
+    def free_part(self, part_num, end_num=2):
         """Free object from end-effector number end_num block"""
         if end_num == 1:
-            self.controller_node.free_block1_from_obj()
+            self.controller_node.free_end1_part(part_num)
         if end_num == 2:
-            self.controller_node.free_block2_from_obj()
+            self.controller_node.free_end2_part(part_num)
 
     def spawn_part(self, X=5, Y=5, Z=0):
         """Spawns one block on the field, X,Y,Z - int coordinates relative to the robot base"""
