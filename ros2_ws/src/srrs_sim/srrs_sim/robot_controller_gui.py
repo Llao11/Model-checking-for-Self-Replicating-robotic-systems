@@ -338,22 +338,6 @@ class GUI:
         thread.join()
 
     # ASSEMBLE ===========================================================================================================================
-    def start_assemble(self):
-        """Main assemble sequence"""
-        self.controller_node.get_logger().info("Start assemble")
-        self.controller_node.fix_end1_base(gui=self)
-        self.controller_node.free_ends_all_parts(gui=self)
-        # set assemble point coordinates
-        self.assemble_coordinates = {"x": 2, "y": -2, "z": 0}
-
-        self.move_part(num=1, x=1, y=2)
-        # self.spawn_part(6, 6, 0)
-        self.assemble_coordinates["z"] = 1
-        self.move_part(num=2, x=-1, y=2)
-        self.assemble_coordinates["z"] = 2
-        self.move_part(num=3, x=0, y=4)
-        # self.assemble_coordinates["z"] = 3
-        # self.move_part(num=4, x=1, y=-3)
 
     def move_part(self, num, x, y):
         """move part number num, from x,y coordinates to assemble_coordinates"""
@@ -416,6 +400,23 @@ class GUI:
             ]
         )
         self.current_part_num += 1
+
+    def start_assemble(self):
+        """Main assemble sequence"""
+        self.controller_node.get_logger().info("Start assemble")
+        self.controller_node.fix_end1_base(gui=self)
+        self.controller_node.free_ends_all_parts(gui=self)
+        # set assemble point coordinates
+        self.assemble_coordinates = {"x": 2, "y": -2, "z": 0}
+
+        self.move_part(num=1, x=1, y=2)
+        # self.spawn_part(6, 6, 0)
+        self.assemble_coordinates["z"] = 1
+        self.move_part(num=2, x=-1, y=2)
+        self.assemble_coordinates["z"] = 2
+        self.move_part(num=3, x=0, y=3)
+        # self.assemble_coordinates["z"] = 3
+        # self.move_part(num=4, x=1, y=-3)
 
     # CLOSE ===========================================================================================================================
 

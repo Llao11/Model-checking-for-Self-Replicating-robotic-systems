@@ -126,24 +126,21 @@ class SRRSController(Node):
             self.goto_XYZ(x, y, z, step_size)
         # near pose calculation
         else:
-            command_sequences = self.calculate_angles(x, y, z)
+            command_sequences = self.calculate_joint_angles(x, y, z)
             self.rotate_joints(command_sequences)
 
-    def calculate_angles(self, x, y, z) -> List[float]:
-        # in XY plane:
-        r = math.sqrt(x * x + y * y)
-        r_0 = math.sqrt(abs(x * x + y * y - 1))
-        beta = math.degrees(math.atan2(y, x))
-        if r != 0:
-            beta_0 = beta - math.degrees(math.asin(1 / r))
+    def calculate_joint_angles(self, x, y, z) -> List[float]:
+        command_sequences = []
+        alpha, beta_0, gamma = self.relative_angles(x, y, z)
+        if z < 4:
+            joint4 = alpha + gamma
+        elif z >= 4 and z <= 6:
+            joint4 = alpha + gamma - 90
         else:
-            beta_0 = 0
-        alpha = math.degrees(math.asin(math.sqrt(r_0 * r_0 + z * z) / 4))
-        gamma = math.degrees(math.atan2(z, abs(r_0)))
+            raise Exception("z is more than 6")
         joint1 = beta_0
         joint2 = alpha - gamma
         joint3 = 180 - 2 * alpha
-        joint4 = alpha + gamma
         joint5 = beta_0
         if self.fixed_end == 1:
             # change the basic direction if
@@ -157,8 +154,32 @@ class SRRSController(Node):
             # self.get_logger().info(f"ANGLES fix2:  {joint1} {joint2}  {joint3}  {joint4}  {joint5}")
             command_sequences = [joint5, joint4, joint3, joint2, joint1]
         else:
-            self.get_logger().info(f"Ends block not fixed")
+            self.get_logger().info("ERROR: End blocks not fixed")
         return command_sequences
+
+    def relative_angles(self, x, y, z):
+        """Calculate angles:
+        alpha - pitch/2 of block2 without gamma
+        beta - yaw of block1
+        gamma - correction of alpha
+        """
+        beta = math.degrees(math.atan2(y, x))
+        if z < 4:
+            r = math.sqrt(x * x + y * y)
+            r_0 = math.sqrt(abs(x * x + y * y - 1))
+        elif z >= 4 and z <= 6:
+            z = z - 2
+            r = math.sqrt(x * x + y * y)
+            r_0 = math.sqrt(abs(x * x + y * y - 1)) - 2
+
+        self.get_logger().info(f"{r=}\n{r_0=}")
+        if r != 0:
+            beta_0 = beta - math.degrees(math.asin(1 / r))
+        else:
+            beta_0 = 0
+        alpha = math.degrees(math.asin((math.sqrt(r_0 * r_0 + z * z)) / 4))
+        gamma = math.degrees(math.atan2(z, abs(r_0)))
+        return alpha, beta_0, gamma
 
     # Low level joints control ===============================================================================================================
 
@@ -178,14 +199,6 @@ class SRRSController(Node):
             self.get_logger().info(
                 f"Error: No data for joint {joint_index}: {command.data}"
             )
-
-    def connect_to_object(self, step=0.01):
-        # obj1 = self.sensorNode.get_contact_objects()[0]
-        # obj2 = self.sensorNode.get_contact_objects()[1]
-        # if self.fixed_end == 1 and obj2 == None:
-        #     self.
-
-        pass
 
         # Wait until movement finished
         # joint target angles in degrees
@@ -232,7 +245,6 @@ class SRRSController(Node):
         sorted_names = ["rev0_1", "rev2_3", "rev5_6", "rev8_9", "rev9_10"]
         self.joint_angles_current = [joint_angles_current_dict[i] for i in sorted_names]
         # self.get_logger().info(f"sorted: {sorted_names}")
-        # self.get_logger().info(f"joint_angles_current: {self.joint_angles_current}")
 
     def get_joint_angle(self, joint_num):
         joint = float(self.joint_angles_current[joint_num]) * 180.0 / math.pi
