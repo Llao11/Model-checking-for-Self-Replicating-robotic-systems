@@ -136,7 +136,7 @@ Thus, on the NuSMV model description level we have:
 \end{itemize}
 
 \lstinputlisting[language=NuSMV, basicstyle=\ttfamily\scriptsize, 
-numbers=left, firstline=57, lastline=90, float,
+numbers=left, firstline=57, lastline=90, 
 caption={NuSMV code for block\_yaw module}, label={lst:NuSMVyawblock}]{code/robot_structure.smv}
 
 MuSMV modules block\_base, block\_pitch sin, and cos NuSMV modules shown in Appendix A.
@@ -203,16 +203,12 @@ In order to verify whether the robot is capable of reaching a desired target poi
 with its free end-effector, in three-dimensional space, we formalize the reachability 
 check directly within the NuSMV model. 
 
-Since we can use only countable number of states and have to represent angles as  integers,
-each transformation of angles to linear coordinates is not precise. 
-Correspondingly the distance between actual and target points is between zero and linear 
-delta calculated based on descritization value for angle.
-
-The relevant fragment of code is shown in Listing \ref{lst:CheckPreparation}.
+In the DEFINE section we provide target point, end-effector coordinates variable 
+and define error threeshold, this code fragment is shown in Listing \ref{lst:CheckPreparation}.
 
 \begin{lstlisting}[language=NuSMV, 
     caption={End effector and target point coincidence condition}, 
-    label={lst:CheckPreparation}, float]
+    label={lst:CheckPreparation}]
 DEFINE
 ...
 error  := 1;
@@ -224,33 +220,124 @@ endY_inside_limits :=(endY <=(checkY+error) & endY >=(checkY-error));
 endZ_inside_limits :=(endZ <=(checkZ+error) & endZ >=(checkZ-error));
 \end{lstlisting}
 
-
-Here, the variables endX, endY, and endZ represent the Cartesian coordinates TODO: add clarification about CS translation and 
+Here, the variables endX, endY, and endZ represent the Cartesian coordinates 
 of the robot end-effector, which are computed elsewhere in the model 
-based on the joint angles and link lengths. The parameters checkX, checkY, and checkZ 
+based on the joint angles and link lengths. 
+
+The parameters checkX, checkY, and checkZ 
 denote the coordinates of a target point that we wish to test for reachability. 
-Since the system operates with discretized values, a tolerance margin error is introduced. 
+
+Since we can use only countable number of states and have to represent angles as  integers,
+each transformation of angles to linear coordinates is not precise. 
+Correspondingly the distance between actual and target points is between zero and linear 
+delta calculated based on descretization value for angle.
 For each spatial dimension, Boolean formulas $endX\_inside\_limits$, $endY\_inside\_limits$, 
 and $endZ\_inside\_limits$ check whether the end-effector coordinate lies within a 
 small interval around the corresponding target value, effectively 
-defining a cube of side length 2*error centered at the target.\\
+defining a cube of side length 2, centered at the target.
+
 The formal property is expressed in Linear Temoporal Logic (LTL) in Listing \ref{lst:LTLSpec}.
+states that on every execution path, it will eventually (F) be 
+the case that the robot’s end-effector is  within the specified tolerance region around 
+the target point. In other words, the property enforces that the end-effector  
+eventually can reach the target zone.
 
 \begin{lstlisting}[language=NuSMV, caption={Reachability condition in LTL specification}, 
-    label={lst:LTLSpec}, float]
+    label={lst:LTLSpec}]
+    LTLSPEC 
+    F (endX_inside_limits & endY_inside_limits & endZ_inside_limits)
+\end{lstlisting}
+The formal property is expressed in Computation Tree Logic (CTL) in Listing \ref{lst:CTLSpec}.
+
+\begin{lstlisting}[language=NuSMV, caption={Reachability condition in CTL specification}, 
+    label={lst:CTLSpec}]
+CTLSPEC 
+EF (endX_inside_limits & endY_inside_limits & endZ_inside_limits)
+\end{lstlisting}
+
+In this specification $EF$ means "there exists a path along 
+which eventually holds following condition". 
+
+
+\subsubsection{Region reachability checking specifications:}
+
+We can check reachability of some 3D region, in our case a box by defining the 
+variables checkX, checkY and checkZ as FROZENVAR. 
+FROZENVAR section in NuSMV declares parameters that are chosen 
+nondeterministically at starting time 
+and then never change along a run for an entire execution (trace).
+The Listing \ref{lst:RegionDefinition}  represents an example 
+of a region: \\ $x=[-10,10],y=[-10,10],z=[0,20]$.
+
+\begin{lstlisting}[language=NuSMV, caption={Region definition for a reachability checking}, 
+    label={lst:RegionDefinition}]
+FROZENVAR
+    checkX : -10..10;
+    checkY : -10..10;
+    checkZ : 0..20;
+\end{lstlisting}
+
+Changing in the specification for the region checking using CTL logic 
+shown in Listing \ref{lst:CTLSpec} is not necessary.
+With the frozen variable region, the formula states: from every initial state 
+(for every admissible target chosen at t=0), there exists a sequence 
+of moves that eventually places the end-effector inside the region.
+
+Because NuSMV checks CTL properties over all initial states
+, this specification proves reachability for every target in the declared 
+ranges (universal over targets, existential over paths). 
+
+These specifications therefore provides a rigorous, formally verifiable 
+mechanism to test spatial reachability of robotic manipulators in 
+discrete state-space models. It can be 
+generalized by altering the checkX, checkY, and 
+checkZ parameters, and by varying the tolerance error,
+to systematically analyze the reachable workspace of the system.
+
+\subsection{Counterexample processing}
+\label{ch:Counterexample}
+
+Based on specifications described in previous section we use 
+the modeling pattern in NuSMV for reachability: “eventually reach point P”, 
+and negate that requirement to force the model checker to produce a counterexample 
+that reaches target point P. 
+
+In our self-replication robotic system this pattern can be implementated to obtain 
+plausible traces on following stages of the self-replication process:
+\begin{enumerate}
+    \item To define the trajectory from current point to new part.
+    \item To define the trajectory of transportation of the part to an assembly point.
+    \item To define the trajectory for new robot to connect to the last part.
+\end{enumerate}
+
+These stages shown on the Figure \ref{fig:LocalAssemblyWithRM}, where input parameters 
+shown in orange squares and counterexamples depicted with red arrow.
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[height=16cm]{LocalAssemblyWithRMCandCE.png} 
+    \caption{Local assembly process without model checking}
+    \label{fig:LocalAssemblyWithRM}
+\end{figure}
+
+The formal property is expressed in Linear Temoporal Logic (LTL) in Listing \ref{lst:LTLSpecNeg}.
+states that on every execution path, it will always (G) be 
+the case that the robot’s end-effector is not within the specified tolerance region around 
+the target point. In other words, the property enforces that the end-effector infinitely often 
+leaves the target zone, meaning the robot cannot remain in that region permanently.
+
+\begin{lstlisting}[language=NuSMV, caption={Reachability condition in LTL specification}, 
+    label={lst:LTLSpecNeg}]
 LTLSPEC 
 G !(endX_inside_limits & endY_inside_limits & endZ_inside_limits)
 \end{lstlisting}
 
-states that on every execution path, it will always (G) eventually (F) be 
-the case that the robot’s end-effector is not within the specified tolerance region around 
-the target point. In other words, the property enforces that the end-effector infinitely often 
-leaves the target zone, meaning the robot cannot remain in that region permanently.\\
-The formal property is expressed in Computation Tree Logic (CTL) in Listing \ref{lst:CTLSpec}.
+
+The formal property is expressed in Computation Tree Logic (CTL) in Listing \ref{lst:CTLSpecNeg}.
 
 \begin{lstlisting}[language=NuSMV, 
     caption={Reachability condition in CTL specification}, 
-    label={lst:CTLSpec}, float]
+    label={lst:CTLSpecNeg}]
 CTLSPEC 
 AG !(endX_inside_limits & endY_inside_limits & endZ_inside_limits)
 \end{lstlisting}
@@ -262,64 +349,106 @@ AG \neg ( endX\_inside\_limits \land endY\_inside\_limits \land endZ\_inside\_li
 is interpreted as: “On all computation paths (A), in all states globally 
 (G), it is never the case that 
 the end-effector simultaneously satisfies all three coordinate 
-bounds.” In other words, if this property 
-holds, the model checker proves that the robot can never reach the point 
-(10,15,25)
-(10,15,25) within the 
-given tolerance.\\ 
+bounds.” In other words, if the  target point defined as in  Listing \ref{lst:CheckPreparation},
+the model checker proves that the robot can never reach the point
+(10,15,25) within the given tolerance.
+
 Conversely, if the property is violated, NuSMV produces a counterexample trace that demonstrates 
 a specific sequence of joint configurations leading the end
 -effector into the defined target region. This 
 counterexample can be directly interpreted as a feasible motion 
 plan achieving the desired reachability.
 
-\subsubsection{Region reachability checking specifications:}
+The implementation  of this process centers on the Counterexample class in python
+and a set of utilities for filtering variables, reconstructing geometry, 
+and plotting results. This class  parse NuSMV counterexample, 
+extracts the variables of interest (end-effector coordinates,
+per-block coordinates, and joint angles), and provides means to render the 
+counterexample trace in 3D graph. It also exposes numerically clean sequences that can 
+hand to a controller. 
 
-We can check reachability of some 3D region, in our case a box by defining the 
-variables checkX, checkY and checkZ as FROZENVAR. 
-FROZENVAR declares parameters that are chosen nondeterministically at starting time 
-and then never change along a run for an entire execution (trace).
-The Listing \ref{lst:RegionDefinition}  represents an example 
-of a region: \\ $x=[-10,10],y=[-10,10],z=[0,20]$.
+Counterexample class shown in Appendix \ref{ch:counterexamplePy} 
+it takes raw NuSMV output and exposes methods 
+to transform it into structured sequences for visualization and control. 
+The source file is short—easy to audit and adapt—but covers the full 
+parsing loop: reading states, carrying forward unchanged values, projecting 
+specific variables, computing angles in degrees, reconstructing robot 
+geometry step-by-step, and plotting.
 
-\begin{lstlisting}[language=NuSMV, caption={Region definition for a reachability checking}, 
-    label={lst:RegionDefinition}, float]
-FROZENVAR
-    checkX : -10..10;
-    checkY : -10..10;
-    checkZ : 0..20;
-\end{lstlisting}
+Parsing the counterexample text presents a challenge because NuSMV prints 
+only the variables that change between consecutive states. 
+To reconstruct complete state vectors, the \texttt{filter\_variables$()$} function
+employs a carry-forward mechanism. 
+It begins with a list of variable names of interest, such as the coordinates of 
+each block or the end-effector, and then iterates over the textual representation 
+of each NuSMV state. When a variable assignment is found, its value is 
+updated in the active state vector; otherwise, the previous value is 
+retained. This mechanism ensures that every time step in the resulting sequence 
+contains a full snapshot of all relevant variables, even those that remained 
+constant. Once the entire sequence is reconstructed, the program converts 
+the data into numerical form, yielding a well-defined matrix of dimension 
+steps $\times$ variables suitable for quantitative analysis.
+The resulting data provide a clear temporal evolution of the robot configuration.
 
-Changing in the specification for the region checking using CTL logic 
-shown in Listing \ref{lst:CTLSpecRegion}.
-$EF$ means "there exists a path along which eventually holds following condition". 
-With the frozen variable region, the formula states: from every initial state (
-for every admissible target chosen at t=0), there exists a sequence 
-of moves that eventually places the end-effector inside the region.
+When angular values are needed, the same mechanism is applied to 
+orientation variables in function \texttt{get\_angles$()$}, 
+which are scaled by a discretization factor to 
+convert symbolic or integer representations into physical degrees. 
+This transformation connects the abstract state space of the model checker 
+to the metric quantities used in real robot kinematics.
 
-Because NuSMV checks CTL properties over all initial states
-, this specification proves reachability for every target in the declared 
-ranges (universal over targets, existential over paths). 
-\begin{lstlisting}[language=NuSMV, caption={Reachability condition of a
-    region with CTL specification}, label={lst:CTLSpecRegion}, float]
-CTLSPEC 
-   EF (endX_inside_limits & endY_inside_limits & endZ_inside_limits ) 
-\end{lstlisting}
+Beyond parsing, the class includes visualization function \texttt{plot\_trace$()$} that convert 
+the numeric data into three-dimensional figures. These plots display the 
+complete end-effector path as well as the robot’s configuration at 
+selected steps, an example of the plot is shown in Figure \ref{fig:3dCounterexampleTrace}.
+Each step is represented as a connected chain of block 
+positions, preserving the spatial structure of the model. The visualization enforces 
+uniform scaling across all axes to maintain geometric fidelity, and 
+the plotted points are labeled to correspond with discrete time indices. 
 
-These specifications therefore provides a rigorous, formally verifiable 
-mechanism to test spatial reachability of robotic manipulators in 
-discrete state-space models. It can be 
-generalized by altering the checkX, checkY, and 
-checkZ parameters, and by varying the tolerance error,
-to systematically analyze the reachable workspace of the system.
-
-\subsection{Counterexample based control}
 \begin{figure}[h!]
     \centering
-    \includegraphics[height=16cm]{LocalAssemblyWithRMCandCE.png} 
-    \caption{Local assembly process without model checking}
-    \label{fig:LocalAssemblyWithRM}
+    \includegraphics[height=12cm]{3dCounterexampleTrace.png} 
+    \caption{Example trace (blue) plot for target point coordinates (10,13,30) 
+    and last trace robot position (orange)}
+    \label{fig:3dCounterexampleTrace}
 \end{figure}
+
+All paths and parameter values, such as the number of robot modules or 
+the NuSMV executable location, are configurable. The implementation follows 
+a transparent design that favors explicitness over abstraction, which makes it accessible to 
+researchers who wish to adapt it to new model structures or naming conventions.
+
+Once the counterexample has been parsed and verified, the data can be 
+integrated into a robotic control pipeline. 
+
+Data from counterexample can be used directly as open-loop trajectories, in which 
+each time step of the counterexample corresponds to a discrete command for 
+the robot’s end-effector or joint configuration. 
+They may also serve as reference paths for closed-loop control (with feedback from sensors),
+allowing the robot to reproduce formally verified behaviors under physical constraints. 
+
+A typical workflow begins with 
+the definition of the robot structure and target point in a NuSMV model 
+file. The property under verification expresses the negation of the 
+desired reachability condition—formally, the statement that the robot 
+can never reach the point. If NuSMV finds that this negated property is 
+false, it outputs a counterexample that shows precisely how the robot 
+can, in fact, reach the point. The Python parser then extracts from this 
+output the sequence of coordinates or angles, which can be sent to 
+the robot controller as a reference trajectory. Visualization confirms that 
+the motion reaches the target, and further analysis can evaluate the 
+energy, path smoothness, or joint feasibility of the resulting motion.
+
+By systematically reconstructing state trajectories from NuSMV output, 
+visualizing them, and exposing them for control, the Counterexample class enables the 
+practical reuse of verification results in robotics experiments.
+Its structure is  extensible for larger models, alternative naming conventions, 
+or real-time integration. The combination of logical specification, counterexample extraction, 
+and geometric reconstruction demonstrates how model checking can directly 
+inform the design and testing of robotic systems, turning  formal verification
+into operational behavior.
+
 
 \subsection{Evaluation}
 TODO: plan experiments: 

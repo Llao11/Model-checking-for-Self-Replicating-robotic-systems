@@ -1,0 +1,116 @@
+\section{Overview}
+In this chapter, we describe  a simulation-based validation platform 
+designed and implemented for self-replicating robotic systems (SRRS), 
+combining the ROS 2 Jazzy 
+middleware, Gazebo Harmonic physics simulation, and a modular set of 
+Python controllers and sensor nodes. The principal goal of this project 
+was not only to design a single robot controller, but also to create an 
+experimental architecture that allows us to test and compare different control 
+approaches, including  based  on NuSMV for  assembly of new robotic units.
+
+We structured the SRRS project as a collection of ROS 2 nodes and launch 
+files that collectively define the robotic world, the robot itself, 
+the manipulable parts, and the control interface. The starting point of 
+the simulation is the launch file \texttt{robot.launch}, which initiates the 
+Gazebo world, spawns the robot and the base environment, and launches the 
+graphical interface for control (robot\_controller\_gui.py). The design ensures 
+that the entire system can be initialized with a single command and 
+that all subsystems--control, sensing, visualization -- operate concurrently under 
+ROS2 multithreaded executor.
+
+\subsection{System Architecture }
+
+The simulated environment consists of three categories of entities:
+\begin{itemize}
+    \item The main robot, defined in robot.xacro, which acts as both manipulator and replicator.
+    \item Modular parts, defined in part.xacro, which represent the components that 
+    the robot manipulates to assemble a new unit.
+    \item The base environment, described in base.sdf, which provides a 
+        fixed reference plane and a physical structure for attachment operations.
+\end{itemize}
+
+All these elements are spawned into the Gazebo Harmonic simulation using the 
+ROS 2 launch mechanism.
+
+The robot model includes multiple revolute joints 
+(rev0\_1, rev2\_3, rev5\_6, rev8\_9, rev9\_10) allowing high-degree-of-
+freedom manipulation. 
+Each part is modeled as a single block that can 
+attach to either of the robot’s two end effectors or to the base via 
+virtual "attachment joints." These joints are controlled through ROS 
+topics using the std\_msgs/msg/Empty message type to send attach/detach 
+commands, bridged to Gazebo via ros\_gz\_bridge.
+
+The modularity of this structure allows us to simulate replication cycles 
+where the robot assembles a set of parts into a new robot instance. 
+This provides a flexible testbed to evaluate different control policies-
+deterministic sequences, feedback-based behaviors, or Model checking based strategies
+-without modifying the core simulator.
+
+We organized the software in several layers, from low-level motion control 
+to high-level behavior orchestration:
+\begin{itemize}
+    \item Low-level control node: RobotController (see robotController.py)
+    \item Part interface node: PartController (see partController.py)
+    \item Sensor acquisition node: SRRSsensorsNode (see SRRSsensorsNode.py)
+    \item Supervisory control node: SRRScontrollerNode (see SRRScontrollerNode.py)
+    \item Graphical user interface: robot\_controller\_gui.py
+\end{itemize}
+
+The robot\_controller\_gui.py file launches and connects all these nodes,
+forming the interactive entry point to the SRRS simulation. The GUI shown in Figure \ref{fig:simGUI} 
+is implemented in Tkinter, providing manual and automated control capabilities,
+live feedback of joint states, and camera streams. 
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[height=8cm]{simGUI.png} 
+    \caption{Graphical user interface for simulation control}
+    \label{fig:simGUI}
+\end{figure}
+
+When the "Start Assemble"
+button is pressed, the GUI calls start\_assemble(), which executes an 
+automated sequence of motions to assemble a new robot from scattered parts.
+
+
+\subsection{Robot simulation and control}
+
+As the example of a robot we take a five-joint manipulator with two  fixed ends, 
+enabling alternating attachment and detachment to the base during locomotion 
+and assembly, the initial configuration is shown in Figure \ref{fig:RobotStructureGazeboSim}. 
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[height=11cm]{RobotStructureGazebo.png} 
+    \caption{Robot structure in Gazebo simulation environment}
+    \label{fig:RobotStructureGazeboSim}
+\end{figure}
+
+This design emulates the behavior of a linear self-
+reconfiguring structure similar to a modular chain robot.
+
+We modeled the motion of the robot's free end in Cartesian coordinates 
+(x, y, z) relative to the fixed base. 
+The function goto\_XYZ(x, y, z) (in RobotController) defines the high-level command for moving the 
+robot’s end-effector to a desired position. 
+The method recursively decomposes 
+the trajectory into steps of a maximum length units to prevent excessive 
+joint rotations, invoking the lower-level function calculate\_joint\_angles() 
+for each sub-movement.
+
+Mathematically, for a given target point (x, y, z), we compute three internal 
+angular parameters:
+
+\[ \alpha = \arcsin(\frac{\sqrt{r_0^2+z^2}}{4}) \]
+\[ \beta = \arctan(\frac{y}{x}) \]
+\[ r = \sqrt{y^2+x^2} \]
+\[ \gamma = \arctan(\frac{z}{r_0}) \]
+,where:
+
+$\alpha$ - is a pitch of middle block without correction 
+$\beta$ - yaw of a first block
+$\gamma$ - correction of $\alpha$
+$ r_0=\sqrt{x^2+y^2-1} $ is a correction term depending on the 
+robot geometry. 
+These angles are used to derive the five joint commands:
