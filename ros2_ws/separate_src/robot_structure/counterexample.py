@@ -5,9 +5,8 @@ import time
 
 
 class Counterexample:
-    """
-    Class represents nusmv counterexample text,
-    """
+    """Class to parse nusmv counterexample, retreive trace states,
+    filter variables and represent traces as graphs"""
 
     def __init__(self, nusmv_result: str):
         self.nusmv_result = nusmv_result
@@ -26,9 +25,6 @@ class Counterexample:
 
     def plot_trace(self, robot_step=0, save_path="3d_plot.png"):
         """Plot a end-effector trace from counterexample."""
-        # !!!!!!!j
-        # TODO: check length of the block segments
-        # !!!!!!!j
         end_coordinates = ["endX", "endY", "endZ"]
         trace = self.filter_variables(end_coordinates)
         fig = plt.figure()
@@ -95,7 +91,8 @@ class Counterexample:
         self.print_steps(steps)
         return steps
 
-    def checklengths(self):
+    def check_lengths(self):
+        """Auxillary function to check that the length of all blocks is not changed"""
         length = []
         steps = self.get_robot_blocks(5)
         for step in steps:
@@ -131,7 +128,7 @@ class Counterexample:
         self, end_coordinates=["endX", "endY", "endZ"]
     ) -> list[list[int]] | None:
         """list of end-effector coordinates by steps"""
-        return counter1.filter_variables(end_coordinates)
+        return self.filter_variables(end_coordinates)
 
     @staticmethod
     def run_nusmv_file(smv_file="./smv/robot_structure.smv"):
@@ -159,17 +156,19 @@ class Counterexample:
 
 if __name__ == "__main__":
     # print("Start checking...")
-    Counterexample.run_nusmv_file()
+    # Counterexample.run_nusmv_file()
     output_file = "result.txt"
     angle_vars = ["block1.yaw", "block2.pitch", "block3.pitch"]
     end_coordinates = ["endX", "endY", "endZ"]
     with open(output_file) as trace:
         counter1 = Counterexample(trace.read())
         steps = counter1.filter_variables(end_coordinates)
+        target = counter1.get_target_coordinates()
+        print(f"Target:{target}")
         angles = counter1.get_angles(angle_vars)
         print("Control angles:")
         counter1.print_steps(angles)
         print("End effector coordinates by steps:")
         counter1.print_steps(steps)
-        counter1.plot_trace(4)
+        counter1.plot_trace(-1)
         # counter1.get_robot_blocks(3)

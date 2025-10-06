@@ -161,35 +161,35 @@ class GUI:
         btn_joint1 = tk.Button(
             self.root,
             text="Set Joint 1",
-            command=lambda: self.controller_node.rotate_joint(
+            command=lambda: self.controller_node.robotController.rotate_joint(
                 0, joint1_angle.get("1.0", tk.END)
             ),
         )
         btn_joint2 = tk.Button(
             self.root,
             text="Set Joint 2",
-            command=lambda: self.controller_node.rotate_joint(
+            command=lambda: self.controller_node.robotController.rotate_joint(
                 1, joint2_angle.get("1.0", tk.END)
             ),
         )
         btn_joint3 = tk.Button(
             self.root,
             text="Set Joint 3",
-            command=lambda: self.controller_node.rotate_joint(
+            command=lambda: self.controller_node.robotController.rotate_joint(
                 2, joint3_angle.get("1.0", tk.END)
             ),
         )
         btn_joint4 = tk.Button(
             self.root,
             text="Set Joint 4",
-            command=lambda: self.controller_node.rotate_joint(
+            command=lambda: self.controller_node.robotController.rotate_joint(
                 3, joint4_angle.get("1.0", tk.END)
             ),
         )
         btn_joint5 = tk.Button(
             self.root,
             text="Set Joint 5",
-            command=lambda: self.controller_node.rotate_joint(
+            command=lambda: self.controller_node.robotController.rotate_joint(
                 4, joint5_angle.get("1.0", tk.END)
             ),
         )
@@ -330,7 +330,7 @@ class GUI:
         """Create a thread with command to ControlNode to goto_XYZ"""
         # self.controller_node.goto_XYZ(outputx, outputy, outputz)
         thread = threading.Thread(
-            target=self.controller_node.goto_XYZ,
+            target=self.controller_node.robotController.goto_XYZ,
             args=(outputx, outputy, outputz),
             daemon=True,
         )

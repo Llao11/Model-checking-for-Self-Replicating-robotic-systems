@@ -29,15 +29,12 @@ setup(
     tests_require=["pytest"],
     entry_points={
         "console_scripts": [
-            "srrs_v1 = srrs_sim.srrs_v1:main",
-            "example_velocity = srrs_sim.example_velocity:main",
-            "two_blocks_controller = srrs_sim.two_blocks_controller:main",
             "joints_controller = srrs_sim.joints_controller:main",
-            "robot_controller_file = srrs_sim.robot_controller_file:main",
-            "robot_controller_keyboard = srrs_sim.robot_controller_keyboard:main",
             "robot_controller_gui = srrs_sim.robot_controller_gui:main",
             "SRRSController = srrs_sim.SRRSController:main",
             "PartSpawner = srrs_sim.PartSpawner:main",
+            "robotController = srrs_sim.robotController:main",
+            "materialController = srrs_sim.materialController:main",
             "Assemble = srrs_sim.Assemble:main",
             "object_pose_io = srrs_sim.object_pose_io:main",
             "camera_process_node = srrs_sim.camera_process_node:main",
