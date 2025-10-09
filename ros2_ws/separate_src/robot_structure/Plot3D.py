@@ -55,7 +55,6 @@ class Plot3D:
 
     # --------------------------- public API ------------------------------
     def set_limits(
-        """ set limits to plot """
         self,
         xlim: Optional[Tuple[float, float]] = None,
         ylim: Optional[Tuple[float, float]] = None,

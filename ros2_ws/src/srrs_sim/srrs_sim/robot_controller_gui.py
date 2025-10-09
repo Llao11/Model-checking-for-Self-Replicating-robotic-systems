@@ -330,7 +330,7 @@ class GUI:
         """Create a thread with command to ControlNode to goto_XYZ"""
         # self.controller_node.goto_XYZ(outputx, outputy, outputz)
         thread = threading.Thread(
-            target=self.controller_node.robotController.goto_XYZ,
+            target=self.controller_node.goto_XYZ,
             args=(outputx, outputy, outputz),
             daemon=True,
         )

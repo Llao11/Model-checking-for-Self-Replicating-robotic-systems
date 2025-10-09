@@ -63,12 +63,13 @@ class RobotController(Node):
         ]
 
     def create_subscribers(self):
-        # self.contact1_subscriber = self.create_subscription(String, '/contact1/change_state', self.contact1_changed ,10)
+        # self.contact1_subscriber = self.create_subscription(String,
+        # '/contact1/change_state', self.contact1_changed ,10)
         self.joints_angles_subscriber = self.create_subscription(
             JointState, "/joint_states", self.joint_state_changed, 10
         )
 
-    # =========================================================================================================================================
+    # ===============================================================================
     # The free end of robot  moving to x,y,z relative to the fixed part (0,0)
     def goto_XYZ(self, x, y, z, step_size=3):
         """
@@ -168,7 +169,7 @@ class RobotController(Node):
         gamma = math.degrees(math.atan2(z, abs(r_0)))
         return alpha, beta_0, gamma
 
-    # Low level joints control ===============================================================================================================
+    # Low level joints control ===============================================
 
     def rotate_joints(self, command_sequences):
         for joint_index in range(len(command_sequences)):
@@ -238,7 +239,7 @@ class RobotController(Node):
         joint = float(self.joint_angles_current[joint_num]) * 180.0 / math.pi
         return joint
 
-    # Fix to base  ===========================================================================================================================
+    # Fix to base  ==========================================================
 
     def get_fixed_end(self):
         return self.fixed_end

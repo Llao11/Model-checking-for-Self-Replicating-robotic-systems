@@ -5,7 +5,7 @@ from .partController import PartController
 
 
 class MaterialController(Node):
-    def __init__(self, parts_num=3):
+    def __init__(self, parts_num):
         super().__init__("material_controller")
         self.create_parts(parts_num)
 

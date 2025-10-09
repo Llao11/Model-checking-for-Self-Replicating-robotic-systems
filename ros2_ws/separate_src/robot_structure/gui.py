@@ -1,18 +1,3 @@
-#!/usr/bin/env python3
-"""
-Tkinter GUI embedding a dynamic **3‑D Matplotlib** plot – now laid out with the
-`grid()` geometry‑manager instead of `pack()`.  The functional bits are
-unchanged; only the widget placement differs.
-
-* **Plot3DBackend** – unchanged. Owns the `Figure`/`Axes3D` and helper methods.
-* **App** – uses a 2‑row grid: row 0 hosts the canvas, row 1 hosts a control
-  bar (buttons + axis‑limit widgets).  Columns expand elastically thanks to
-  `grid_columnconfigure(..., weight=1)`.
-
-Run the file and you’ll see the same interactive 3‑D plot with buttons and
-limit‑boxes, but everything is positioned via `grid()`.
-"""
-
 from __future__ import annotations, print_function, with_statement
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolbar2Tk
 
@@ -36,8 +21,8 @@ from mpl_toolkits.mplot3d import Axes3D  # noqa: F401 – required for 3‑D bac
 # ---------------------------------------------------------------------------
 # Data model helper
 Point3D = [float, float, float]
-input_smv_file = "./smv/robot_structure3d.smv"
-output_smv_file = "./smv/template_robot_structure3d.smv"
+input_smv_file = "./smv/robot_structure.smv"
+output_smv_file = "./smv/template_robot_structure.smv"
 
 # ---------------------------------------------------------------------------
 # Tkinter GUI wrapper

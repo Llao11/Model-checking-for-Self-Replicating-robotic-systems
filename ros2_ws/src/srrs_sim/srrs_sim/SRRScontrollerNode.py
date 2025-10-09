@@ -1,5 +1,4 @@
 from rclpy.node import Node
-from std_msgs.msg import Float64MultiArray, Empty, String
 import time
 from .materialController import MaterialController
 from .robotController import RobotController
@@ -16,13 +15,15 @@ class SRRSController(Node):
         self.materialController = MaterialController(parts_num=3)
         self.parts = self.materialController.get_parts()
 
-    # Low level joints control ===============================================================================================================
+    # Low level robot control =============================================
+    def goto_XYZ(self, x, y, z):
+        self.robotController.goto_XYZ(x, y, z)
 
     def rotate_joints(self, command_sequences):
         self.robotController.rotate_joints(command_sequences)
         self.robotController.wait_movement_finish(command_sequences)
 
-    # Fix to base  ===========================================================================================================================
+    # Fix to base  ==========================================================
     def get_fixed_end(self):
         return self.robotController.fixed_end
 
@@ -54,7 +55,7 @@ class SRRSController(Node):
     def free_end2_base(self):
         self.robotController.free_end2_base()
 
-    # Fix PARTS to END-EFFECTORS  ===========================================================================================================================
+    # Fix PARTS to END-EFFECTORS  ==========================================
 
     def fix_end1_part(self, part_num, **kwargs):
         part_index = part_num - 1
@@ -76,7 +77,7 @@ class SRRSController(Node):
             gui.btn_fix1_obj.config(bg="red")
             gui.btn_free1_obj.config(bg="white")
 
-    # FREE PARTS from  END-EFFECTORS ===========================================================================================================================
+    # FREE PARTS from  END-EFFECTORS ======================================
 
     def free_end1_part(self, part_num):
         part_index = part_num - 1

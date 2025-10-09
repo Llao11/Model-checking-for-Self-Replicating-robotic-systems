@@ -257,9 +257,9 @@ DEFINE
     base_yhx := 0;      base_yhy := 100;    base_yhz := 0;
     base_zhx := 0;      base_zhy := 0;      base_zhz := 100;
 
-    checkX := 10;
-    checkY := 13;
-    checkZ := 30;
+checkX := -60;
+checkY := -60;
+checkZ := -60;
 
     endX := block4.px2;  
     endY := block4.py2;  
