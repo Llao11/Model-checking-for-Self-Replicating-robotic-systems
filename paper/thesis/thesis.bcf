@@ -2443,6 +2443,10 @@
     <bcf:citekey order="80" intorder="1">AbdelRahman2022Hierarchical</bcf:citekey>
     <bcf:citekey order="81" intorder="1">Lee2007Robotic</bcf:citekey>
     <bcf:citekey order="82" intorder="1">Lee2007Robotic</bcf:citekey>
+    <bcf:citekey order="83" intorder="1">ROS2Jazzy</bcf:citekey>
+    <bcf:citekey order="84" intorder="1">GazeboHarmonic</bcf:citekey>
+    <bcf:citekey order="85" intorder="1">GitHub</bcf:citekey>
+    <bcf:citekey order="86" intorder="1">Jenett2019MaterialRobot</bcf:citekey>
   </bcf:section>
   <!-- SORTING TEMPLATES -->
   <bcf:sortingtemplate name="ynt">

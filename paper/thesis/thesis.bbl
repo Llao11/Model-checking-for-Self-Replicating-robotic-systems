@@ -1061,6 +1061,97 @@
       \verb 10.1007/978-3-031-60698-4_19
       \endverb
     \endentry
+    \entry{GitHub}{online}{}
+      \name{author}{1}{}{%
+        {{hash=6aa5ac25ca72c96851ecd0b0f7430ff9}{%
+           family={Babaytsev},
+           familyi={B\bibinitperiod},
+           given={Dmitry},
+           giveni={D\bibinitperiod}}}%
+      }
+      \strng{namehash}{6aa5ac25ca72c96851ecd0b0f7430ff9}
+      \strng{fullhash}{6aa5ac25ca72c96851ecd0b0f7430ff9}
+      \strng{bibnamehash}{6aa5ac25ca72c96851ecd0b0f7430ff9}
+      \strng{authorbibnamehash}{6aa5ac25ca72c96851ecd0b0f7430ff9}
+      \strng{authornamehash}{6aa5ac25ca72c96851ecd0b0f7430ff9}
+      \strng{authorfullhash}{6aa5ac25ca72c96851ecd0b0f7430ff9}
+      \field{labelalpha}{Bab25}
+      \field{sortinit}{2}
+      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{note}{Accessed: 2025-10-08}
+      \field{title}{Repository of a thesis}
+      \field{year}{2025}
+      \verb{urlraw}
+      \verb https://github.com/Llao11/Model-checking-for-Self-Replicating-robotic-systems
+      \endverb
+      \verb{url}
+      \verb https://github.com/Llao11/Model-checking-for-Self-Replicating-robotic-systems
+      \endverb
+    \endentry
+    \entry{GazeboHarmonic}{online}{}
+      \name{author}{1}{}{%
+        {{hash=da3f2037cc0123c47ff0d1c42d82001f}{%
+           family={Robotics},
+           familyi={R\bibinitperiod},
+           given={Open},
+           giveni={O\bibinitperiod}}}%
+      }
+      \strng{namehash}{da3f2037cc0123c47ff0d1c42d82001f}
+      \strng{fullhash}{da3f2037cc0123c47ff0d1c42d82001f}
+      \strng{bibnamehash}{da3f2037cc0123c47ff0d1c42d82001f}
+      \strng{authorbibnamehash}{da3f2037cc0123c47ff0d1c42d82001f}
+      \strng{authornamehash}{da3f2037cc0123c47ff0d1c42d82001f}
+      \strng{authorfullhash}{da3f2037cc0123c47ff0d1c42d82001f}
+      \field{extraname}{1}
+      \field{labelalpha}{Rob25}
+      \field{sortinit}{2}
+      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
+      \field{extraalpha}{1}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{note}{Accessed: 2025-10-08}
+      \field{title}{Gazebo Harmonic Documentation}
+      \field{year}{2025}
+      \verb{urlraw}
+      \verb https://gazebosim.org/docs/harmonic/getstarted/
+      \endverb
+      \verb{url}
+      \verb https://gazebosim.org/docs/harmonic/getstarted/
+      \endverb
+    \endentry
+    \entry{ROS2Jazzy}{online}{}
+      \name{author}{1}{}{%
+        {{hash=da3f2037cc0123c47ff0d1c42d82001f}{%
+           family={Robotics},
+           familyi={R\bibinitperiod},
+           given={Open},
+           giveni={O\bibinitperiod}}}%
+      }
+      \strng{namehash}{da3f2037cc0123c47ff0d1c42d82001f}
+      \strng{fullhash}{da3f2037cc0123c47ff0d1c42d82001f}
+      \strng{bibnamehash}{da3f2037cc0123c47ff0d1c42d82001f}
+      \strng{authorbibnamehash}{da3f2037cc0123c47ff0d1c42d82001f}
+      \strng{authornamehash}{da3f2037cc0123c47ff0d1c42d82001f}
+      \strng{authorfullhash}{da3f2037cc0123c47ff0d1c42d82001f}
+      \field{extraname}{2}
+      \field{labelalpha}{Rob25}
+      \field{sortinit}{2}
+      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
+      \field{extraalpha}{2}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{note}{Accessed: 2025-10-08}
+      \field{title}{ROS 2 Documentation Jazzy Jalisco}
+      \field{year}{2025}
+      \verb{urlraw}
+      \verb https://docs.ros.org/en/jazzy/index.html
+      \endverb
+      \verb{url}
+      \verb https://docs.ros.org/en/jazzy/index.html
+      \endverb
+    \endentry
   \enddatalist
 \endrefsection
 \endinput

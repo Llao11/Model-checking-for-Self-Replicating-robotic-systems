@@ -58,19 +58,77 @@
     backgroundcolor=\color{nusmvbgcolor},
     captionpos=b % Sets the caption position to bottom
 }
+\lstdefinelanguage{PythonMyStyle}{
+  language=Python,
+  morekeywords={
+    def, class, if, else, elif, for, while, try, except, finally,
+    True, False, None, lambda, import, from, as, return, yield,
+    break, continue, pass, global, nonlocal, with, assert, del, async, await
+  },
+  sensitive=true,
+  comment=[l]\#,
+  morestring=[b]',
+  morestring=[b]",
+  morecomment=[l]\#,
+  morekeywords=[2]{print, input, range, len, open, list, dict, set, str, int, float, bool},
+  keywordstyle=\color{blue}\bfseries,
+  keywordstyle=[2]\color{orange},
+  commentstyle=\color{gray}\ttfamily,
+  stringstyle=\color{red},
+  basicstyle=\ttfamily\small,
+  breaklines=true,
+  showstringspaces=false,
+  tabsize=4
+}
 
 \usepackage{xcolor}
 \definecolor{backcolour}{rgb}{0.95,0.95,0.92}
 \definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{deepblue}{rgb}{0,0,0.5}
+\definecolor{deepred}{rgb}{0.6,0,0}
+\definecolor{deepgreen}{rgb}{0,0.5,0}
+
+
+\usepackage{amsmath}
 \lstset{
     backgroundcolor=\color{backcolour},   % Light gray background color
-    basicstyle=\ttfamily\small,    % Typewriter font with footnotesize text
-    numbers=left,                         % Line numbers on the left
-    numberstyle=\tiny\color{codegray},    % Line number style: tiny gray font
-    numbersep=5pt,                       % Space between numbers and code
-    frame=single,                        % Frame the code block with a single line
-    breaklines=true,                     % Automatic line breaking
-    captionpos=b                        % Caption position at the bottom (if used)
+    basicstyle=\ttfamily\footnotesize,
+    numbers=left,
+    stepnumber=1,
+    numberstyle=\tiny\color{gray},
+    numbersep=5pt,
+    keywordstyle=\color{blue},
+    stringstyle=\color{red},
+    commentstyle=\color{green!70!black},
+    breaklines=true,
+    showstringspaces=false,
+    tabsize=2,
+    % language=xacro
+}
+
+\lstdefinelanguage{xacro}{
+  % language=XML,
+    morestring=[b]",
+    morecomment=[s]{<!--}{-->},
+    morekeywords={
+        xacro:macro,xacro:property,xacro:insert_block,xacro:include,
+        xacro:arg,xacro:if,xacro:unless,xacro:choose,xacro:when,xacro:otherwise,
+        xacro:element,xacro:attribute,
+        robot, link, visual, collision, origin, geometry, mesh, box, cylinder, sphere, material, color, inertial,
+        joint, parent, child, axis, limit, dynamics, transmission, actuator, sensor
+    }
+    basicstyle=\ttfamily\scriptsize,
+    keywordstyle=\color{blue}, % Keyword style
+    commentstyle=\color{comcolor}, % Comment style
+    stringstyle=\color{deepgreen}, % String literal style
+    numbers=left, % Line numbers on the left
+    numberstyle=\color{gray}, % Line number style
+    stepnumber=1, % Each line will be numbered
+    numbersep=5pt, % Distance of line numbers from the code
+    breaklines=true, % Wrap lines if they are too long
+    showstringspaces=false, % Don't show spaces in strings as special characters
+    backgroundcolor=\color{nusmvbgcolor},
+    captionpos=b % Sets the caption position to bottom
 }
 %
 % Suggested Packages

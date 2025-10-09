@@ -32,7 +32,7 @@
 \contentsline {section}{\numberline {4.1}Research tools}{35}{section.4.1}%
 \contentsline {section}{\numberline {4.2}Proposed approach}{37}{section.4.2}%
 \contentsline {chapter}{\numberline {5}Implementation of model checking in SRRS}{39}{chapter.5}%
-\contentsline {section}{\numberline {5.1}Overview}{39}{section.5.1}%
+\contentsline {section}{\numberline {5.1}Subject description}{39}{section.5.1}%
 \contentsline {section}{\numberline {5.2}Analysis of the system}{42}{section.5.2}%
 \contentsline {section}{\numberline {5.3}Model checking based control in local space}{45}{section.5.3}%
 \contentsline {subsection}{\numberline {5.3.1}Overview}{45}{subsection.5.3.1}%
@@ -42,33 +42,51 @@
 \contentsline {subsection}{\numberline {5.3.3}Counterexample processing}{53}{subsection.5.3.3}%
 \contentsline {subsection}{\numberline {5.3.4}Evaluation}{57}{subsection.5.3.4}%
 \contentsline {section}{\numberline {5.4}Robot configuration model checking}{58}{section.5.4}%
-\contentsline {subsection}{\numberline {5.4.1}Overview}{58}{subsection.5.4.1}%
-\contentsline {subsection}{\numberline {5.4.2}Searching for relevant robot configurations}{58}{subsection.5.4.2}%
-\contentsline {subsubsection}{\nonumberline Individual robot configuration checking}{58}{subsubsection*.53}%
-\contentsline {subsubsection}{\nonumberline Implementation in Python}{60}{subsubsection*.56}%
-\contentsline {subsubsection}{\nonumberline Aggregated robot configuration checking in NuSMV}{62}{subsubsection*.59}%
-\contentsline {section}{\numberline {5.5}Reachability model checking in global space}{63}{section.5.5}%
-\contentsline {subsection}{\numberline {5.5.1}Overview}{63}{subsection.5.5.1}%
-\contentsline {subsection}{\numberline {5.5.2}Evaluation}{63}{subsection.5.5.2}%
-\contentsline {section}{\numberline {5.6}General System Model checking}{63}{section.5.6}%
-\contentsline {subsection}{\numberline {5.6.1}Overview}{63}{subsection.5.6.1}%
-\contentsline {subsection}{\numberline {5.6.2}Evaluation}{63}{subsection.5.6.2}%
-\contentsline {section}{\numberline {5.7}Collective behavior model checking}{63}{section.5.7}%
-\contentsline {subsection}{\numberline {5.7.1}Overview}{63}{subsection.5.7.1}%
-\contentsline {chapter}{\numberline {6}Simulation of the SRRS}{64}{chapter.6}%
-\contentsline {section}{\numberline {6.1}Overview}{64}{section.6.1}%
-\contentsline {subsection}{\numberline {6.1.1}System Architecture}{64}{subsection.6.1.1}%
-\contentsline {subsection}{\numberline {6.1.2}Robot simulation and control}{65}{subsection.6.1.2}%
-\contentsline {chapter}{\numberline {7}Validation and evaluation}{68}{chapter.7}%
-\contentsline {chapter}{\numberline {8}Conclusion}{69}{chapter.8}%
-\contentsline {chapter}{\nonumberline Bibliography}{70}{chapter*.62}%
-\contentsline {chapter}{\numberline {A}Appendix}{73}{appendix.A}%
-\contentsline {section}{\numberline {A.1}NuSMV models}{73}{section.A.1}%
-\contentsline {subsection}{\numberline {A.1.1}robot\_structure.smv}{73}{subsection.A.1.1}%
-\contentsline {subsubsection}{\nonumberline Trigonometric modules}{73}{subsubsection*.64}%
-\contentsline {subsubsection}{\nonumberline block\_base module}{74}{subsubsection*.66}%
-\contentsline {subsubsection}{\nonumberline block\_yaw module}{74}{subsubsection*.68}%
-\contentsline {subsubsection}{\nonumberline block\_pitch module}{75}{subsubsection*.70}%
-\contentsline {subsubsection}{\nonumberline main module}{75}{subsubsection*.72}%
-\contentsline {subsection}{\numberline {A.1.2}Counterexample.py class}{77}{subsection.A.1.2}%
+\contentsline {subsection}{\numberline {5.4.1}Sequential checking of possible configations}{58}{subsection.5.4.1}%
+\contentsline {subsection}{\numberline {5.4.2}Implementation in Python}{60}{subsection.5.4.2}%
+\contentsline {section}{\numberline {5.5}Aggregated configuration checking in NuSMV}{62}{section.5.5}%
+\contentsline {section}{\numberline {5.6}Reachability model checking in global space}{64}{section.5.6}%
+\contentsline {subsection}{\numberline {5.6.1}Overview}{64}{subsection.5.6.1}%
+\contentsline {subsection}{\numberline {5.6.2}Evaluation}{64}{subsection.5.6.2}%
+\contentsline {section}{\numberline {5.7}General System Model checking}{64}{section.5.7}%
+\contentsline {subsection}{\numberline {5.7.1}Overview}{64}{subsection.5.7.1}%
+\contentsline {subsection}{\numberline {5.7.2}Evaluation}{64}{subsection.5.7.2}%
+\contentsline {section}{\numberline {5.8}Collective behavior model checking}{64}{section.5.8}%
+\contentsline {subsection}{\numberline {5.8.1}Overview}{64}{subsection.5.8.1}%
+\contentsline {chapter}{\numberline {6}Simulation of the SRRS}{65}{chapter.6}%
+\contentsline {section}{\numberline {6.1}System Architecture}{65}{section.6.1}%
+\contentsline {section}{\numberline {6.2}Gazebo simulation elements}{68}{section.6.2}%
+\contentsline {subsection}{\numberline {6.2.1}Base model}{68}{subsection.6.2.1}%
+\contentsline {subsection}{\numberline {6.2.2}Parts simulation and behavior}{69}{subsection.6.2.2}%
+\contentsline {section}{\numberline {6.3}Robot simulation and control}{71}{section.6.3}%
+\contentsline {subsection}{\numberline {6.3.1}Gazebo representation of a robot}{71}{subsection.6.3.1}%
+\contentsline {subsection}{\numberline {6.3.2}Low level robot controller}{74}{subsection.6.3.2}%
+\contentsline {section}{\numberline {6.4}Base and Part Interaction}{76}{section.6.4}%
+\contentsline {section}{\numberline {6.5}Supervisory Control and GUI Integration}{78}{section.6.5}%
+\contentsline {subsubsection}{\nonumberline Launch and Execution Pipeline}{80}{subsubsection*.59}%
+\contentsline {subsubsection}{\nonumberline Control Strategy Validation Framework}{80}{subsubsection*.61}%
+\contentsline {subsection}{\numberline {6.5.1}Mathematical Abstraction of Assembly Process}{81}{subsection.6.5.1}%
+\contentsline {subsection}{\numberline {6.5.2}Implementation Challenges and Design Considerations}{81}{subsection.6.5.2}%
+\contentsline {section}{\numberline {6.6}Simulation Workflow}{82}{section.6.6}%
+\contentsline {subsection}{\numberline {6.6.1}Conclusion}{82}{subsection.6.6.1}%
+\contentsline {chapter}{\numberline {7}Validation and evaluation}{84}{chapter.7}%
+\contentsline {chapter}{\numberline {8}Conclusion}{85}{chapter.8}%
+\contentsline {chapter}{\nonumberline Bibliography}{86}{chapter*.62}%
+\contentsline {chapter}{\numberline {A}Appendix}{89}{appendix.A}%
+\contentsline {section}{\numberline {A.1}NuSMV models}{89}{section.A.1}%
+\contentsline {subsection}{\numberline {A.1.1}robot\_structure.smv}{89}{subsection.A.1.1}%
+\contentsline {subsubsection}{\nonumberline Trigonometric modules}{89}{subsubsection*.64}%
+\contentsline {subsubsection}{\nonumberline block\_base module}{89}{subsubsection*.66}%
+\contentsline {subsubsection}{\nonumberline block\_yaw module}{90}{subsubsection*.68}%
+\contentsline {subsubsection}{\nonumberline block\_pitch module}{90}{subsubsection*.70}%
+\contentsline {subsubsection}{\nonumberline main module}{91}{subsubsection*.72}%
+\contentsline {section}{\numberline {A.2}Python scripts}{93}{section.A.2}%
+\contentsline {subsection}{\numberline {A.2.1}Counterexample.py class}{93}{subsection.A.2.1}%
+\contentsline {section}{\numberline {A.3}ROS2 nodes}{96}{section.A.3}%
+\contentsline {subsection}{\numberline {A.3.1}RobotController class}{96}{subsection.A.3.1}%
+\contentsline {subsection}{\numberline {A.3.2}PartController class}{100}{subsection.A.3.2}%
+\contentsline {section}{\numberline {A.4}Gazebo sdf,urdf and xacro code}{102}{section.A.4}%
+\contentsline {subsection}{\numberline {A.4.1}base.sdf}{102}{subsection.A.4.1}%
+\contentsline {subsection}{\numberline {A.4.2}robot.xacro}{102}{subsection.A.4.2}%
+\contentsline {subsection}{\numberline {A.4.3}part.xacro}{108}{subsection.A.4.3}%
 \providecommand \tocbasic@end@toc@file {}\tocbasic@end@toc@file 

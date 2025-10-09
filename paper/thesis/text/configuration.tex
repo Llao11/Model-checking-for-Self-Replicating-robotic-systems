@@ -17,27 +17,16 @@
 \newpage
 \section{Robot configuration model checking}
 
-\subsection{Overview}
-
 In this part we will check the model of the robot of the certain configuration 
 for the reachability property introduced in 
 
-Block types -> NuSMV block modules structure -> NuSMV template\\
-Border conditions:
-    - Base blocks on the end
-    - initial block position
-    - connect only from upper side
-
-python script -> Generate NuSMV -> check reachability border
-
-
-Criteria: reachability of the random distributed blocks, given base block position
+Criteria: reachability of the random distributed blocks, given target point position
 Validation: 
 optimal structure -> generate xacro, check assembly
 
 
-\subsection{Searching for relevant robot configurations}
-\subsubsection{Individual robot configuration checking}
+% \subsection{Searching for relevant robot configurations}
+\subsection{Sequential checking of possible configations}
 In order to systematically evaluate which robot structures are capable 
 of reaching a target coordinates, implemented an automated configuration checking 
 procedure that integrates model generation, model checking with NuSMV, and 
@@ -92,18 +81,19 @@ the configuration is stored in a set of relevant configurations, which
 represents the final output of the process.
 
 
-\subsubsection{Implementation in Python}
-The implementation of the  workflow described in 
-Figure \ref{fig:SearchingRelevantConfigurations} is presented in three-class Python design.
+\subsection{Implementation in Python}
+The implementation of the  workflow  described in 
+Figure \ref{fig:SearchingRelevantConfigurations} was performed in configurations checking 
+system written in Python.
 The architecture of the design corresponds directly to the class diagram shown on the 
 Figure \ref{fig:RobotConfigCheckingClassDiagram}, where the 
 class \textit{Configuration\_checking} orchestrates the process, the class \textit{Robot} 
-assembles a sequence of blocks, and the class \textit{Block} encapsulates the 
+assembles a sequence of blocks, object of the class \textit{Block} encapsulates the 
 description of an individual block.
 
 \begin{figure}[h!]
     \centering
-    \includegraphics[height=10cm]{RobotConfigCheckingClassDiagram.png} 
+    \includegraphics[height=13cm]{RobotConfigCheckingClassDiagram.png} 
     \caption{Class diagram of searching for relevant configurations}
     \label{fig:RobotConfigCheckingClassDiagram}
 \end{figure}
@@ -179,6 +169,77 @@ for further analysis or deployment in robotic applications.
 
 
 
-\subsubsection{Aggregated robot configuration checking in NuSMV}
+\section{Aggregated configuration checking in NuSMV}
 
-\newpage
+Alternative approach is to check all possible configurations of a robot 
+in NuSMV model itself. 
+To implement this approach we created a universal block that  works as a universal interface
+between main module and modules for different types of blocks, this module shown in 
+Listing \ref{lst:NuSMVGeneralBlock}.
+
+\begin{lstlisting}[language=NuSMV, caption={General block serves as interface 
+    to choose and access specific types of modules}, 
+    label={lst:NuSMVGeneralBlock}]
+MODULE block_general(type,px, py, pz, xhx, xhy, xhz, yhx, yhy, yhz, zhx, zhy, zhz, L, angle)
+VAR
+    block_y : block_yaw( px, py, pz, xhx, xhy, xhz, yhx, yhy, yhz, zhx, zhy, zhz, L, angle );
+    block_p : block_pitch(px, py, pz, xhx, xhy, xhz, yhx, yhy, yhz, zhx, zhy, zhz, L, angle );
+DEFINE
+    xhx2   :=case type=0: block_y.xhx2; TRUE : block_p.xhx2; esac;
+    xhy2   :=case type=0: block_y.xhy2; TRUE : block_p.xhy2; esac;
+    xhz2   :=case type=0: block_y.xhz2; TRUE : block_p.xhz2; esac;
+    yhx2   :=case type=0: block_y.yhx2; TRUE : block_p.yhx2; esac;
+    yhy2   :=case type=0: block_y.yhy2; TRUE : block_p.yhy2; esac;
+    yhz2   :=case type=0: block_y.yhz2; TRUE : block_p.yhz2; esac;
+    zhx2   :=case type=0: block_y.zhx2; TRUE : block_p.zhx2; esac;
+    zhy2   :=case type=0: block_y.zhy2; TRUE : block_p.zhy2; esac;
+    zhz2   :=case type=0: block_y.zhz2; TRUE : block_p.zhz2; esac;
+    px2    :=case type=0: block_y.px2;  TRUE : block_p.px2; esac;
+    py2    :=case type=0: block_y.py2;  TRUE : block_p.py2; esac;
+    pz2    :=case type=0: block_y.pz2;  TRUE : block_p.pz2; esac;
+\end{lstlisting}
+
+Additionally, we added type variable as FROZENVAR part of the MAIN module that defines 
+type for each block during model checking. 
+In NuSMV, FROZENVAR are variables whose values are fixed throughout the 
+entire execution of the model. They are assigned a value at the initialization 
+step but do not change during state transitions, effectively acting as 
+constant parameters that can differ between model instances. 
+This construct is useful for representing static elements of our system that
+remain invariant while the system evolves, such as robot configuration 
+and target region coordinates.
+
+The robot structure part in MAIN module changes accordingly, to link to 
+a general\_block and pass var\_block variable that specifies which type of block to use.
+These changes shown in the Listing \ref{lst:NuSMVMainModuleAgregated}.
+
+\begin{lstlisting}[language=NuSMV, caption={Changes in main module to go over different types of blocks}, 
+    label={lst:NuSMVMainModuleAgregated}]
+MODULE main
+FROZENVAR
+    var_block1 : {0,1};
+    var_block2 : {0,1};
+    ...
+VAR
+    block0 : block_base(base_px, base_py, base_pz,
+        base_xhx, base_xhy, base_xhz,
+        base_yhx, base_yhy, base_yhz,
+        base_zhx, base_zhy, base_zhz, L0);
+    block1 : block_general(var_block1, block0.px2, block0.py2, block0.pz2,
+        block0.xhx2, block0.xhy2, block0.xhz2,
+        block0.yhx2, block0.yhy2, block0.yhz2,
+        block0.zhx2, block0.zhy2, block0.zhz2, L1, angle1 );
+    block2 : block_general(var_block2, block1.px2, block1.py2, block1.pz2,
+        block1.xhx2, block1.xhy2, block1.xhz2,
+        block1.yhx2, block1.yhy2, block1.yhz2,
+        block1.zhx2, block1.zhy2, block1.zhz2, L2, angle2 );
+    ...
+DEFINE
+    ...
+    angle1    := 0;
+    angle2    := 0;
+    ...
+\end{lstlisting}
+
+
+

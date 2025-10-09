@@ -86,6 +86,34 @@
       \field{title}{Theory of Self-Reproducing Automata}
       \field{year}{1962}
     \endentry
+    \entry{Nasa1980ConferencePublication}{book}{}
+      \name{author}{1}{}{%
+        {{hash=69e73a204f481277bbdc8466cd733075}{%
+           family={Santa\bibnamedelimb Clara\bibnamedelimb Space\bibnamedelima Initiative},
+           familyi={S\bibinitperiod\bibinitdelim C\bibinitperiod\bibinitdelim S\bibinitperiod\bibinitdelim I\bibinitperiod},
+           given={NASA},
+           giveni={N\bibinitperiod}}}%
+      }
+      \list{location}{1}{%
+        {Space Initiative/XRI Santa Clara, California}%
+      }
+      \list{publisher}{1}{%
+        {NASA Conference Publication 2255, NASA Ames Research Center Moffett Field, California}%
+      }
+      \strng{namehash}{69e73a204f481277bbdc8466cd733075}
+      \strng{fullhash}{69e73a204f481277bbdc8466cd733075}
+      \strng{bibnamehash}{69e73a204f481277bbdc8466cd733075}
+      \strng{authorbibnamehash}{69e73a204f481277bbdc8466cd733075}
+      \strng{authornamehash}{69e73a204f481277bbdc8466cd733075}
+      \strng{authorfullhash}{69e73a204f481277bbdc8466cd733075}
+      \field{labelalpha}{San80}
+      \field{sortinit}{1}
+      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{Advanced Automation for Space Missions}
+      \field{year}{1980}
+    \endentry
     \entry{Aziz1996VerifyingCTMC}{inproceedings}{}
       \name{author}{4}{}{%
         {{hash=804441a4782f6022f75bb7a72f3b77a7}{%

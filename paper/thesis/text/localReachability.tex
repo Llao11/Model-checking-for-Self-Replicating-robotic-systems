@@ -431,23 +431,20 @@ allowing the robot to reproduce formally verified behaviors under physical const
 A typical workflow begins with 
 the definition of the robot structure and target point in a NuSMV model 
 file. The property under verification expresses the negation of the 
-desired reachability condition—formally, the statement that the robot 
+desired reachability condition -- formally, the statement that the robot 
 can never reach the point. If NuSMV finds that this negated property is 
 false, it outputs a counterexample that shows precisely how the robot 
 can, in fact, reach the point. The Python parser then extracts from this 
 output the sequence of coordinates or angles, which can be sent to 
-the robot controller as a reference trajectory. Visualization confirms that 
-the motion reaches the target, and further analysis can evaluate the 
-energy, path smoothness, or joint feasibility of the resulting motion.
+the robot controller as a reference trajectory. 
+Visualization confirms that the motion reaches the target, and further analysis can evaluate the 
+dynamic parameters, adjust path smoothness, or joint feasibility of the resulting motion.
 
 By systematically reconstructing state trajectories from NuSMV output, 
 visualizing them, and exposing them for control, the Counterexample class enables the 
-practical reuse of verification results in robotics experiments.
+practical reuse of verification results in robotic system experiments.
 Its structure is  extensible for larger models, alternative naming conventions, 
-or real-time integration. The combination of logical specification, counterexample extraction, 
-and geometric reconstruction demonstrates how model checking can directly 
-inform the design and testing of robotic systems, turning  formal verification
-into operational behavior.
+or  integration into simulation. 
 
 
 \subsection{Evaluation}
