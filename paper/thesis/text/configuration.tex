@@ -166,16 +166,62 @@ The final set of relevant configurations captures only those robot
 designs that satisfy the given conditions, providing a reliable foundation 
 for further analysis or deployment in robotic applications.
 
+The result of the robot with length 4 and 5 blocks for reachability of point 
+ $x=5, y=5, z=10 $ shown in the Listing \ref{lst:NuSMVGeneralConfigResult}
 
+\begin{lstlisting}[language=NuSMV, caption={The output of configuration model checking 
+    for lengths of robot 4 and 5 and target region x=-5..5, y=-5..5, z=0..5}, 
+    label={lst:NuSMVGeneralConfigResult}]
+Checking self.X=5, self.Y=5, self.Z=10
+self.length=4                                                                                            
+number of combinations:8                                                                                 
+1/8:base_pitch_pitch_pitch_:    not reachable   [0.377735 sec]        
+2/8:base_pitch_pitch_yaw_:      not reachable   [0.039332 sec]        
+3/8:base_pitch_yaw_pitch_:      not reachable   [0.576335 sec]                                           
+4/8:base_pitch_yaw_yaw_:        not reachable   [0.01432 sec]                                            
+5/8:base_yaw_pitch_pitch_:      reachable       [0.242966 sec]
+6/8:base_yaw_pitch_yaw_:        not reachable   [0.034844 sec]
+7/8:base_yaw_yaw_pitch_:        not reachable   [0.062835 sec]
+8/8:base_yaw_yaw_yaw_:          not reachable   [0.013127 sec]            
+
+Checking self.X=5, self.Y=5, self.Z=10
+self.length=5                                                                                            
+number of combinations:16                                                                                
+1/16:base_pitch_pitch_pitch_pitch_: not reachable   [15.916151 sec]                                                                                                                                              
+2/16:base_pitch_pitch_pitch_yaw_:   not reachable   [0.344371 sec]                                                                                                                                               
+3/16:base_pitch_pitch_yaw_pitch_:   not reachable   [35.386106 sec]                                  
+4/16:base_pitch_pitch_yaw_yaw_:     not reachable   [0.041149 sec]                                           
+5/16:base_pitch_yaw_pitch_pitch_:   reachable       [24.917136 sec]                                  
+6/16:base_pitch_yaw_pitch_yaw_:     not reachable   [0.727521 sec]        
+7/16:base_pitch_yaw_yaw_pitch_:     not reachable   [1.013776 sec]         
+8/16:base_pitch_yaw_yaw_yaw_:       not reachable   [0.028078 sec]
+9/16:base_yaw_pitch_pitch_pitch_:   reachable       [4.10417 sec]                                    
+...
+\end{lstlisting}
+
+We found one configuration for the robot with 4 blocks and two configurations for 
+the robot with 5 blocks. For these configurations we can plot the trace and robot pose,
+they are on the Figure \ref{fig:ConfigCheckingPointReachableTraces}
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[height=5cm]{base_yaw_pitch_pitch_.png} 
+    \includegraphics[height=5cm]{base_yaw_pitch_pitch_pitch_.png} 
+    \caption{Trace for robot length 4 (left) and length 5 (right) for configurations 
+    that can reach the target region}
+    \label{fig:ConfigCheckingPointReachableTraces}
+\end{figure}
 
 
 \section{Aggregated configuration checking in NuSMV}
 
-Alternative approach is to check all possible configurations of a robot 
-in NuSMV model itself. 
-To implement this approach we created a universal block that  works as a universal interface
-between main module and modules for different types of blocks, this module shown in 
-Listing \ref{lst:NuSMVGeneralBlock}.
+Alternative approach is to check all possible combinations of blocks in a robot 
+in NuSMV itself. 
+To implement this we add a new block to the NuSMV model described 
+in Chapter \ref{ch:robotNuSMVmodel}.
+That block  works as a universal interface between main module and modules for 
+different types of blocks, the code for this block module shown 
+in Listing \ref{lst:NuSMVGeneralBlock}.
 
 \begin{lstlisting}[language=NuSMV, caption={General block serves as interface 
     to choose and access specific types of modules}, 
@@ -199,7 +245,7 @@ DEFINE
     pz2    :=case type=0: block_y.pz2;  TRUE : block_p.pz2; esac;
 \end{lstlisting}
 
-Additionally, we added type variable as FROZENVAR part of the MAIN module that defines 
+We also introduced a new variable in FROZENVAR part of the MAIN module that defines 
 type for each block during model checking. 
 In NuSMV, FROZENVAR are variables whose values are fixed throughout the 
 entire execution of the model. They are assigned a value at the initialization 
@@ -239,6 +285,17 @@ DEFINE
     angle1    := 0;
     angle2    := 0;
     ...
+\end{lstlisting}
+
+% Since we cannot negate the reachability of all points in a region without per point definition, 
+% and we dont need counterexample by checking of possible configations the specification will include only
+% condition shown in Listing \ref{}
+\textcolor{red}{TODO: describe counterexample of a specification to find an unreachable point}
+
+\begin{lstlisting}[language=NuSMV, caption={Reachability condition in CTL specification}, 
+    label={lst:CTLSpec}]
+CTLSPEC 
+EF (endX_inside_limits & endY_inside_limits & endZ_inside_limits)
 \end{lstlisting}
 
 

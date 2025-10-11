@@ -1,0 +1,27 @@
+from robot import Robot
+from counterexample import Counterexample
+from nusmv_model_generator import RobotNusmvGenerator
+
+angle_vars = [
+    "block1.yaw",
+    "block2.pitch",
+    "block3.pitch",
+    "block4.pitch",
+    "block5.yaw",
+]
+sequence = ["base", "yaw", "pitch", "pitch", "pitch", "yaw"]
+lengths = [10, 20, 30, 30, 10, 20]
+robot = Robot(sequence, lengths)
+generator = RobotNusmvGenerator(robot, output_smv_path="./smv/")
+generator.set_target_point(40, 40, 10)
+generator.generate_from_template("project_robot")
+result = Counterexample.run_nusmv_file("./smv/robot.smv")
+counterexample = Counterexample(result, len(sequence))
+counterexample.set_plot_limits(50)
+end_coordinates = ["endX", "endY", "endZ"]
+steps = counterexample.filter_variables(end_coordinates)
+print(steps)
+angles = counterexample.get_angles(angle_vars)
+print("Control angles:")
+counterexample.print_steps(angles)
+counterexample.plot_trace(-1, show_plot=True)
