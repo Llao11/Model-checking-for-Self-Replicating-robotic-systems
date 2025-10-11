@@ -1,0 +1,131 @@
+-- 2D robot-arm block with discrete angles (10° resolution)
+-- Parameters:
+--   alpha  : identifier of a VAR 0..35 holding the joint angle (×10°)
+--   length    : block length (positive integer constant)
+--   x_parent,
+--   y_parent  : expressions for the parent joint’s absolute coordinates
+MODULE Block(alpha, length, x_parent, y_parent)
+
+-- integer deltas w.r.t. the parent, based on sin / cos * 100 (rounded)
+DEFINE
+    deltaX :=            --   x =  length * sin(angle)
+        case
+            alpha = 0  : (length *   0) / 100;
+            alpha = 1  : (length *  17) / 100;
+            alpha = 2  : (length *  34) / 100;
+            alpha = 3  : (length *  50) / 100;
+            alpha = 4  : (length *  64) / 100;
+            alpha = 5  : (length *  77) / 100;
+            alpha = 6  : (length *  87) / 100;
+            alpha = 7  : (length *  94) / 100;
+            alpha = 8  : (length *  98) / 100;
+            alpha = 9  : (length * 100) / 100;
+            alpha = 10 : (length *  98) / 100;
+            alpha = 11 : (length *  94) / 100;
+            alpha = 12 : (length *  87) / 100;
+            alpha = 13 : (length *  77) / 100;
+            alpha = 14 : (length *  64) / 100;
+            alpha = 15 : (length *  50) / 100;
+            alpha = 16 : (length *  34) / 100;
+            alpha = 17 : (length *  17) / 100;
+            alpha = 18 : (length *   0) / 100;
+            alpha = 19 : (length *-17) / 100;
+            alpha = 20 : (length *-34) / 100;
+            alpha = 21 : (length *-50) / 100;
+            alpha = 22 : (length *-64) / 100;
+            alpha = 23 : (length *-77) / 100;
+            alpha = 24 : (length *-87) / 100;
+            alpha = 25 : (length *-94) / 100;
+            alpha = 26 : (length *-98) / 100;
+            alpha = 27 : (length *-100) / 100;
+            alpha = 28 : (length *-98) / 100;
+            alpha = 29 : (length *-94) / 100;
+            alpha = 30 : (length *-87) / 100;
+            alpha = 31 : (length *-77) / 100;
+            alpha = 32 : (length *-64) / 100;
+            alpha = 33 : (length *-50) / 100;
+            alpha = 34 : (length *-34) / 100;
+            alpha = 35 : (length *-17) / 100;
+            TRUE       : 0;          -- defensive default
+        esac;
+
+    deltaY :=            --   y =  length * cos(angle)
+        case
+            alpha = 0  : (length * 100) / 100;
+            alpha = 1  : (length *  98) / 100;
+            alpha = 2  : (length *  94) / 100;
+            alpha = 3  : (length *  87) / 100;
+            alpha = 4  : (length *  77) / 100;
+            alpha = 5  : (length *  64) / 100;
+            alpha = 6  : (length *  50) / 100;
+            alpha = 7  : (length *  34) / 100;
+            alpha = 8  : (length *  17) / 100;
+            alpha = 9  : (length *   0) / 100;
+            alpha = 10 : (length *-17) / 100;
+            alpha = 11 : (length *-34) / 100;
+            alpha = 12 : (length *-50) / 100;
+            alpha = 13 : (length *-64) / 100;
+            alpha = 14 : (length *-77) / 100;
+            alpha = 15 : (length *-87) / 100;
+            alpha = 16 : (length *-94) / 100;
+            alpha = 17 : (length *-98) / 100;
+            alpha = 18 : (length *-100) / 100;
+            alpha = 19 : (length *-98) / 100;
+            alpha = 20 : (length *-94) / 100;
+            alpha = 21 : (length *-87) / 100;
+            alpha = 22 : (length *-77) / 100;
+            alpha = 23 : (length *-64) / 100;
+            alpha = 24 : (length *-50) / 100;
+            alpha = 25 : (length *-34) / 100;
+            alpha = 26 : (length *-17) / 100;
+            alpha = 27 : (length *   0) / 100;
+            alpha = 28 : (length *  17) / 100;
+            alpha = 29 : (length *  34) / 100;
+            alpha = 30 : (length *  50) / 100;
+            alpha = 31 : (length *  64) / 100;
+            alpha = 32 : (length *  77) / 100;
+            alpha = 33 : (length *  87) / 100;
+            alpha = 34 : (length *  94) / 100;
+            alpha = 35 : (length *  98) / 100;
+            TRUE       : 0;
+        esac;
+
+    -- absolute coordinates of this block’s tip
+    x_end := x_parent + deltaX;
+    y_end := y_parent + deltaY;
+
+    
+-- Robot structure
+MODULE main
+
+VAR
+    a1 : 0..35;
+    a2 : 0..35;
+    a3 : 0..35;
+
+    block1 : Block(a1, length, 0, 0);                       -- base at origin
+    block2 : Block(a2, length, block1.x_end, block1.y_end);   -- chained
+    block3 : Block(a3, length, block2.x_end, block2.y_end);
+
+DEFINE
+    length :=10;          -- length of every block
+    endX := block3.x_end;
+    endY := block3.y_end;
+
+    error := 2; -- endX and endY coordinates error while checking reachability
+    checkX := 20;
+    checkY := 20;
+    endX_inside_limits := (endX <= (checkX + error) & endX >= (checkX - error));
+    endY_inside_limits := (endY <= (checkY + error) & endY >= (checkY - error));
+    
+-- INVAR  endX >= -3 & endX <= 3 & endY >= -3 & endY <= 3
+
+-- ---------- Reachability specification------------------------------------------
+
+LTLSPEC 
+     -- G F !(endX <=22 & endX>=18 & endY <= 22 & endY>=18)
+     G F !(endX_inside_limits & endX_inside_limits)
+
+-- CTLSPEC 
+     -- EF (endX <=21 & endX>=19 & endY <= 21 & endY>=19)
+

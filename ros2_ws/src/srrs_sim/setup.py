@@ -18,6 +18,8 @@ setup(
         (os.path.join("share", package_name, "urdf"), glob("urdf/*.xacro")),
         (os.path.join("share", package_name, "urdf/parts"), glob("urdf/parts/*.xacro")),
         (os.path.join("share", package_name, "sdf"), glob("sdf/*.sdf")),
+        (os.path.join("share", package_name, "nusmv"), glob("nusmv/*.py")),
+        (os.path.join("share", package_name, "nusmv/smv"), glob("nusmv/smv/*.smv")),
         (os.path.join("share", package_name, "meshes"), glob("meshes/*.stl")),
     ],
     install_requires=["setuptools"],

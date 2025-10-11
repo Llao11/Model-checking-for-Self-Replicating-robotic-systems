@@ -1,6 +1,7 @@
 import rclpy
+from ament_index_python.packages import get_package_share_directory
+from pathlib import Path
 import os
-import time
 import subprocess
 import queue
 import tkinter as tk
@@ -14,6 +15,7 @@ import tkinter as tk
 from . import SRRScontrollerNode
 from . import SRRSsensorsNode
 from . import camera_subscriber_node
+# from .share.robot import Robot
 
 
 class GUI:
@@ -132,6 +134,11 @@ class GUI:
             text="Start assemble",
             command=lambda: self.start_assemble(),
         )
+        self.btn_counterexample = tk.Button(
+            self.root,
+            text="Counterexample movement",
+            command=lambda: self.start_counterexample_movement(),
+        )
 
         # Position fix/free buttons
         self.btn_fix2_base.grid(row=5, column=0)
@@ -144,6 +151,7 @@ class GUI:
 
         # Assembly
         self.btn_start_assemble.grid(row=9, column=0)
+        self.btn_counterexample.grid(row=9, column=1)
 
         # Individual joint control
 
@@ -417,6 +425,30 @@ class GUI:
         self.move_part(num=3, x=0, y=3)
         # self.assemble_coordinates["z"] = 3
         # self.move_part(num=4, x=1, y=-3)
+
+    def start_counterexample_movement(self):
+        """Counterexample based movement"""
+        # share = Path(get_package_share_directory("srrs_sim"))
+        # nusmv_path = share / "nusmv" / "nusmv_model_generator.yaml"
+        print(os.path.abspath(__file__))
+        self.controller_node.get_logger().info("Start assemble")
+        self.controller_node.fix_end1_base(gui=self)
+        self.controller_node.free_ends_all_parts(gui=self)
+        steps = [
+            [0, 0, 0, 0, 0],
+            [0, -10, -10, -10, -10],
+            [0, -20, -20, -20, -20],
+            [0, -30, -30, -30, -30],
+            [0, -30, -40, -40, -40],
+            [0, -30, -50, -50, -50],
+            [0, -30, -60, -50, -60],
+            [0, -30, -70, -50, -60],
+            [0, -30, -80, -50, -60],
+        ]
+        # yaw1 correction - adjust coordinate systems
+        steps = [[step[0] - 135] + step[1:] for step in steps]
+        for step in steps:
+            self.controller_node.robotController.rotate_joints(step)
 
     # CLOSE ===========================================================================================================================
 

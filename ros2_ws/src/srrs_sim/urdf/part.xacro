@@ -1,6 +1,7 @@
 <?xml version="1.0" ?>
 <robot name="part" xmlns:xacro="http://www.ros.org/wiki/xacro">
     <xacro:arg name="part_num" default="0"/>
+    <xacro:arg name="color" default="black"/>
     <!-- <xacro:arg name="parent_model" default="0"/> -->
     <!-- <xacro:arg name="parent_link" default="0"/> -->
 
@@ -35,8 +36,8 @@
     <gazebo reference="part">
         <visual>
             <material>
-                <ambient>${black}</ambient>
-                <diffuse>${black}</diffuse>
+                <ambient>${blue}</ambient>
+                <diffuse>${blue}</diffuse>
             </material>
         </visual>
 

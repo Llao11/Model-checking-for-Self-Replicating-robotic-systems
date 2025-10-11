@@ -1,0 +1,274 @@
+-- 3-D robot link with yaw and pitch (10 degrees discretisation)
+-- Parameters:
+--   yawVar   : VAR  0..35   ( multiples of 10°)
+--   pitchVar : VAR  0..35    ( multiples of 10°)
+--   LEN      : constant length
+--   baseX,Y,Z: absolute parent-joint coordinates
+-------------------------------------------------------------------------------
+
+ --===== SINE Calculation========================================
+MODULE sin(angle)
+DEFINE
+    val:= case
+        angle = 0  :   0;  
+        angle = 1  :  17; 
+        angle = 2  :  34;
+        angle = 3  : 50;
+        angle = 4  :  64;
+        angle = 5  :  77;
+        angle = 6  :  87;
+        angle = 7  : 94;
+        angle = 8  :  98;
+        angle = 9  : 100;
+        angle = 10 :  98;
+        angle = 11 : 94;
+        angle = 12 :  87;
+        angle = 13 :  77;
+        angle = 14 :  64;
+        angle = 15 : 50;
+        angle = 16 :  34;
+        angle = 17 :  17;
+        angle = 18 :   0;
+        angle = 19 :-17;
+        angle = 20 :-34;
+        angle = 21 :-50;
+        angle = 22 :-64;
+        angle = 23 :-77;
+        angle = 24 :-87;
+        angle = 25 :-94;
+        angle = 26 :-98;
+        angle = 27 :-100;
+        angle = 28 :-98;
+        angle = 29 :-94;
+        angle = 30 :-87;
+        angle = 31 :-77;
+        angle = 32 :-64;
+        angle = 33 :-50;
+        angle = 34 :-34;
+        angle = 35 :-17;
+        TRUE : 0;
+    esac;
+
+ --===== COSINE Calculation========================================
+MODULE cos(angle)
+DEFINE
+    val:= case
+        angle = 0  : 100;
+        angle = 1  :  98;
+        angle = 2  :  94;
+        angle = 3  : 87;
+        angle = 4  :  77;
+        angle = 5  :  64;
+        angle = 6  :  50;
+        angle = 7  : 34;
+        angle = 8  :  17;
+        angle = 9  :   0;
+        angle = 10 :-17;
+        angle = 11 :-34;
+        angle = 12 :-50;
+        angle = 13 :-64;
+        angle = 14 :-77;
+        angle = 15 :-87;
+        angle = 16 :-94;
+        angle = 17 :-98;
+        angle = 18 :-100;
+        angle = 19 :-98;
+        angle = 20 :-94;
+        angle = 21 :-87;
+        angle = 22 :-77;
+        angle = 23 :-64;
+        angle = 24 :-50;
+        angle = 25 :-34;
+        angle = 26 :-17;
+        angle = 27 :   0;
+        angle = 28 :  17;
+        angle = 29 :  34;
+        angle = 30 :  50;
+        angle = 31 : 64;
+        angle = 32 :  77;
+        angle = 33 :  87;
+        angle = 34 :  94;
+        angle = 35 : 98;
+        TRUE : 0;
+    esac;
+
+
+--=========================================
+MODULE block_base(px, py, pz, xhx, xhy, xhz, yhx, yhy, yhz, zhx, zhy, zhz, L)
+DEFINE
+  xhx2 := xhx;
+  xhy2 := xhx;
+  xhz2 := xhz;
+
+  yhx2 := yhx;
+  yhy2 := yhx;
+  yhz2 := yhz;
+
+  zhx2 := zhx;
+  zhy2 := zhy;
+  zhz2 := zhz;
+
+  -- advance along (updated) local ẑ
+  px2 := px;
+  py2 := py;
+  pz2 := pz;
+
+--=========================================
+MODULE block_yaw(px, py, pz,
+                   xhx, xhy, xhz, yhx, yhy, yhz, zhx, zhy, zhz,
+                   L, initYaw)
+VAR
+  yaw : 0..35;
+  cy : cos(yaw);
+  sy : sin(yaw);
+
+DEFINE
+  SCALE := 100;
+
+  cos_yaw := cy.val;    -- [-100..100]
+  sin_yaw := sy.val;
+
+  -- yaw about local ẑ: rotate x/y components within each basis vector; z components unchanged
+  xhx2 := (xhx * cos_yaw - xhy * sin_yaw) / SCALE;
+  xhy2 := (xhx * sin_yaw + xhy * cos_yaw) / SCALE;
+  xhz2 := xhz;
+
+  yhx2 := (yhx * cos_yaw - yhy * sin_yaw) / SCALE;
+  yhy2 := (yhx * sin_yaw + yhy * cos_yaw) / SCALE;
+  yhz2 := yhz;
+
+  zhx2 := zhx;
+  zhy2 := zhy;
+  zhz2 := zhz;
+
+  -- advance along (updated) local ẑ
+  px2 := px + (zhx2 * L) / SCALE;
+  py2 := py + (zhy2 * L) / SCALE;
+  pz2 := pz + (zhz2 * L) / SCALE;
+
+
+ASSIGN
+  init(yaw) := initYaw;
+  next(yaw) := { yaw, (yaw+1) mod 36, (yaw+35) mod 36 };
+
+
+
+--=========================================
+MODULE block_pitch(px, py, pz,
+                     xhx, xhy, xhz, yhx, yhy, yhz, zhx, zhy, zhz,
+                     L, initPitch)
+VAR
+  pitch : 0..35;
+
+  cp : cos(pitch);
+  sp : sin(pitch);
+
+DEFINE
+  SCALE := 100;
+
+  cos_p := cp.val;    -- [-100..100]
+  sin_p := sp.val;
+
+  -- x' =  cos*p * x + sin*p * z
+  -- y' =  y
+  -- z' = -sin*p * x + cos*p * z
+  xhx2 := (xhx * cos_p + zhx * sin_p) / SCALE;
+  xhy2 := (xhy * cos_p + zhy * sin_p) / SCALE;
+  xhz2 := (xhz * cos_p + zhz * sin_p) / SCALE;
+
+  yhx2 := yhx;  yhy2 := yhy;  yhz2 := yhz;
+
+  zhx2 := (-xhx * sin_p + zhx * cos_p) / SCALE;
+  zhy2 := (-xhy * sin_p + zhy * cos_p) / SCALE;
+  zhz2 := (-xhz * sin_p + zhz * cos_p) / SCALE;
+
+  px2 := px + (zhx2 * L) / SCALE;
+  py2 := py + (zhy2 * L) / SCALE;
+  pz2 := pz + (zhz2 * L) / SCALE;
+
+ASSIGN
+  init(pitch) := initPitch;
+  next(pitch) := { pitch, (pitch+1) mod 36, (pitch+35) mod 36 };
+
+
+--========================================
+MODULE main
+        
+        VAR
+        	block0: block_base(base_px, base_py, base_pz,
+                                	base_xhx, base_xhy, base_xhz,
+                                	base_yhx, base_yhy, base_yhz,
+                                	base_zhx, base_zhy, base_zhz,
+                                	L1);
+	block1: block_pitch(block0.px2, block0.py2, block0.pz2,
+                        	block0.xhx2, block0.xhy2, block0.xhz2,
+                        	block0.yhx2, block0.yhy2, block0.yhz2,
+                        	block0.zhx2, block0.zhy2, block0.zhz2,
+                        	L1, pitch1);
+	block2: block_pitch(block1.px2, block1.py2, block1.pz2,
+                        	block1.xhx2, block1.xhy2, block1.xhz2,
+                        	block1.yhx2, block1.yhy2, block1.yhz2,
+                        	block1.zhx2, block1.zhy2, block1.zhz2,
+                        	L2, pitch2);
+	block3: block_yaw(block2.px2, block2.py2, block2.pz2,
+                        	block2.xhx2, block2.xhy2, block2.xhz2,
+                        	block2.yhx2, block2.yhy2, block2.yhz2,
+                        	block2.zhx2, block2.zhy2, block2.zhz2,
+                        	L3, yaw3);
+	block4: block_pitch(block3.px2, block3.py2, block3.pz2,
+                        	block3.xhx2, block3.xhy2, block3.xhz2,
+                        	block3.yhx2, block3.yhy2, block3.yhz2,
+                        	block3.zhx2, block3.zhy2, block3.zhz2,
+                        	L4, pitch4);
+	block5: block_yaw(block4.px2, block4.py2, block4.pz2,
+                        	block4.xhx2, block4.xhy2, block4.xhz2,
+                        	block4.yhx2, block4.yhy2, block4.yhz2,
+                        	block4.zhx2, block4.zhy2, block4.zhz2,
+                        	L5, yaw5);
+
+        DEFINE
+        	-- link1	
+L1	:= 10;
+	pitch1	:= 0;
+	-- link1	
+L2	:= 10;
+	pitch2	:= 0;
+	-- link1	
+L3	:= 10;
+	yaw3	:= 0;
+	-- link1	
+L4	:= 10;
+	pitch4	:= 0;
+	-- link1	
+L5	:= 10;
+	yaw5	:= 0;
+
+            base_px := 0;       base_py := 0;       base_pz := 0;
+            base_xhx := 100;    base_xhy := 0;      base_xhz := 0;
+            base_yhx := 0;      base_yhy := 100;    base_yhz := 0;
+            base_zhx := 0;      base_zhy := 0;      base_zhz := 100;
+        endX := block5.px2;
+endY := block5.py2;
+endZ := block5.pz2;
+
+            error := 1; -- +-1 (error=2) endX and endY coordinates error while checking reachability
+            
+            checkX := 5;
+            checkY := 5;
+            checkZ := 10;
+            
+            endX_inside_limits := (endX <= (checkX + error) & endX >= (checkX - error));
+            endY_inside_limits := (endY <= (checkY + error) & endY >= (checkY - error));
+            endZ_inside_limits := (endZ <= (checkZ + error) & endZ >= (checkZ - error));
+            
+            CTLSPEC
+                AG !(endX_inside_limits & endY_inside_limits & endZ_inside_limits )
+            
+            --main end
+-- ---------- Reachability specification------------------------------------------
+-- LTLSPEC 
+--     G  !(endX_inside_limits & endY_inside_limits & endZ_inside_limits)
+-- CTLSPEC 
+--       AG !(endX_inside_limits & endY_inside_limits & endZ_inside_limits ) --& blocks_above_serface)
+
+

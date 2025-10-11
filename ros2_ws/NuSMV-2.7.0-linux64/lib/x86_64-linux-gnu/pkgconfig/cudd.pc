@@ -1,0 +1,10 @@
+prefix=/
+includedir=${prefix}/include
+libdir=${prefix}/lib/x86_64-linux-gnu
+
+Name: cudd
+Description: Decision diagrams package
+URL: https://github.com/ivmai/cudd
+Version: 2.4.1
+Libs: -L${libdir} -lcudd -lm
+Cflags: -I${includedir}

@@ -18,6 +18,9 @@ from launch.launch_context import LaunchContext
 
 
 def generate_launch_description():
+    robot_init_X = 4
+    robot_init_Y = 4
+    robot_init_Z = 1
     # Launch Arguments
     use_sim_time = LaunchConfiguration("use_sim_time", default=True)
 
@@ -97,11 +100,11 @@ def generate_launch_description():
             "robot",
             # '-x', '0.0', '-y', '0.0', '-z', f'{str(step)}',  # Set X, Y, Z coordinates
             "-x",
-            f"{str(step * 4)}",
+            f"{str(step * robot_init_X)}",
             "-y",
-            f"{str(step * 4)}",
+            f"{str(step * robot_init_Y)}",
             "-z",
-            "0.134",  # Set X, Y, Z coordinates
+            f"{str(step * robot_init_Z)}",  # Set X, Y, Z coordinates
             # Set Yaw (rotation in radians)
             "-X",
             "0.0",
@@ -268,8 +271,20 @@ def generate_launch_description():
 
     # PARTS SPAWN ==============================================================================================================
     # spawn parts locations:
+
+    colors = {
+        "green": "0 0.8 0 1",
+        "red": "0.8 0 0 1",
+        "orange": "1 0.65 0 1",
+        "blue": "0 0 0.8 1",
+        "yellow": "1 1 0 1",
+        "white": "1 1 1 1",
+        "grey": "0.2 0.2 0.2 1",
+        "black": "0 0 0 1",
+    }
     step = 0.134
-    part_coordinates_int = []
+    part_coordinates_int = [[5, 5, 1]]
+    part_colors = [colors["yellow"]]
     # part_coordinates_int = [[5, 6, 1], [3, 6, 1], [4, 7, 1]]
     part_coordinates = [[elem * step for elem in row] for row in part_coordinates_int]
     bridge_topics = []
@@ -279,6 +294,8 @@ def generate_launch_description():
         [FindPackageShare("srrs_sim"), "urdf", "part.xacro"]
     )
     for i, (x, y, z) in enumerate(part_coordinates):
+        x = x + (robot_init_X - 2) * step
+        y = y + (robot_init_Y - 3) * step
         part_name = f"part{i + 1}"
         processed_urdf_path = f"temp_part{i + 1}.urdf"
         generate_part_urdf = ExecuteProcess(
@@ -286,6 +303,7 @@ def generate_launch_description():
                 "xacro",
                 part_xacro_path,
                 f"part_num:={i + 1}",
+                f'color:="{part_colors[i]}"',
                 # parent_model:={parent_model} parent_link:={
                 # parent_link }",
                 "-o",
