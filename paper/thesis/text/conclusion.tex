@@ -1,14 +1,67 @@
+
+    1. How can automated model checking and other formal-verification 
+        techniques be used to verify different properties of 
+        self-replicating robotic systems, and what adaptations 
+        can be done for practical implementation?
+
+        In this paper we described usage of NuSMV model checker for 
+        three chosen aspects of SRRS domain:
+\begin{enumerate}
+    
+    \item Checking point and region reachability during local assembly process 
+        and using counterexample to control the movement.
+
+    \item Checking of various robot configurations (block sequences) based on reachability
+    to choose the eligible for the system and environment.
+
+    \item Checking of global liveness of a system based on distribution of material parts
+    in a 2D field
+\end{enumerate}
+
+    2. What systematic methodology can translate the behaviors and 
+        structural constraints of self-replicating robots into expressive 
+        temporal-logic models and specifications?
+
+    We proposed the NuSMV template-base model generation approach to check the 
+    properties mentioned above for chosen type of SRRS. 
+    We demonstrated a validation methodology of the model checking results by
+    simulation using ROS2 and Gazebo simulation.
+    
+
+    3. What limitations -- computational, semantic, or 
+        modelling-related -- does model checking face in domain of SRRS,
+        and how might these limitations can be mitigated?\\
+
+    We explore the computational difference in different model checking tasks,
+    compared aggregated  and sequential configuration checking, point and region based 
+    targets.
+
+
 Future work will focus on incorporating autonomous perception and adaptive 
-control: integrating visual localization of parts, dynamic path planning
-, and learning-based decision modules. By doing so, the SRRS framework can 
-evolve from a manually orchestrated demonstration toward a truly self
--replicating robotic organism capable of operating in unstructured environments.
+control:
+\begin{itemize}
+    \item Exploration of using model checking for different types of robots, 
+        material parts and environment for chosen self-replication system
+        and analysis of other types of self-replication robotic systems.
+    \item Futher analysis of possibilities to control the system on various levels
+        based on counterexamples from model checker.
+    \item Adaptive changing of the system during self-replication
+        through integration of configuration checking into self-replicating process 
+        based on environment conditions.
+    \item Implementation of model checking to collective behavior in SRRS.
+\end{itemize}
+% integrating visual localization of parts, 
+% dynamic path planning. 
+% By doing so, the SRRS framework can 
+% evolve from a manually orchestrated demonstration toward a truly self
+% -replicating robotic organism capable of operating in unstructured environments.
+
 
 In conclusion, the SRRS project serves as both a scientific and engineering 
 contribution: scientifically, as a platform for testing hypotheses about 
-self-replicating mechanisms; and technically, as a fully functional ROS 
-2–Gazebo system implementing attachment-based assembly. The methods and 
-code we developed—spanning from the launch orchestration (robot.launch
-) to the detailed node-level control (robotController.py, SRRScontrollerNode.
-py, partController.py)-collectively provide a reproducible foundation for 
+self-replicating systems;
+and technically, as a fully functional ROS2 - Gazebo system implementing mechanical assembly. 
+The methods and code we developed--spanning from the launch orchestration
+ to the detailed node-level control -collectively provide a reproducible foundation for 
 future research in autonomous manufacturing and self-replication robotics.
+

@@ -16,13 +16,14 @@
 
 \newpage
 \section{Robot configuration model checking}
+\label{ch:configurationChecking}
 
 In this part we will check the model of the robot of the certain configuration 
 for the reachability property introduced in 
 
-Criteria: reachability of the random distributed blocks, given target point position
-Validation: 
-optimal structure -> generate xacro, check assembly
+% Criteria: reachability of the random distributed blocks, given target point position
+% Validation: 
+% optimal structure -> generate xacro, check assembly
 
 
 % \subsection{Searching for relevant robot configurations}
@@ -82,6 +83,7 @@ represents the final output of the process.
 
 
 \subsection{Implementation in Python}
+\label{ch:configurationCheckingPy}
 The implementation of the  workflow  described in 
 Figure \ref{fig:SearchingRelevantConfigurations} was performed in configurations checking 
 system written in Python.
@@ -290,7 +292,6 @@ DEFINE
 % Since we cannot negate the reachability of all points in a region without per point definition, 
 % and we dont need counterexample by checking of possible configations the specification will include only
 % condition shown in Listing \ref{}
-\textcolor{red}{TODO: describe counterexample of a specification to find an unreachable point}
 
 \begin{lstlisting}[language=NuSMV, caption={Reachability condition in CTL specification}, 
     label={lst:CTLSpec}]
@@ -298,5 +299,10 @@ CTLSPEC
 EF (endX_inside_limits & endY_inside_limits & endZ_inside_limits)
 \end{lstlisting}
 
+\textcolor{red}{TODO: describe counterexample of a specification to find an unreachable point}
 
+\textcolor{red}{TODO: Write conclusion for a chapter}
+
+
+% \chapter{Conclusion}
 

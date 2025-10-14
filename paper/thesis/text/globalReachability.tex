@@ -1,18 +1,675 @@
 \newpage
-\section{Reachability model checking in global space}
+\section{Reachability model checking in 2D space}
+\label{ch:global}
 
 % \section{Evaluation}
-\subsection{Overview}
 
-In this section we will extend the model checking of a reachability that was described in 
-Chapter \ref{ModelChackingLocal}.
+In this section we will analyze  another form of reachability that was described in 
+Chapter \ref{ModelChackingLocal}. 
+We will explore the reachability of various points on the field, assuming 
+that the robot moves in steps, fixing the end effectors on the field one 
+at a time.  
 
-Input: Initial position, target position, set of obstacles
-Robot structure (xacro) -> Define step algorithm -> optimal step?-> Generate NuSMV -> check model, get counterexample -> 
-derive path -> compare with shortest path algorithm (implement Deikstra/ A* in 2D)
+In our experimental system, the robot moves on 
+a grid of discrete cells, picking up components and assembling a new 
+robot. Using model checking we want to ensure that the robot can 
+successfully gather the necessary parts to replicate, or otherwise detect 
+scenarios leading to failure.
 
-Evaluation: comparithon with shortest path algorithms
-Validation: assembly simulation in global space in Gazebo
-\subsection{Evaluation}
+Formal methods can verify reachability of 
+the goal state -- a completed new robot or a failure state, where replication 
+becomes impossible and thereby increase confidence in the design. 
+By analyzing counterexamples to these LTL properties, 
+we can extract sequences of actions leading to success or failure.
+
+\subsection{Model structure for 2D space reachability}
+
+\subsubsection{Assumptions and simplifications}
+
+To make the global reachability checking tractable, we model a simplified 
+Self-Replicating Robotic System with several key assumptions and abstractions. 
+These assumptions define the environment and the robot’s capabilities in our NuSMV model:
+
+\begin{enumerate}
+    
+    \item Discrete 2D Grid and robot end fixed in one cell at each time: 
+        The robot operates on a two-dimensional grid of cells (a finite field).
+        We consider only a single end-effector that occupies one cell on this grid at any time, 
+    representing the robot's current position (with coordinates x 
+    and y). The rest of the robot's body is not explicitly modeled on the 
+    grid -- instead, the structure of the robot is represented abstractly by 
+    a sequence of required part types. The end-effector 
+    is initially anchored at an assembly site, taken to be the origin cell 
+    (0,0) for convenience. All other objects (parts or obstacles) occupy discrete 
+    cell positions on the grid. An example of a grid configuration is shown 
+    on the diagram in Figure  , different part types are scattered on a field and the 
+    robot must collect them.
+
+\item Movement Constraints: The robot can move one cell at a time to a 
+    neighboring cell (up, down, left, or right), and only into cells that 
+    are unoccupied (have a type "None"). In other words, the robot's end-effector cannot 
+    move into a cell that already contains a part or an obstacle. This models 
+    a scenario where the robot must navigate around obstacles and cannot pass 
+    through or occupy the same space as existing objects. Movement is 
+    constrained to the four orthogonal directions on the grid (no diagonal moves). 
+    Each move is treated as a discrete time step in the model.
+
+\item Local Part Search: 
+    At any given position, the robot can "sense" or 
+    inspect only its immediate neighbors for parts. The reach range for 
+    checking is limited to the four adjacent cells. If a neighboring cell 
+    contains a part, the robot can decide to check that part’s type. 
+    This locality assumption simplifies sensing—there is no global visibility 
+    of all parts at once, only local perception of adjacent cells.
+
+\item Abstracted Assembly Action: When the robot finds a required part needed 
+    for replication, it will pick up that part and carry it back to the 
+    assembly location (the origin) to attach it to the new robot under construction.
+    We abstract this entire retrieval and assembly process as a single action 
+    that does not explicitly appear as a series of steps in the NuSMV model.
+    In other words, once a part is found, the model assumes the robot instantly 
+    returns to the assembly site with the part and the assembly index advances.
+    This means the time and path taken to carry the part back are not 
+    modeled; the effect (having assembled one more part) is reflected in 
+    the state. This assumption significantly reduces model complexity by 
+    not requiring us to simulate back-and-forth transport or the physical attachment 
+    process. After assembly, the robot’s end-effector is conceptually back 
+    at the assembly site (0,0) and ready to search for the next part. 
+    The assembly site itself is not explicitly marked on the grid (we 
+    assume it is at the starting position). We also assume that assembling the 
+    part does not change the grid configuration in the model (the part is 
+    not removed from the grid representation when taken, since the assembly 
+    action is outside the modeled steps). 
+\item Modeling simplification; in a real scenario, the part would be removed from the environment once 
+    collected. However, by not altering the grid, we avoid introducing additional 
+    transitions; we rely on the assembly index to track progress rather than 
+    the physical absence of the part.
+\end{enumerate}
+
+Under these assumptions, the self-replication process can be seen as 
+a sequential loop of searching for the next required part, checking if 
+an encountered part matches the needed type, assembling the part if 
+it matches, which implicitly resets the search to the next part, and 
+continuing the search for subsequent parts until either the new robot 
+is fully assembled or no further progress is possible. 
+
+The high-level behavior can be represented by a state chart, 
+as depicted in Figure \ref{fig:globalReachabilityStateChart}. 
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=15cm]{GlobalReachabilityStatechart.png} 
+    \caption{State chart of the self-replication system modeled for global reachability}
+    \label{fig:globalReachabilityStateChart}
+\end{figure}
+
+In this state machine, the robot has distinct modes: MOVING, CHECKING,
+ASSEMBLING, and two terminal states: FINISHED and FAILED. 
+
+Initially, the robot is in the MOVING state, roaming the grid to find parts. 
+When a neighbor cell is occupied by some object, the robot transitions to 
+CHECKING and inspects that object’s type. 
+
+If the object is of the type that the robot currently needs 
+the next part in the assembly sequence, the robot enters the ASSEMBLING state,
+meaning it picks up the part and 
+(in one abstract step) delivers it to the assembly point and attaches it.
+
+This successful assembly of a part causes the robot to increment an 
+internal counter of how many parts of the sequence have been assembled. 
+
+The robot then returns to MOVING to search for the next part, unless the 
+sequence is now complete, in which case it transitions to FINISHED 
+and means a new robot has been successfully constructed. 
+
+If the robot is in CHECKING state and finds that the adjacent part is not the type 
+it needs, it will go back to MOVING state and continue searching 
+(the unwanted part is left in place). 
+
+The process repeats until either the FINISHED state is reached 
+(all required parts found in order) or a FAILURE condition occurs. 
+A failure state is reached if the robot cannot 
+find any required part and cannot move to any new location -- essentially, 
+the robot is stuck with remaining parts needed, the assembly sequence isn't complete,
+but with no available moves or accessible needed parts. 
+In our model, this condition is captured by the situation where the 
+robot is in MOVING state, still has parts to assemble, and every adjacent 
+cell is either occupied (not NONE) by something (which might not be 
+the needed part) or is out of bounds of the grid. In such a case, 
+the model transitions the robot to FAILED, a terminal state indicating assembly 
+cannot be completed. 
+
+Both FINISHED and FAILED are terminal states in 
+the model, that means once reached, the robot remains in that state. 
+This state logic forms the basis of our NuSMV model.
+
+\subsection{NuSMV Formal Model Structure}
+\label{ch:globalNusmvStruct}
+We constructed a formal model in NuSMV to capture the 
+described behavior. The model is centered around the robot's 
+position and state, the grid environment, and the assembly progress. 
+Here we describe the main components of the model:
+
+\subsubsection{State variables and initial conditions}
+The NuSMV model defines discrete state variables corresponding to the 
+robot and environment. Key variables include:
+
+\begin{itemize}
+    \item grid: or field is a 2D array representing the environment, 
+        indexed from 0 to field\_max\_index in 
+        both dimensions. Each cell in the grid can hold either “NONE” (if the 
+        cell is empty) or a part type or obstacle type. We define a set of 
+        possible cell values, e.g., NONE, TYPE1, TYPE2, TYPE3, OBSTACLE1,... . 
+        In a given scenario, some of these types will be present and others 
+        not, but the model is capable of representing any configuration of 
+        parts. We initialize grid with a specific configuration where a handful 
+        of cells have parts or obstacles and the rest are NONE. 
+        An example of a small 4 x 4 size grid initialized as it shown 
+        in Listing \ref{lst:globalReachGrid}:
+
+    \begin{lstlisting}[language=NuSMV, caption={Initial representation of grid in NuSMV model}, 
+label={lst:globalReachGrid}]
+    initial_grid := [
+    [NONE,	NONE,	NONE,	NONE,	NONE,	NONE],		
+    [NONE,	NONE,	NONE,	NONE,	NONE,	NONE],		
+    [NONE,	NONE,	NONE,	NONE,	NONE,	NONE],		
+    [NONE,	NONE,	NONE,	TYPE2,	NONE,	NONE],		
+    [TYPE1,	NONE,	NONE,	NONE,	NONE,	NONE],		
+    [NONE,	NONE,	NONE,	NONE,	TYPE3,	NONE]
+];
+    \end{lstlisting}
+
+    This example corresponds to a field where three part objects (
+    of types TYPE1, TYPE2, TYPE3) are placed at specific coordinates, 
+    and the rest are empty cells (NONE). An obstacle could similarly be 
+    placed by setting a cell to OBSTACLE. 
+    The robot's starting position is (0,0), which in this example is also the 
+    assembly site and is empty. 
+    
+    \item x and y: the robot's current grid coordinates, integers ranging from 
+    0 to field\_max\_index, where field\_max\_index = N-1 if the grid is N x N. 
+    These coordinates represent the cell where the robot’s end-effector is 
+    located.
+
+    \item robot\_state: the mode of operation of the robot, which can take values
+    MOVING, CHECKING, ASSEMBLING, FINISHED, FAILED. This enumerated type 
+    encodes the state machine described earlier.
+
+    \item assembly\_index: an integer index tracking how many parts of the target 
+    assembly sequence have been completed, or equivalently, the index of 
+    the next required part in the sequence. 
+    Initially, assembly\_index = 0 meaning no parts have 
+    been assembled yet, and when assembly\_index exceeds robot\_size 
+    the assembly is complete. In practice, reaching the last part triggers 
+    the FINISHED state as described below.
+
+    \item sequence: an array that holds the required part type for each index of 
+    the robot's assembly sequence. This array is of length (robot\_size + 1). 
+    For example, if the robot must assemble parts of types TYPE1, TYPE2,
+    TYPE2, TYPE3 in that order, then robot\_size = 3 and sequence[0]=
+    TYPE1, sequence[1]=TYPE2, sequence[2]=TYPE2, sequence[3]=TYPE3. 
+    In the model initialization, we explicitly set each element of sequence to 
+    define the blueprint of the robot we want to assemble. This sequence is 
+    a parameter to the model, different robot designs can be specified by 
+    changing these initial values.
+
+    \item checked\_cells: an auxiliary 2D array (same dimensions as grid) used 
+        to record which cells have been visited during the search. Each element 
+        of checked\_cells can be either UNKNOWN or VISITED. Initially, all cells 
+        are UNKNOWN. The intention is to mark cells as VISITED once 
+        the robot has explored them, to prevent the robot from infinitely revisiting 
+        the same empty cells in a loop. In the model, we will constrain movements 
+        such that the robot does not move into a cell that is already marked VISITED.
+        This prevents trivial cycles and helps the model checker focus on 
+        new areas. The checked\_cells array is updated when the robot moves: when 
+        transitioning to a new position, that position can be marked as visited.
+        In our NuSMV model, this is encoded implicitly through transition constraints 
+        rather than an explicit assignment.
+
+\end{itemize}
+
+At the beginning, we initialize the model variables as 
+follows. The robot starts in state MOVING, with x = 0 and y = 0 (
+assembly point). The assembly index is 0, which means no parts assembled yet. 
+The grid is set to the predefined configuration of parts and obstacles for 
+that scenario. 
+The sequence array is initialized with the desired part 
+sequence for the robot to build. All cells in checked\_cells start as 
+UNKNOWN, except the starting cell which can be considered implicitly 
+visited.
+
+
+\subsubsection{State transition}
+
+The core of the model is the state transition logic, which we encode using 
+ASSIGN and TRANS blocks. 
+We break down the transitions by robot state, and the simplified transition system
+shown in Figure \ref{fig:globalReachabilityTransitionSystem}
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=7cm]{GlobalReachabilityTransitionSystem.png} 
+    \caption{Simplified transition system relative to robot\_state variable}
+    \label{fig:globalReachabilityTransitionSystem}
+\end{figure}
+
+In the NuSMV model, the logic with robot\_state  is realized with a structured 
+case statement for next(robot\_state) in ASSIGN section.
+ When the robot is in MOVING state, it is actively changing the 
+coordinates. We implement two key behaviors for MOVING:
+
+If the robot is in MOVING and a required part is adjacent (in any of 
+the four neighbors), then it should transition to CHECKING, 
+as it shown in Listing \ref{lst:globalMoveCheck}. 
+
+    \begin{lstlisting}[language=NuSMV, caption={Asign for transition from MOVING to CHECKING}, 
+label={lst:globalMoveCheck}]
+  (robot_state = MOVING & 
+   ((x > 0                & grid[x - 1][y] != NONE) | 
+    (x < field_max_index  & grid[x + 1][y] != NONE) | 
+    (y > 0                & grid[x][y - 1] != NONE) | 
+    (y < field_max_index  & grid[x][y + 1] != NONE))
+  ) : CHECKING;
+    \end{lstlisting}
+
+% If any of these is true, a part (or obstacle) 
+% is immediately adjacent, triggering a state change to CHECKING. This 
+% rule corresponds to the robot noticing something to inspect.
+
+If the robot is in MOVING and no required part can ever be found,
+the robot should give up and enter FAILED, this part shown in Listing \ref{lse:globalMoveFail}. 
+The condition we use to approximate "no required part exists or no 
+moves possible" is: the robot is MOVING, still needs parts (assembly\_index <= 
+robot\_size), and all adjacent cells are blocked (no empty neighbor to 
+move into). 
+
+    \begin{lstlisting}[language=NuSMV, caption={Assign for transition MOVING to FAILED}, 
+label={lse:globalMoveFail}]
+  (robot_state = MOVING & 
+  (assembly_index <= robot_size) & 
+  ((x = 0                 | grid[x - 1][y] != NONE ) & 
+    (x = field_max_index  | grid[x + 1][y] != NONE) & 
+    (y = 0                | grid[x][y - 1] != NONE ) & 
+    (y = field_max_index  | grid[x][y + 1] != NONE ))
+  ) : FAILED;
+    \end{lstlisting}
+
+If at the current position none of the four directions offers an empty 
+cell (i.e. the robot is surrounded by occupied cells or edges), then 
+the robot cannot move. 
+captures dead-end situations (e.g., the robot is boxed in by obstacles or 
+irrelevant parts that are not the one it needs).
+
+The actual movement to a new cell is 
+not decided in the next (robot\_state), instead, movement is governed by
+separate TRANS constraints described later. 
+In essence, if the robot stays in MOVING for the next step, we allow 
+its (x, y) to change to an adjacent empty cell that hasn’t been visited 
+yet. We encoded movement using additional transition constraints rather 
+than in the main case, to separate the logic of where it moves from when 
+it moves in the state machine.
+
+When in robot\_state is in CHECKING, the robot is examining a specific 
+neighboring part's type to see if it's what we need, the formal description is in Listing \ref{lst:globalCheck}. 
+
+    \begin{lstlisting}[language=NuSMV, caption={Assign for transition from CHECKING state and changing of 
+        auxiliary partX and partY variables}, 
+    label={lst:globalCheck}]
+    (robot_state = CHECKING & 
+    assembly_index <= robot_size) : case
+    grid[partX][partY]  = sequence[assembly_index] : ASSEMBLING; 
+    grid[partX][partY] != sequence[assembly_index] : MOVING;
+    esac;
+    \end{lstlisting}
+We need to decide whether to go to ASSEMBLING ,if the part matches the requirement
+or back to MOVING if it does not.
+
+To formalize this, we introduced variables 
+partX and partY to record the coordinates of the part being checked, the conditions are
+in Listing \ref{lst:globalPartXY}. 
+
+    \begin{lstlisting}[language=NuSMV, caption={Assign for transition from CHECKING state and changing of 
+        auxiliary partX and partY variables}, 
+    label={lst:globalPartXY}]
+    next(partX) := case
+      ( robot_state = MOVING & next(robot_state) = CHECKING & 
+        x > 0 & grid[x - 1][y] = sequence[assembly_index]
+      ) : x - 1;  -- found in left neighbour cell (
+        robot_state = MOVING & next(robot_state) = CHECKING & 
+        x < field_max_index & grid[x + 1][y] = sequence[assembly_index]
+      ) : x + 1;  -- found in right neighbour cell
+      TRUE : x;  -- otherwise, retain previous (or irrelevant outside checking context)
+    esac;
+    next(partY) := case
+      ( robot_state = MOVING & next(robot_state) = CHECKING & 
+        y > 0 & grid[x][y - 1] = sequence[assembly_index]
+      ) : y - 1;  -- found in upper neighbour cell
+      ( robot_state = MOVING & next(robot_state) = CHECKING & 
+        y < field_max_index & grid[x][y + 1] = sequence[assembly_index]
+      ) : y + 1;  -- found in down neighbour cell
+      TRUE : y;
+    esac;
+    \end{lstlisting}
+
+When the robot transitions from MOVING to CHECKING, we simultaneously set 
+partX and partY to the coordinates of the neighbor that it decided to 
+inspect. In the model, we achieve this by writing next(partX) and next
+(partY) with conditions mirroring the state change. 
+
+For example, one rule is: if robot\_state = MOVING and next(robot\_state) = CHECKING and 
+the left neighbor cell (x-1, y) contains the needed part type (grid[
+x-1][y] = sequence[assembly\_index]), then next(partX) = x-1 and next
+(partY) = y. Similar rules set partX and partY for the right, up, 
+or down neighbor if that neighbor is the target part. 
+
+If the part at (partX, partY) matches the required type for the current 
+assembly index (i.e., grid[partX][partY] = sequence[assembly\_index]), 
+then the robot will proceed to pick it up and assemble it.  
+
+If the part is not the needed type (grid[partX][partY] != sequence[
+assembly\_index]), then the robot will return to MOVING to keep searching. 
+So we have next(robot\_state) = MOVING for that case. We coded this using 
+a nested case within the CHECKING branch in NuSMV (so that from CHECKING
+, the next state is a sub-case that depends on a comparison of the part
+’s type).
+
+The ASSEMBLING state represents that the robot 
+has successfully fetched a part and is adding it to the assembly. 
+We consider that the assembly of one part is completed within this state,
+so the next step depends on whether there are more parts to assemble. 
+The implementation of this transition shown in the Listing \ref{lst:globalAssembling}
+
+\begin{lstlisting}[language=NuSMV, caption={Assign for transitions from ASSEMBLING state}, 
+    label={lst:globalAssembling}]
+    (robot_state = ASSEMBLING
+    ) : case 
+    assembly_index < robot_size : MOVING;
+    assembly_index = robot_size : FINISHED;
+    esac;
+\end{lstlisting}
+
+If the robot was assembling a part, and it was not the final part (
+i.e. assembly\_index < robot\_size before assembly), then after assembling, 
+the robot should go back to MOVING to search for the next part. We 
+model this by next(robot\_state) = MOVING when robot\_state = ASSEMBLING and 
+assembly\_index < robot\_size. Additionally, we will update the assembly\_index: while 
+in ASSEMBLING, if it’s not the last part, we increment assembly\_index by 
+1 for the next state (so the needed part type will advance to the next 
+in the sequence).
+
+If the robot was assembling and this part was the final one needed (
+assembly\_index = robot\_size, meaning we just placed the last part), 
+then the assembly is now complete. 
+Therefore, we transition to FINISHED.
+In this scenario, we also increment assembly\_index (
+although it’s not strictly necessary once we mark FINISHED, but it 
+could be used to indicate assembly\_index = robot\_size+1 meaning “
+done”).
+
+In summary, ASSEMBLING is a transient state: it will always go either to 
+MOVING (with the next part index) or to FINISHED, in one step.
+
+FINISHED and FAILED are the absorbing terminal states. We encode in Listing \ref{lst:globalFinFail} 
+that if the robot is already in FINISHED, it stays in FINISHED, and similarly for FAILED. 
+
+\begin{lstlisting}[language=NuSMV, caption={Terminal conditions for FINISHED and FAILED}, 
+    label={lst:globalFinFail}]
+      robot_state = FINISHED  : FINISHED;
+      robot_state = FAILED    : FAILED;
+\end{lstlisting}
+
+Thus, once a terminal condition is reached, no further transitions occur 
+and the trace effectively ends.
+
+
+
+In addition to the robot\_state updates, the model includes constraints on 
+how the x and y coordinates can change between steps. 
+The movement and visit tracking logic described in TRANS block of the logic. 
+
+If the robot will remain (or go) in the MOVING state at the next step
+then we require that next(x), next(y) is one of the neighboring cells 
+of (x, y) that is empty and not yet visited, this part shown  in Listing \ref{lst:globalXY}. 
+
+\begin{lstlisting}[language=NuSMV, caption={Transition of x and y coordinates during MOVING}, 
+    label={lst:globalXY}]
+  TRANS 
+    (next(robot_state) = MOVING ) -> (   
+        ( next(x) = x - 1 & x > 0  
+        & next(y) = y 
+        & grid[x - 1][y] = NONE
+        & checked_cells[x - 1][y] != VISITED
+        ) |
+        ( next(x) = x + 1 & x < field_max_index  
+        & next(y) = y 
+        & grid[x + 1][y] = NONE
+        & checked_cells[x + 1][y] != VISITED 
+        ) |
+        (next(y) = y - 1 & y > 0 
+        & next(x) = x 
+        & grid[x][y - 1] = NONE
+        & checked_cells[x][y - 1] != VISITED
+        ) |
+        (
+        next(y) = y + 1 & y < field_max_index  
+        & next(x) = x 
+        & grid[x][y + 1] = NONE
+        & checked_cells[x][y + 1] != VISITED 
+        ));
+\end{lstlisting}
+
+ This big disjunction covers each of the four directions. 
+ It essentially means: if we are continuing to move, the robot must move 
+ by one step into a free cell that has not been visited before. 
+It prevents illegal moves (e.g., jumping multiple cells or moving into occupied cells) and also 
+ prevents staying in place during a MOVING step.
+
+If the robot's next state is not MOVING (next(robot\_state) != MOVING), 
+that implies the robot is engaging in checking or assembling, so we 
+constrain that the robot’s coordinates do not change in that step, see Listing \ref{lst:globalMoveXY}
+
+\begin{lstlisting}[language=NuSMV, caption={Condition that robot position doesnt change if not MOVING}, 
+    label={lst:globalMoveXY}]
+    TRANS (next(robot\_state) != MOVING) -> (next(x) = x & next(y) = y)
+\end{lstlisting}
+
+This ensures that during a CHECKING or ASSEMBLING step, the robot stays at the same 
+location.
+
+We also add TRANS (next(grid) = grid) because we assume the environment's
+configuration of objects doesn't spontaneously change between steps 
+(no external agent moves the parts or obstacles during the process). 
+The only change to the grid would theoretically 
+be removal of a part that was picked up, but as per our assembly abstraction,
+we are not updating the grid for that, so indeed the grid remains static 
+in the model. Similarly, TRANS (next(sequence) = sequence) is added because 
+the required sequence doesn’t change over time (it's a fixed goal).
+
+
+For completeness, we enforce that unless in ASSEMBLING (where assembly\_index increments),
+the assembly\_index stays the same across a step: 
+TRANS (robot\_state != ASSEMBLING) -> (next(assembly\_index) = assembly\_index). 
+Combined with the earlier assignment rule that in ASSEMBLING state we do increment, 
+this ensures assembly\_index only goes up exactly when a part is being 
+assembled.
+
+In our implementation, we simplified matters by 
+only constraining moves to not go into VISITED cells, and we implicitly assume 
+the robot doesn't immediately revisit its last position because it's now marked visited.
+The initial cell (0,0) could be considered visited 
+from the start to avoid the robot just stepping out and back in repeatedly.
+In practice, because the robot always has the option to move into an 
+unvisited cell (and the model checker tends to find a path to the goal 
+if it exists, rather than looping), we found that the first counterexample trace 
+it finds is typically a simple path without revisiting. 
+Nonetheless, a more rigorous model would include an explicit update of checked\_cells[
+next(x)][next(y)] := VISITED and possibly mark the start as visited in 
+the init section for completeness.
+
+
+\subsubsection{Specification for checking 2D reachability}
+
+To perform reachability analysis of the terminal states (FINISHED or FAILED), 
+we frame the problem as checking LTL properties that assert that those 
+states never happen. By checking the negation of the reachability, 
+the model checker will provide a counterexample path 
+when the state is in fact reachable. 
+We used two LTL formulas, first - successful assembly never occurs, in Listing \ref{lst:globalFin}
+
+\begin{lstlisting}[language=NuSMV, caption={Terminal conditions for FINISHED and FAILED}, 
+    label={lst:globalFin}]
+    LTLSPEC G F (robot_state != FINISHED). 
+\end{lstlisting}
+
+This LTL formula reads as "always eventually, the robot\_state is not 
+FINISHED," which is a somewhat indirect way of saying "robot\_state is 
+never stuck in FINISHED forever." 
+
+If this property is false, it means there exists a path where eventually robot
+\_state = FINISHED and remains FINISHED thereafter (since once finished, 
+it stays). In simpler terms, a counterexample to this property is 
+a finite trace that ends in 
+the FINISHED state (the model checker will actually produce a loop or 
+repetition after FINISHED, but the interesting part is up to reaching FINISHED). 
+Thus, a counterexample to this formula provides a concrete sequence of 
+actions leading the robot to successfully assemble the new robot.
+
+Another possible specification shown in Listing \ref{lst:globalFail}
+\begin{lstlisting}[language=NuSMV, caption={Terminal conditions for FINISHED and FAILED}, 
+    label={lst:globalFail}]
+    LTLSPEC G F (robot\_state != FAILED). 
+\end{lstlisting}
+This formula asserts "it is always eventually not FAILED," i.e. the 
+robot never gets permanently stuck in FAILED. If this is false, there 
+is a scenario where the robot ends up in FAILED state. The counterexample trace 
+for this formula will show how the robot ended up unable to complete the 
+assembly.
+
+In our NuSMV model file, we typically use first of these LTL specifications.
+For example, to find a successful path in 2D.
+But if we want to find a potential failure path, we check the second. 
+
+In all interesting cases for our scenarios, the properties are 
+false because we specifically set up scenarios where eventually the 
+robot does finish (we ensure all needed parts are actually present somewhere 
+on the grid) or could fail (if we design a scenario where a part is 
+absent or unreachable). 
+
+We leverage these traces as a source of information for 
+analyzing and interpreting the robot behavior, as described in the Chapter \ref{ch:validation}.
+
+
+\subsection{Model generation and verification}
+
+Writing a NuSMV model for one specific grid configuration and robot sequence is 
+useful for a single-case analysis, but our goal was to explore many scenarios 
+(different field sizes, different placements of parts, different robot 
+part sequences) without manually coding each model variant. To facilitate this,
+we developed a Python toolchain to automate model generation, execution,
+and counterexample processing. 
+
+The workflow can be summarized in the following steps:
+
+We prepare a general NuSMV model template based on the  NuSMV model 
+described in section \ref{ch:globalNusmvStruct}.
+with placeholders for scenario-specific parameters. 
+
+The template, stored in a file Assemble\_initial\_template.smv,
+presented in Appendix \ref{ch:globalTemplate}, it includes formatting placeholders such 
+as {field\_max\_index}, {object\_types}, {init\_robot\_sequence}, {
+initial\_grid}, etc. in place of concrete values.
+This template captures the structure of the model (variables, state transition 
+logic, LTL specification), leaving certain details to be filled in.
+
+We built a simple graphical user interface,shown in Figure \ref{fig:globalGUI1}, 
+using Tkinter library, to allow interactive configuration: the user can specify the field size 
+and robot length.
+Then user have to press button "Generate field".
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=9cm]{globalGUI1.png} 
+    \caption{Graphical interface for 2D reachability checking}
+    \label{fig:globalGUI1}
+\end{figure}
+
+The program opens the grid with buttons for each cell, where the user can select 
+a cell's content from a dropdown (e.g. None, or specific part types), 
+this part shown in Figure \ref{fig:globalGUI2}. 
+
+The robot’s required part sequence can be set via dropdowns in a side 
+panel. This interface makes it easy to set up custom scenarios without directly 
+editing code.
+The tool ensures the field and sequence lengths are consistent (it 
+will create as many sequence slots as the robot size requires, etc.).
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=15cm]{globalGUI2.png} 
+    \caption{Graphical interface for 2D reachability checking with field}
+    \label{fig:globalGUI2}
+\end{figure}
+
+
+
+Once the scenario is configured, user press "Generate model" button and
+the  program uses the provided inputs to generate a concrete NuSMV model file.
+This is done by taking the template and substituting in the actual values. 
+The Python class takes user input or configuration for the scenario, 
+such as the field size, the list of part types and obstacle types to 
+consider, the initial positions of all objects on the field, and the 
+robot's assembly sequence (which defines robot\_size and the sequence array 
+values). 
+
+The set of object types is derived from all items present on the 
+grid (plus the “NONE” empty type); 
+The robot's part sequence (a list like ["TYPE1", "TYPE2", "TYPE2", "TYPE3"]) 
+is used both to set robot\_size (length minus 
+one) and to fill in the init(sequence[i]) lines in the model. The initial 
+grid configuration is formatted as a matrix literal for NuSMV. 
+
+This model file is essentially the same structure for any scenario,
+but with different initial conditions and parameters reflecting that 
+scenario. The Python generator prints a summary to the user, confirming the 
+model generation and showing the initial grid and sequence it encoded, 
+for verification purposes.
+
+After generating the model, with "Verify model" button we verify it using NuSmv. 
+We automate this by invoking the nuSmv binary through a subprocess 
+call on the generated model file.
+The output will indicate whether the LTL specification was satisfied or 
+violated. 
+
+The significant part of our program is parsing the NuSmv counterexample to extract the 
+robot's movement path and key events. 
+We focus on the variables of interest: x, y, and the robot\_state (particularly 
+noting when it reaches FINISHED or FAILED). 
+Our Python script reads the 
+output line by line and filters those lines that indicate a change or 
+value of x or y or mention the robot\_state becoming FINISHED. 
+By doing this, we reconstruct the sequence of coordinates the robot went through. 
+
+The trace format usually lists assignments in 
+a single step as separate lines.
+By capturing x and y and assembling them in order, we build a list of 
+(x, y) positions visited at each step of the counterexample path. 
+The path indicates the cells the robot effector occupied 
+over time.
+The Python GUI then takes this path of coordinates and visually 
+draws it on the grid for the user: connecting the sequence of cell centers 
+with lines (in chronological order) so one can see the trajectory. 
+The output text field of the GUI also shows a cleaned-up version of 
+the nuSmv output and/or the path coordinates.
+
+By automating this workflow, we can iterate quickly over different scenarios 
+and immediately get the robot’s path if assembly is possible, or see 
+where it fails. The counterexample trace effectively serves as a simulated 
+execution of the self-replication process under the given scenario. 
+Thus, we explore the state space with model checker  and provide an 
+example execution leading to the outcome of interest.
+
+
+
+
 
 

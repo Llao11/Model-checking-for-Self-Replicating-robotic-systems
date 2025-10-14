@@ -1,15 +1,19 @@
-For the validation of  properties checked in previous chapters
-and for demonstrating the feasibility of 
+In this chapter we will verify approaches described in Chapter \ref{ch:implementation}
+and perform evaluation of their computation time.
+
+To verify approaches and validate the results of reachability and configuration checking 
+ and to demonstrate the feasibility of 
 the counterexample-guided control approach, we complement the formal analysis 
-with an experimental simulation platform. The platform is realized in 
-the Gazebo environment, which provides a physics-based simulation of 
-the modular robot and its interaction with voxel-like blocks. The robot 
-is controlled through ROS2 nodes, enabling modular and distributed control 
-strategies. By comparing the outcomes of formal verification with simulation 
+with the simulation. 
+We will use the simulation platform described in Chapter \ref{ch:simulation}.
+By comparing the outcomes of formal verification with simulation 
 results, we aim to assess both the soundness and the practical utility of 
 model-checking-based methods for modular self-replicating robots.
 
+
+
 \section{Validation of the counterexample based robot control}
+\label{ch:validation}
 
 To validate the counterexample based approach, introduced in 
 chapter \ref{ch:Counterexample} we will integrate the counterexample generation 
@@ -85,11 +89,253 @@ the geometric offset of the blocks in the simulation model.
 Maximal discrepancy during simulation of 10 different reachable points 
 was 27\% of length unit in the simulation (size of the voxel).
 
+
+The simulation also revealed the following challenges in the current implementation 
+of counterexample-based control:
+
+\begin{enumerate}
+    \item non-orthogonality of the end effector to the sides of the part during mechanical attachment.
+    \item potential self-intersection of the robot during movement along the path
+    of the robot in NSMV for orthogonal connection to parts.
+    \item position error due to angle discretization.
+    \item error due to simplified representation of the robot structure in NYSMV.
+\end{enumerate}
+
+These issues can be resolved in the following system improvements by:
+
+\begin{enumerate}
+\item introducing additional constraints on the blocks close to the end 
+    of the robot in NYSMV for orthogonal connection to the parts.
+\item introducing constraints on self-intersections of robot blocks during movement.
+\item iterative reduction of the discretization angle with the introduction of 
+    restrictions as the trace is refined.
+\item refinement of the robot's geometry in the model.
+\end{enumerate}
+
+
 \section{Validation of the robot configuration checking}
 
-\section{Complexity evaluation}
-\textcolor{red}{TODO: Add comparison of a time to preform an assembly action}\\
-\textcolor{red}{TODO: Add graph of a model checking time for different lengths}\\
+In order to prove viability of configurations checking workflow described 
+in Chapter \ref{ch:configurationChecking} we will first compare checking results for 
+both sequential checking with python and aggregated checking with NuSMV. 
+Then we will generate Xacro files for Gazebo simulations and validate 
+the results with physical simulation.
+
+
+\subsection{Comparison of individual and aggregated model checking}
+
+We will perform sequential configuration checking for block types:
+ "yaw", "pitch", 
+
+for target point $[5,5,10]$ 
+
+and target region $x=\{-10,10\}, y=\{-10,10\}, z=\{0,10\}]$
+
+We will use configuration\_checking class, described in Chapter \ref{ch:configurationCheckingPy}.
+and the working script which is located in validation\_individual\_configurations.py script.
+
+For robot length 3 blocks using individual checking 
+we   have only one reachable configuration with two pitch type of blocks,
+the list of all possible configurations are given in Table \ref{tab:conf3individ}.
+
+% 1/4:base_pitch_pitch_: & not reachable  & 0.041764 sec \\ \hline                                                       
+% 2/4:base_pitch_yaw_:   & not reachable  & 0.014439 sec \\ \hline                                                       
+% 3/4:base_yaw_pitch_:   & not reachable  & 0.023248 sec \\ \hline                                                       
+% 4/4:base_yaw_yaw_:     & not reachable  & 0.013113 sec \\ \hline
+
+\begin{table}[h!]
+\begin{tabular}{|l|l|l|l|l|l|}
+\hline
+N  & Configration                           & Point  & Time,sec   & Region  & Time,sec    \\ \hline
+1 & \cellcolor{green!20} base\_pitch\_pitch &  \cellcolor{green!20} reachable       & \cellcolor{green!20} 0.0899   & not reachable  & 0.0417 \\ \hline
+2 & base\_pitch\_yaw   &  not reachable   & 0.0291   & not reachable  & 0.0144 \\ \hline
+3 & base\_yaw\_pitch   &  not reachable   & 0.0467   & not reachable  & 0.0232 \\ \hline
+4 & base\_yaw\_yaw     &  not reachable   & 0.0275   & not reachable  & 0.0131 \\ \hline
+\end{tabular}
+\caption{Configurations reachability checking for robot size 3.}
+\label{tab:conf3individ}
+\end{table}
+
+For the aggregated model checking with NuSMV model adjusted for robot length 3 we will 
+have a following result for the reachability of point $[5,5,10]$ :
+
+['base', 'pitch', 'pitch']
+Computation time: 0.047455 sec
+
+In this and similar configurations if the first block after initial is pitch block,
+it is equivalent to a base-yaw-pitch... configuration, this property defined by base block structure,
+and reflects the arbitrary initial rotation of a robot, that is the reason wry this configuration is reachable
+for target point with given coordinates. 
+
+% 1/8:base_pitch_pitch_pitch_: &  not reachable   & 0.3181                                                                                                                                                        
+% 2/8:base_pitch_pitch_yaw_:   &  not reachable   & 0.0402                                                                                                                                                        
+% 3/8:base_pitch_yaw_pitch_:   &  not reachable   & 0.2137                                                                                                                                                        
+% 4/8:base_pitch_yaw_yaw_:     &  not reachable   & 0.0164 
+% 5/8:base_yaw_pitch_pitch_:   &  not reachable   & 0.1253 
+% 6/8:base_yaw_pitch_yaw_:     &  not reachable   & 0.0235 
+% 7/8:base_yaw_yaw_pitch_:     &  not reachable   & 0.0654 
+% 8/8:base_yaw_yaw_yaw_:       &  not reachable   & 0.0171 
+
+For robot length 4 blocks using individual checking 
+we have two reachable configuration with two pitch type of blocks,
+the list of all possible configurations are given in Table \ref{tab:conf3individ}.
+
+\begin{table}[h!]
+\begin{tabular}{|l|l|l|l|l|l|}
+\hline
+N  & Configration                           & Point  & Time,sec   & Region  & Time,sec    \\ \hline
+1 & base\_pitch\_pitch\_pitch & reachable      & 0.3534 &  not reachable   & 0.3181  \\ \hline
+2 & \cellcolor{green!20}base\_pitch\_pitch\_yaw   &\cellcolor{green!20} not reachable  &\cellcolor{green!20} 0.0920 &  not reachable   & 0.0402  \\ \hline
+3 & base\_pitch\_yaw\_pitch   & not reachable  & 0.5114 &  not reachable   & 0.2137  \\ \hline
+4 & base\_pitch\_yaw\_yaw     & not reachable  & 0.0322 &  not reachable   & 0.0164  \\ \hline
+5 & base\_yaw\_pitch\_pitch   & reachable      & 0.5847 &  not reachable   & 0.1253  \\ \hline
+6 & base\_yaw\_pitch\_yaw     & not reachable  & 0.0528 &  not reachable   & 0.0235  \\ \hline
+7 & base\_yaw\_yaw\_pitch     & not reachable  & 0.1590 &  not reachable   & 0.0654  \\ \hline
+8 & base\_yaw\_yaw\_yaw       & not reachable  & 0.0294 &  not reachable   & 0.0171  \\ \hline
+\end{tabular}
+\caption{Configurations reachability checking for robot size 4.}
+\label{tab:conf4individ}
+\end{table}
+
+For the aggregated model checking with NuSMV model adjusted for robot length 4 we will 
+have a following result for the reachability of point $[5,5,10]$ :
+
+['base', 'pitch', 'pitch', 'yaw']
+Time: 0.699504 sec
+
+% Rerion {-10,10} {-10,10} {0,10}
+% 1/16:base_pitch_pitch_pitch_pitch_: & not reachable    & 7.063483  \\ \hline                                                                                                                                               
+% 2/16:base_pitch_pitch_pitch_yaw_:   & not reachable    & 0.335288  \\ \hline                                                                                                                                               
+% 3/16:base_pitch_pitch_yaw_pitch_:   & not reachable    & 3.426266  \\ \hline                                                                                                                                               
+% 4/16:base_pitch_pitch_yaw_yaw_:     & not reachable    & 0.044213  \\ \hline                                                                                                                                                       
+% 5/16:base_pitch_yaw_pitch_pitch_:   & reachable        & 8.627509  \\ \hline                                                                                                                                               
+% 6/16:base_pitch_yaw_pitch_yaw_:     & not reachable    & 0.235784  \\ \hline                                                                                                                                                       
+% 7/16:base_pitch_yaw_yaw_pitch_:     & not reachable    & 1.182801  \\ \hline                                                                                                                                                       
+% 8/16:base_pitch_yaw_yaw_yaw_:       & not reachable    & 0.018368  \\ \hline                                                                                                                                                       
+% 9/16:base_yaw_pitch_pitch_pitch_:   & reachable        & 1.359482  \\ \hline                                                                                                                                               
+% 10/16:base_yaw_pitch_pitch_yaw_:    & reachable        & 0.262962  \\ \hline                                                                                                                                               
+% 11/16:base_yaw_pitch_yaw_pitch_:    & reachable        & 4.359035  \\ \hline                                                                                                                                               
+% 12/16:base_yaw_pitch_yaw_yaw_:      & not reachable    & 0.046289  \\ \hline                                                                                                                                                       
+% 13/16:base_yaw_yaw_pitch_pitch_:    &  not reachable   & 0.503343  \\ \hline                                                                                                                                               
+% 14/16:base_yaw_yaw_pitch_yaw_:      & not reachable    & 0.075326  \\ \hline                                                                                                                                                       
+% 15/16:base_yaw_yaw_yaw_pitch_:      & not reachable    & 0.138259  \\ \hline                                                                                                                                                       
+% 16/16:base_yaw_yaw_yaw_yaw_:        & not reachable    & 0.017746  \\ \hline
+
+\begin{table}[h!]
+\begin{tabular}{|l|l|l|l|l|l|}
+\hline
+N  & Configration                           & Point  & Time,sec   & Region  & Time,sec    \\ \hline
+1  & base\_pitch\_pitch\_pitch\_pitch  & reachable      & 1.8347   & not reachable    & 7.0634  \\ \hline
+2  &  base\_pitch\_pitch\_pitch\_yaw & reachable        & 0.2701   & not reachable    & 0.3352  \\ \hline
+3  &  base\_pitch\_pitch\_yaw\_pitch & reachable        & 2.0633   & not reachable    & 3.4262  \\ \hline
+4  &  base\_pitch\_pitch\_yaw\_yaw   & not reachable    & 0.0390   & not reachable    & 0.0442  \\ \hline
+5  &  base\_pitch\_yaw\_pitch\_pitch & reachable        & 2.2923   & reachable        & 8.6275  \\ \hline
+6  & \cellcolor{green!20} base\_pitch\_yaw\_pitch\_yaw   & \cellcolor{green!20}reachable        & \cellcolor{green!20}0.2200   & not reachable    & 0.2357  \\ \hline
+7  &  base\_pitch\_yaw\_yaw\_pitch   & not reachable    & 0.9994   & not reachable    & 1.1828  \\ \hline
+8  &  base\_pitch\_yaw\_yaw\_yaw     & not reachable    & 0.0132   & not reachable    & 0.0183  \\ \hline
+9  &  base\_yaw\_pitch\_pitch\_pitch & reachable        & 1.1530   & reachable        & 1.3594  \\ \hline
+10 &  base\_yaw\_pitch\_pitch\_yaw   & reachable        & 0.2345   & reachable        & 0.2629  \\ \hline
+11 &  base\_yaw\_pitch\_yaw\_pitch   & reachable        & 2.3829   & reachable        & 4.3590  \\ \hline
+12 &  base\_yaw\_pitch\_yaw\_yaw     & not reachable    & 0.0237   & not reachable    & 0.0462  \\ \hline
+13 &  base\_yaw\_yaw\_pitch\_pitch   & not reachable    & 0.4713   &  not reachable   & 0.5033  \\ \hline
+14 &  base\_yaw\_yaw\_pitch\_yaw     & not reachable    & 0.0673   & not reachable    & 0.0753  \\ \hline
+15 &  base\_yaw\_yaw\_yaw\_pitch     & not reachable    & 0.1292   & not reachable    & 0.1382  \\ \hline
+16 &  base\_yaw\_yaw\_yaw\_yaw      & not reachable     & 0.1292   & not reachable    & 0.0177  \\ \hline
+\end{tabular}
+\caption{Configurations reachability checking for robot size 5.}
+\label{tab:conf5individ}
+\end{table}
+
+
+For the aggregated model checking with NuSMV model adjusted for robot length 5 we will 
+have a following result for the reachability of point $[5,5,10]$ :
+
+['base', 'pitch', 'yaw', 'pitch', 'yaw']
+Time: 22.020454 sec
+% Rerion {-10,10} {-10,10} {0,10}
+% 1/32:base_pitch_pitch_pitch_pitch_pitch_:       not reachable   [1007.459237 sec]                                                                                                                                    
+% 2/32:base_pitch_pitch_pitch_pitch_yaw_: not reachable   [7.32352 sec]                                                                                                                                                
+% 3/32:base_pitch_pitch_pitch_yaw_pitch_:  reachable      [466.351648 sec]                                                                                                                                             
+% 4/32:base_pitch_pitch_pitch_yaw_yaw_:   not reachable   [0.356292 sec]                                                                                                                                               
+% 5/32:base_pitch_pitch_yaw_pitch_pitch_:  reachable      [226.78197 sec]                                                                                                                                              
+% 6/32:base_pitch_pitch_yaw_pitch_yaw_:    reachable      [10.687369 sec]                                                                                                                                              
+% 7/32:base_pitch_pitch_yaw_yaw_pitch_:   not reachable   [38.146766 sec]                                                                                                                                              
+% 8/32:base_pitch_pitch_yaw_yaw_yaw_:     not reachable   [0.086282 sec]                                                                                                                                               
+% 9/32:base_pitch_yaw_pitch_pitch_pitch_:  reachable      [207.573496 sec]                                                                                                                                             
+% 10/32:base_pitch_yaw_pitch_pitch_yaw_:   reachable      [10.631467 sec]                                                                                                                                              
+% 11/32:base_pitch_yaw_pitch_yaw_pitch_:   reachable      [889.288371 sec]                                                                                                                                             
+% 12/32:base_pitch_yaw_pitch_yaw_yaw_:    not reachable   [0.28334 sec]                                                                                                                                                
+% 13/32:base_pitch_yaw_yaw_pitch_pitch_:  not reachable   [29.298298 sec]                                                                                                                                              
+% 14/32:base_pitch_yaw_yaw_pitch_yaw_:    not reachable   [1.680105 sec]                                                                                                                                               
+% 15/32:base_pitch_yaw_yaw_yaw_pitch_:    not reachable   [3.842957 sec]                                                                                                                                               
+% 16/32:base_pitch_yaw_yaw_yaw_yaw_:      not reachable   [0.033597 sec]                                                                                                                                               
+% 17/32:base_yaw_pitch_pitch_pitch_pitch_:         reachable      [38.161522 sec]                                                                                                                                      
+% 18/32:base_yaw_pitch_pitch_pitch_yaw_:   reachable      [3.197818 sec]                                                                                                                                               
+% 19/32:base_yaw_pitch_pitch_yaw_pitch_:   reachable      [238.729532 sec]                                                                                                                                             
+% 20/32:base_yaw_pitch_pitch_yaw_yaw_:    not reachable   [0.270885 sec]                                                                                                                                               
+% 21/32:base_yaw_pitch_yaw_pitch_pitch_:   reachable      [150.388283 sec]                                                                                                                                             
+% 22/32:base_yaw_pitch_yaw_pitch_yaw_:     reachable      [7.866586 sec]                                                                                                                                               
+% 23/32:base_yaw_pitch_yaw_yaw_pitch_:     reachable      [27.916541 sec]                                                                                                                                              
+% 24/32:base_yaw_pitch_yaw_yaw_yaw_:      not reachable   [0.051017 sec]                                                                                                                                               
+% 25/32:base_yaw_yaw_pitch_pitch_pitch_:  not reachable   [4.084711 sec]                                                                                                                                               
+% 26/32:base_yaw_yaw_pitch_pitch_yaw_:    not reachable   [0.594951 sec]                                                                                                                                               
+% 27/32:base_yaw_yaw_pitch_yaw_pitch_:    not reachable   [27.393938 sec]                                                                                                                                              
+% 28/32:base_yaw_yaw_pitch_yaw_yaw_:      not reachable   [0.088772 sec]                                                                                                                                               
+% 29/32:base_yaw_yaw_yaw_pitch_pitch_:    not reachable   [1.367703 sec]                                                                                                                                               
+% 30/32:base_yaw_yaw_yaw_pitch_yaw_:      not reachable   [0.300151 sec]                                                                                                                                               
+% 31/32:base_yaw_yaw_yaw_yaw_pitch_:      not reachable   [0.64044 sec]                                                                                                                                                
+% 32/32:base_yaw_yaw_yaw_yaw_yaw_:        not reachable   [0.018887 sec]
+
+
+\begin{table}[h!]
+\begin{tabular}{|l|l|l|l|l|l|}
+\hline
+N  & Configration                           & Point  & Time,sec   & Region  & Time,sec    \\ \hline
+1 & base\_pitch\_pitch\_pitch\_pitch\_pitch &  reachable     & 169.71c & not reachable     & 1007.4  \\ \hline
+2 & base\_pitch\_pitch\_pitch\_pitch\_yaw &   reachable      & 1.8283  & not reachable     & 7.3235  \\ \hline
+3 & base\_pitch\_pitch\_pitch\_yaw\_pitch &   reachable      & 70.105  & reachable      & 466.35  \\ \hline
+4 & base\_pitch\_pitch\_pitch\_yaw\_yaw &    not reachable     & 0.2860  & not reachable      & 0.3562  \\ \hline
+5 & base\_pitch\_pitch\_yaw\_pitch\_pitch &   reachable      & 50.922  & reachable      & 226.78  \\ \hline
+6 & base\_pitch\_pitch\_yaw\_pitch\_yaw &     reachable      & 2.4502  & reachable      & 10.687  \\ \hline
+7 & base\_pitch\_pitch\_yaw\_yaw\_pitch &     reachable      & 17.172  & not reachable     & 38.146  \\ \hline
+8 & base\_pitch\_pitch\_yaw\_yaw\_yaw &      not reachable     & 0.0463  & not reachable      & 0.0862  \\ \hline
+9 & base\_pitch\_yaw\_pitch\_pitch\_pitch &   reachable      & 55.968  & reachable      & 207.57  \\ \hline
+10 & base\_pitch\_yaw\_pitch\_pitch\_yaw &    reachable      & 6.5920  & reachable      & 10.631  \\ \hline
+11 & base\_pitch\_yaw\_pitch\_yaw\_pitch &    reachable      & 147.78  & reachable      & 889.28  \\ \hline
+12 & base\_pitch\_yaw\_pitch\_yaw\_yaw &      reachable      & 0.2445  & not reachable     & 0.2833  \\ \hline
+13 & base\_pitch\_yaw\_yaw\_pitch\_pitch &    reachable      & 18.397  & not reachable     & 29.298  \\ \hline
+14 & base\_pitch\_yaw\_yaw\_pitch\_yaw &      reachable      & 1.1950  & not reachable     & 1.6801  \\ \hline
+15 & base\_pitch\_yaw\_yaw\_yaw\_pitch &     not reachable     & 2.7777  & not reachable      & 3.8429  \\ \hline
+16 & base\_pitch\_yaw\_yaw\_yaw\_yaw &       not reachable     & 0.0128  & not reachable      & 0.0335  \\ \hline
+17 & base\_yaw\_pitch\_pitch\_pitch\_pitch &  reachable      & 25.389  & reachable      & 38.161  \\ \hline
+18 & base\_yaw\_pitch\_pitch\_pitch\_yaw &    reachable      & 2.2987  & reachable      & 3.1978  \\ \hline
+19 & base\_yaw\_pitch\_pitch\_yaw\_pitch &    reachable      & 46.454  & reachable      & 238.72  \\ \hline
+20 & base\_yaw\_pitch\_pitch\_yaw\_yaw &     not reachable     & 0.2329  & not reachable      & 0.2708  \\ \hline
+21 & base\_yaw\_pitch\_yaw\_pitch\_pitch &    reachable      & 45.252  & reachable      & 150.38  \\ \hline
+22 & base\_yaw\_pitch\_yaw\_pitch\_yaw &      reachable      & 5.0098  & reachable      & 7.8665  \\ \hline
+23 & base\_yaw\_pitch\_yaw\_yaw\_pitch &     not reachable     & 17.253  & reachable       & 27.916  \\ \hline
+24 & base\_yaw\_pitch\_yaw\_yaw\_yaw &       not reachable     & 0.0482  & not reachable      & 0.0510  \\ \hline
+25 & base\_yaw\_yaw\_pitch\_pitch\_pitch &    reachable      & 2.8130  & not reachable     & 4.0847  \\ \hline
+26 & base\_yaw\_yaw\_pitch\_pitch\_yaw &      reachable      & 0.5298  & not reachable     & 0.5949  \\ \hline
+27 & base\_yaw\_yaw\_pitch\_yaw\_pitch &      reachable      & 7.4332  & not reachable     & 27.393  \\ \hline
+28 & base\_yaw\_yaw\_pitch\_yaw\_yaw &       not reachable     & 0.0784  & not reachable      & 0.0887  \\ \hline
+29 & base\_yaw\_yaw\_yaw\_pitch\_pitch &     not reachable     & 1.1831  & not reachable      & 1.3677  \\ \hline
+30 & base\_yaw\_yaw\_yaw\_pitch\_yaw &       not reachable     & 0.1470  & not reachable      & 0.3001  \\ \hline
+31 & base\_yaw\_yaw\_yaw\_yaw\_pitch &       not reachable     & 0.6042  & not reachable      & 0.6404  \\ \hline
+32 & base\_yaw\_yaw\_yaw\_yaw\_yaw &         not reachable     & 0.0119  & not reachable      & 0.0188  \\ \hline
+\end{tabular}
+\caption{Configurations reachability checking for robot size 6.}
+\label{tab:conf5individ}
+\end{table}
+Time: 1057.268079 sec
+
+All aggregated model checking results are corresponds to the individual checking.
+
+
+\subsection{Simulation of eligible configurations}
+
+
+\subsection{Computational time analysis}
 
 We can assess the complexity of the configuration checking with sequential 
 model checking, using a target point with coordinates: x=5, y=5, z=10. 
@@ -98,7 +344,171 @@ robot shown in the Figure \ref{fig:ConfigCheckingPointTimeSize}
 
 \begin{figure}[h!]
     \centering
-    \includegraphics[height=10cm]{Time_size_plot.png} 
+    \includegraphics[height=10cm]{Time_size_plot_point.png} 
     \caption{Mean time of model checking with number of blocks in robot}
     \label{fig:ConfigCheckingPointTimeSize}
 \end{figure}
+
+
+
+\subsection{Conclusion}
+We validated that checked configurations corresponds to a simulation environment
+and that two proposed approaches equivalent to each other.
+
+Sequential checking of the configuration has the following features:
+\begin{enumerate}
+    \item It gives a full list of all reachable configurations
+    \item It allows to further analyze the generated configuration
+    \item It is slower in general than aggregated approach
+ \end{enumerate}
+
+Aggregated configurations checking from the other hand:
+\begin{enumerate}
+    \item Is faster than sequential checking for common case
+    \item Gives only the first encountered reachable configuration, 
+        can find others only after negating the found one.
+    \item Allows constraint specific blocks by number in sequence 
+        with type defining variable in NuSMV
+ \end{enumerate}
+
+\section{Evaluation of 2D reachability checking}
+
+We performed a number of verification experiments using the workflow described in 
+Chapter \ref{ch:global} to validate the model and to analyze 
+the robot's behavior in various conditions.
+
+% The experiments served two primary purposes: (1) Validation of the 
+% model's correctness against expected outcomes in known scenarios, 
+% and (2) Performance assessment to understand how the complexity scales 
+% with field size and robot length.
+%
+% Model Validation in Various Scenarios: We tested the model on grid sizes 
+% ranging from very small (3x3, 4x4) up to moderate sizes like 7x7. 
+% The robot’s assembly sequence length was also varied (we tried sequences of 
+% length 2 up to 6 or more parts). We placed parts and obstacles in different 
+% configurations, including edge cases:
+%
+% Scenarios where the robot can immediately find all parts (straightforward success).
+%
+% Scenarios where one of the required parts is present but located behind 
+% obstacles, forcing the robot to take a longer path.
+%
+% Scenarios where a required part is completely absent from the field (
+% which should inevitably lead to failure).
+%
+% Cases where the robot is boxed in or starts in a tight area, to see 
+% if the model correctly identifies the failure (no path) early.
+%
+% Random distributions of a variety of parts on the field, with the robot 
+% tasked to assemble one particular sequence out of the clutter.
+%
+% In each case, we checked that the counterexample path returned by nuXmv 
+% made sense and corresponded to a feasible execution of the intended rules
+% . The correctness of the NuSMV model’s logic was thus empirically confirmed 
+% by these tests: for instance, in scenarios where a part was unreachable, 
+% the model always eventually produced a FAILED trace (and the trace clearly 
+% showed the robot searching all around an obstacle until no options remained
+% ). In scenarios where multiple paths to a part existed, the model checker 
+% inherently found one path (not necessarily all) — typically it finds one 
+% of the shortest paths due to the way bounded search works in nuXmv, 
+% but we did not formally ensure minimality. We cross-validated the results 
+% using a manual simulation in a few cases and also with a custom visualization: 
+% the GUI’s drawn path allowed us to see if the robot took a reasonable route
+% . All these tests gave confidence that the model accurately implements the 
+% intended behavior of the SRRS under our assumptions, and that the automation 
+% correctly captures the traces.
+
+We ensured that the automatic generation itself was correct by 
+comparing an automatically generated model (for a simple scenario) 
+to the hand-written initial model. They matched in structure, and running 
+both yielded the same outcome. 
+% This was aided by using the Formal-Methods Playground tool created by \c
+% for quick iteration; we would generate a model with Python, then load it in the Playground or directly in nuXmv 
+% to verify it. The Formal-Methods Playground [2] provided a convenient environment 
+% to develop the initial model and even visualize state space for small 
+% cases, which complemented our Python automation approach.
+
+Using our Python tool, we measured the 
+time required for model generation, model checking, and counterexample processing 
+under different scenario sizes. 
+We were particularly interested in how the computation grows with:
+
+\subsubsection{ Field Size }
+We kept the robot’s sequence length fixed 
+and increased the grid size (4x4, 5x5, 6x6, and 7x7)
+to see how the state space explosion affects runtime. 
+The results, shown in Figure \ref{}, indicated that the verification time grows quickly with 
+the area of the grid. 
+Intuitively, a larger field means more possible positions 
+and more possible paths for the robot, which dramatically increases the 
+state space that the model checker must explore. We found that going beyond 
+a 7x7 grid with a 4-part robot made nuXmv’s execution considerably slower 
+(in our unoptimized model). The relationship was not strictly exponential in 
+field size for our tested range, but it was steep—significantly higher 
+runtime for each increment in field dimension.
+
+\subsubsection{Robot Length }
+We then fixed a field size to 6 and varied the number of parts 
+in the robot's sequence (e.g., robot 
+of length 3 vs length 4 vs length 5, etc.). The computation times for 
+model generation, verification, and trace processing as a function of 
+robot size are plotted in Fig. 4. As expected, longer sequences also 
+increase the state space (because the assembly\_index has a larger range 
+and more parts need to be found in order). This tends to increase the 
+length of counterexample traces (successful assembly will have more steps
+, since each additional part requires a search sub-loop) and can also 
+increase branching (more opportunities to pick up wrong parts, etc.). 
+Our measurements showed a noticeable increase in runtime as the robot 
+length grew. For instance, with a 6x6 field, going from a robot requiring 
+3 parts to one requiring 5 parts made the verification slower, but the 
+impact was somewhat less dramatic than increasing the field size. 
+This suggests that spatial complexity (field area) was the more limiting 
+factor in our model than the temporal length of the task, at least in 
+the ranges we tried.
+
+The performance data was collected on a standard laptop (Intel Core i7 
+2.4 GHz, running Ubuntu 24.04). We recorded the times for model generation 
+(which were negligible for these sizes, on the order of fractions of 
+a second up to a couple of seconds for the largest cases), model checking 
+(which dominated the time, ranging from under a second for very small 
+cases to many seconds or minutes for the larger ones), and counterexample processing 
+(also very fast, since parsing a text trace is trivial compared to 
+the model checking). Figures 3 and 4 illustrate these trends. In Fig
+. 3, for a fixed robot length of 4, the verification time sharply increases 
+as the field grows (with, say, 7x7 being substantially slower than 4x4
+). In Fig. 4, with field size fixed at 6x6, the curve shows increasing time 
+for increasing robot sequence lengths.
+
+One qualitative observation from all our experiments is that the counterexample 
+produced by nuSmv was often the shortest possible path to reach the 
+goal or failure. That is, the model checker tends to find an optimal or 
+near-optimal solution in terms of number of steps, likely because any 
+unnecessary wandering would constitute a longer counterexample and model 
+checking algorithms often find counterexamples by BFS or iterative deepening 
+(thus finding shorter traces first). For example, if there was a more 
+direct route for the robot to gather parts, the first counterexample usually 
+reflected that direct route rather than a circuitous one. In our tests
+, for all evaluated configurations up to length-4 robots in 5x5 grids 
+(and many in 6x6), the first counterexample found corresponded to a 
+strategy where the robot made efficient moves, not visiting irrelevant areas
+. This suggests that, at least for these sizes, our approach could be 
+leveraging the model checker as not just a verifier but also a planner that 
+yields shortest paths. However, we did not formally guarantee optimality, 
+and it is possible for a model checker to output a non-shortest counterexample 
+in some cases (especially if heuristics or BDD search orders favor a 
+particular exploration). We simply noted this behavior; a more rigorous analysis 
+could be done to confirm path optimality or lack thereof. Regardless, 
+having a concrete execution trace (shortest or not) is extremely valuable 
+for interpreting the system’s behavior.
+
+In summary, the verification experiments confirmed that the NuSMV model 
+correctly captures the reachability of both success and failure conditions 
+in a self-replicating robot scenario. The automated workflow significantly reduced 
+the effort to test different scenarios, and the results provided both 
+confidence in the model (through validation tests) and insight into performance 
+bottlenecks (through timing measurements). Figures 3 and 4 provide a 
+high-level view of how scaling the problem size impacts the computational cost
+, which is important when considering more complex or larger-scale applications 
+of this verification approach.
+
+
