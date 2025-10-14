@@ -16,6 +16,7 @@ class Configuration_checking:
         length,
         block_types,
         target: list,
+        isTargetRegion=False,
         template_smv="./smv/robot_structure_template.smv",
         output_smv_path="./tmp/",
     ):
@@ -24,7 +25,7 @@ class Configuration_checking:
         self.length = length
         self.block_types = block_types
         self.target = target
-        self.isTargetRegion = False
+        self.isTargetRegion = isTargetRegion
         self.num_of_combinations = (len(self.block_types)) ** (self.length - 1)
         self.combinations = self.get_all_combinations(self.length, self.block_types)
 
@@ -113,7 +114,7 @@ class Configuration_checking:
             start_time = datetime.now(timezone.utc)
             robot = Robot(configuration)
             generator = RobotNusmvGenerator(robot)
-            self.set_target(target, generator)
+            self.set_target(self.target, generator)
             config_name = robot.get_configuration_name()
             configs.append(config_name)
             generator.generate_from_template(config_name)
@@ -147,21 +148,24 @@ if __name__ == "__main__":
     robot_size = []
     config_names = []
     results = []
-    target = ["5", "5", "5"]
+    # target = ["5", "5", "10"]
+    target = ["{-10,10}", "{-10,10}", "{0,10}"]
     list_of_times = []
-    for length in range(2, 7):
+    for length in range(2, 8):
         robot_size.append(length)
-        config_checking = Configuration_checking(length, block_types, target)
-        # config_checking.set_target_region(-5, 5, -5, 5, 0, 5)
+        config_checking = Configuration_checking(
+            length, block_types, target, isTargetRegion=True
+        )
+        # config_checking.set_target(target)
         config_names, times, res = config_checking.start_checking_combinations()
         results.append(res)
         list_of_times.append(times)
         means.append(statistics.mean(times))
         std_dev = statistics.stdev(times)
-    with open("time_size_res.txt", "a") as file:
-        file.write(str(config_names))
-        file.write(str(means))
-        file.write(str(results))
+    # with open("time_size_res.txt", "a") as file:
+    #     file.write(str(config_names))
+    #     file.write(str(means))
+    #     file.write(str(results))
     plt.figure(figsize=(8, 6))
     plt.plot(robot_size, means, marker="o", linestyle="-", color="b")
     plt.xlabel("Robot Size")

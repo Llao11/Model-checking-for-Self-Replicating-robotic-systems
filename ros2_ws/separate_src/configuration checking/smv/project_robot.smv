@@ -261,7 +261,7 @@ endZ := block5.pz2;
             error := 1; -- +-1 (error=2) endX and endY coordinates error while checking reachability
             
             checkX := 50;
-            checkY := 20;
+            checkY := 50;
             checkZ := 10;
             
             endX_inside_limits := (endX <= (checkX + error) & endX >= (checkX - error));

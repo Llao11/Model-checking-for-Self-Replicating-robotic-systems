@@ -110,7 +110,7 @@ zhz2 := zhz;
 -- advance along (updated) local ẑ
 px2 := px;
 py2 := py;
-pz2 := pz;
+pz2 := pz + L;
 
     --=========================================
 MODULE block_yaw(px, py, pz,
@@ -206,7 +206,7 @@ VAR
                         base_xhx, base_xhy, base_xhz,
                         base_yhx, base_yhy, base_yhz,
                         base_zhx, base_zhy, base_zhz,
-                        L1);
+                        L0);
     block1 : block_yaw(block0.px2, block0.py2, block0.pz2,
                         block0.xhx2, block0.xhy2, block0.xhz2,
                         block0.yhx2, block0.yhy2, block0.yhz2,
@@ -234,6 +234,8 @@ VAR
                       L5, pitch5);
 DEFINE
 
+-- link0
+    L0 := 10;   
 -- link1
     L1 := 10;   
     yaw1    := 0;

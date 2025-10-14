@@ -155,9 +155,9 @@ class Counterexample:
         return result
 
     @staticmethod
-    def run_nusmv_file(smv_file="./smv/robot_structure.smv"):
+    def run_nusmv_file(smv_file="./smv/robot_structure.smv", result_path="result.txt"):
         result = Counterexample.run_nusmv(smv_file)
-        output_file = "result.txt"
+        output_file = result_path
         stdout = result.stdout
         if "is true" in result.stdout:
             print("The LTL property holds.")
@@ -168,20 +168,39 @@ class Counterexample:
 
 
 if __name__ == "__main__":
-    # print("Start checking...")
-    Counterexample.run_nusmv_file()
-    output_file = "result.txt"
-    angle_vars = ["block1.yaw", "block2.pitch", "block3.pitch"]
+    length = 3
+    smv_file = f"./smv_aggregated/robot_structure_aggregated_point_length{length}.smv"
+    result_path = f"tmp/aggregated_result{length}.txt"
+    Counterexample.run_nusmv_file(smv_file, result_path)
     end_coordinates = ["endX", "endY", "endZ"]
-    with open(output_file) as trace:
-        counter1 = Counterexample(trace.read())
-        steps = counter1.filter_variables(end_coordinates)
-        target = counter1.get_target_coordinates()
-        print(f"Target:{target}")
-        angles = counter1.get_angles(angle_vars)
-        print("Control angles:")
-        counter1.print_steps(angles)
-        print("End effector coordinates by steps:")
-        counter1.print_steps(steps)
-        counter1.plot_trace(-1)
-        # counter1.get_robot_blocks(3)
+    block_types = ["yaw", "pitch"]
+    block_type_vars = [f"var_block{num}" for num in range(1, length)]
+    print(block_type_vars)
+    with open(result_path) as trace:
+        counterexample = Counterexample(trace.read())
+        types = counterexample.filter_variables(block_type_vars)[1]
+        configuration = [block_types[num] for num in types]
+        print(configuration)
+        # steps = counterexample.filter_variables(end_coordinates)
+        # counterexample.print_steps(steps)
+
+        # target = counter1.get_target_coordinates()
+        # print(f"Target:{target}")
+        # print("End effector coordinates by steps:")
+        # counter1.plot_trace(-1)
+    # Counterexample.run_nusmv_file()
+    # output_file = "result.txt"
+    # angle_vars = ["block1.yaw", "block2.pitch", "block3.pitch"]
+    # end_coordinates = ["endX", "endY", "endZ"]
+    # with open(output_file) as trace:
+    #     counter1 = Counterexample(trace.read())
+    #     steps = counter1.filter_variables(end_coordinates)
+    #     target = counter1.get_target_coordinates()
+    #     print(f"Target:{target}")
+    #     angles = counter1.get_angles(angle_vars)
+    #     print("Control angles:")
+    #     counter1.print_steps(angles)
+    #     print("End effector coordinates by steps:")
+    #     counter1.print_steps(steps)
+    #     counter1.plot_trace(-1)
+    # counter1.get_robot_blocks(3)
