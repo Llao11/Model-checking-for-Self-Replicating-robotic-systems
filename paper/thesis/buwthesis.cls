@@ -224,8 +224,42 @@
   \global\thesisfrontpagesupervisor{Referee}
   \global\thesisfrontpagedateofsubmission{Submission date}
   \global\thesisdeclarationtitle{Declaration}
-  \global\thesisdeclarationtext{Unless otherwise indicated in the text or %
-    references, this thesis is entirely the product of my own scholarly work.}
+  \global\thesisdeclarationtext{
+    I hereby certify that I am the independent author of the submitted work 
+    and have not used any sources or resources other than those indicated. 
+    In the case of group work, my contribution has been clearly indicated. 
+    I am responsible for the quality of the text and the selection of 
+    all content. I have ensured that information and arguments are substantiated 
+    or supported by suitable academic sources. Any passages, ideas, concepts,
+    graphics, etc. that have been taken verbatim or paraphrased from external 
+    sources or my own previous work have been clearly labelled as such and properly cited.
+    All unreferenced content in this work is my own according to copyright law.
+    I am aware that this declaration of originality also refers to the use 
+    of non-citable, generative AI (referred to henceforth as »generative AI«).
+
+    I am aware that the use of generative AI is not permitted without the 
+    express consent of the examiner (release declaration). If I have been 
+    permitted to use generative AI, I certify that I have only used it 
+    as an aid and that the work is clearly predominated by my own creativity. 
+    I assume full responsibility for any machine-generated passages in my work.
+    If I have been permitted to use generative AI, I certify that its use 
+    is indicated in a separate appendix included in my work. This appendix contains 
+    a statement or detailed documentation on the use of generative AI in accordance with
+    the specifications outlined in the release declaration issued by the examiner.
+    I have included detail on how generative AI was used in my work, including 
+    the form, aim, and extent to which it was used. These details conform to 
+    the documentation requirements outlined in the release declaration.
+
+    I certify that this work has not previously been submitted in the same 
+    or similar format to any other examining authority in Germany or abroad.
+    I certify that it has not previously been published in German or any other language.
+
+    I am aware that violating any of the aforementioned points is punishable in 
+    accordance with examination regulations and may result in my examination performance 
+    being assessed as fraudulent and assessed as »failed«. In the event of
+    repeated or serious attempts to cheat, I may be banned from submitting work 
+    or taking examinations in my degree programme for a limited time or permanently.
+}
   \global\thesisfrontmatterkeywords{Keywords}
 }{}
 \ifthenelse{\equal{\documentlanguage}{ngerman}}{%
@@ -292,17 +326,17 @@
     \vspace*{\fill}
     \parindent 0cm
     \begin{center}
-      \textbf{\huge \the\thesisdeclarationtitle}
+      \textbf{\Large \the\thesisdeclarationtitle}
     \end{center}
 
     \vspace{1cm}
 
-		\large \the\thesisdeclarationtext
+		\small \the\thesisdeclarationtext
 
     \vspace{1cm}
     \the\thesislocation, \the\thesissubmissiondate
 
-    \vspace{2cm}
+    \vspace{1cm}
     \centering
     \par\noindent\makebox[2.5in]{\hrulefill}%
     \par\noindent\makebox[2.5in]{\the\thesisauthor}

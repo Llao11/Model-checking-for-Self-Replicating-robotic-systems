@@ -336,7 +336,7 @@ All aggregated model checking results are corresponds to the individual checking
 
 
 \subsection{Computational time analysis}
-
+\label{ch:timeAnalysis}
 We can assess the complexity of the configuration checking with sequential 
 model checking, using a target point with coordinates: x=5, y=5, z=10. 
 The changing of mean time required for checking relative to a number of blocks in 
@@ -512,3 +512,146 @@ high-level view of how scaling the problem size impacts the computational cost
 of this verification approach.
 
 
+\section{Threats to validity}
+
+In our work, the integration of formal verification through 
+NuSMV, simulation in ROS2 and Gazebo, and the conceptual modeling of 
+self-replicating robotic system introduces several sources of 
+uncertainty and possible threats to validity.
+The purpose of this section is to critically evaluate these threats and 
+to define their implications.
+% in terms of internal validity -- whether the 
+% results accurately represent the studied system, external validity --
+% the generalizability of findings, construct validity  -- whether the models 
+% represent the intended concepts, and conclusion validity --the reliability of 
+% analytical results.
+Understanding these potential weaknesses is essential not only for interpreting 
+the results  but also for guiding future work aimed at reducing their 
+impact. 
+
+Three main sources of validity threats were identified 
+in the developed system.
+Limited generalization of the developed system — the applicability of 
+the proposed verification methods is confined to a specific class of 
+SRRS systems.
+Discretization errors and computational trade-offs — the accuracy and 
+performance of the model are constrained by the discretization parameter.
+Inconsistencies between NuSMV models, simulation environments, and real-world 
+-- abstractions and simplifications lead to mismatches between modeled 
+and physical behaviors.
+
+\subsection{ Limited generalization of the developed system }
+
+The approaches and implementations presented in Chapter \ref{ch:implementation} and \ref{ch:simulation}
+were specifically designed and validated on modular, self-replicating robotic 
+systems with relative robot. 
+These systems are characterized by discrete structural blocks,
+that can be mechanically connected, detached, and rearranged to form new robots.
+The model checking framework assumes a 
+relative coordinate representation, where all positional and kinematic relations 
+are expressed relative to the robot's local reference frame.
+
+While this abstraction enabled a compact and computationally tractable formal 
+model, it  limits external validity. 
+In particular, the proposed verification methods may not directly generalize to
+non-modular SRRS architectures, such as continuous-body or deformable robots,
+self-replicating swarm systems, where replication emerges from collective behavior or
+ hybrid robotic systems, where the replication process 
+involves chemical or additive-manufacturing operations.
+
+For such systems, the assumptions about structure, connectivity, and 
+discrete transitions used in this work would not necessarily hold. 
+Additionally, the temporal logic specifications we used depend on the ability to 
+enumerate discrete states.  SRRS with other type of structure 
+ would therefore require reformulation of the model semantics. 
+
+Therefore, the findings of this work should be interpreted as representative 
+of a specific class of SRRS rather than as a universal model checking methodology 
+for all self-replicating robots.
+
+\subsection{ Discretization errors}
+
+The second threat to validity arises from the discretization parameter 
+employed during model generation. In formal verification of  
+motion-related properties, the continuous workspace of the robot must 
+be discretized into a finite set of states to make model checking computationally 
+feasible. 
+In our system, each step of discretization defines a quantization 
+of angular  and  linear space,  determining how finely 
+the robot's configuration space is represented.
+
+This choice introduces the  accuracy–efficiency contradiction:     
+
+A coarse discretization with a large step size reduces the number of 
+states, leading to faster model checking, but at the expense of precision. 
+A fine discretization with a small step size increases model 
+fidelity but causes exponential growth in the number of states, leading 
+to  extremely long verification times. 
+
+These discretization-related errors directly threaten the validity,
+as the model's discrete representation might fail to capture the intended 
+continuous behaviors. 
+
+This problem can be mitigated by performing conducting multi-resolution analysis, 
+where verification is performed at multiple levels of discretization and 
+results are compared for consistency.
+Using abstraction refinement techniques, in which coarse verification results 
+guide selective refinement of critical regions in the state space.
+
+Future research should therefore formalize the relationship between discretization,
+verification precision, and computational time for SRRS,
+to develop flexible model parameterization.
+
+\subsection{Inconsistencies between NuSMV model, simulation, and reality}
+
+Another threat to validity stems from inconsistencies between the 
+used NuSMV model, the ROS2–Gazebo simulation, and the real-world physical implementation 
+of the robot. 
+While the verification model captures the logical and 
+structural relations among robot components, certain geometric and kinematic 
+simplifications were made to keep the model tractable.
+
+A concrete example arises in the representation of blocks of type block\_pitch, 
+where in the simulation and real robot design an axis of rotation  is 
+shifted along the rotation axis relative to the connected block. 
+This shift introduces a small translational displacement during rotation—
+an effect that is physically significant for precise assembly but was 
+omitted in the NuSMV model for simplicity. 
+As a result, the formal model assumes perfectly aligned rotational joints,
+whereas the physical robot exhibits a small offset.
+
+The potential consequence is that a configuration deemed 
+reachable in the formal model might not be physically realizable due 
+to geometric interference or misalignment.
+
+To mitigate this threat we used an alternating shift direction in the simulation, 
+and in future work we this feature can be incorporated into the NuSMV model,
+
+Performing cross-validation between model checking and simulation, 
+as partially implemented in this thesis, to detect inconsistencies by 
+replaying verified sequences in the simulation environment.
+
+% While these mitigations can reduce the gap, a complete alignment between 
+% symbolic and physical models is challenging, particularly in modular robotics 
+% where even minor geometric deviations can propagate through the assembly
+% . Consequently, verification results should be interpreted with an 
+% awareness that they reflect idealized structural conditions.
+
+\subsection{Summary}
+
+The three identified sources of validity threats represent the main 
+factors that may constrain the implementation to other sysems and interpretation of 
+the results presented in this thesis. 
+None of these threats invalidate the fundamental conclusions of 
+the research, but they define the operational boundaries within which 
+those conclusions remain valid.
+
+From a methodological perspective, these threats highlight the necessity of 
+maintaining a multi-layered validation pipeline, where formal verification, 
+simulation-based testing, and physical experimentation complement one 
+another. 
+Model checking provides exhaustive logical guarantees within its 
+abstract domain, while simulation validates these results under physical 
+dynamics, and real-world testing confirms them under environmental uncertainty.
+By addressing these aspects, subsequent studies can move toward fully 
+validated, scalable frameworks for self-replicating robotic systems.

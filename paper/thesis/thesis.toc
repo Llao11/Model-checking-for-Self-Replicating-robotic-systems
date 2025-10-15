@@ -51,7 +51,7 @@
 \contentsline {subsection}{\numberline {5.4.3}Model generation and verification}{68}{subsection.5.4.3}%
 \contentsline {section}{\numberline {5.5}Robot configuration model checking}{72}{section.5.5}%
 \contentsline {subsection}{\numberline {5.5.1}Sequential checking of possible configations}{72}{subsection.5.5.1}%
-\contentsline {subsection}{\numberline {5.5.2}Implementation in Python}{74}{subsection.5.5.2}%
+\contentsline {subsection}{\numberline {5.5.2}Automated template-based model generation}{74}{subsection.5.5.2}%
 \contentsline {section}{\numberline {5.6}Aggregated configuration checking in NuSMV}{77}{section.5.6}%
 \contentsline {chapter}{\numberline {6}Simulation of the SRRS}{79}{chapter.6}%
 \contentsline {section}{\numberline {6.1}System Architecture}{79}{section.6.1}%
@@ -79,23 +79,28 @@
 \contentsline {section}{\numberline {7.3}Evaluation of 2D reachability checking}{106}{section.7.3}%
 \contentsline {subsubsection}{\nonumberline Field Size}{106}{subsubsection*.83}%
 \contentsline {subsubsection}{\nonumberline Robot Length}{106}{subsubsection*.85}%
-\contentsline {chapter}{\numberline {8}Conclusion}{108}{chapter.8}%
-\contentsline {chapter}{\nonumberline Bibliography}{110}{chapter*.86}%
-\contentsline {chapter}{\numberline {A}Appendix}{114}{appendix.A}%
-\contentsline {section}{\numberline {A.1}NuSMV models}{114}{section.A.1}%
-\contentsline {subsection}{\numberline {A.1.1}robot\_structure.smv}{114}{subsection.A.1.1}%
-\contentsline {subsubsection}{\nonumberline Trigonometric modules}{114}{subsubsection*.88}%
-\contentsline {subsubsection}{\nonumberline block\_base module}{114}{subsubsection*.90}%
-\contentsline {subsubsection}{\nonumberline block\_yaw module}{115}{subsubsection*.92}%
-\contentsline {subsubsection}{\nonumberline block\_pitch module}{115}{subsubsection*.94}%
-\contentsline {subsubsection}{\nonumberline main module}{116}{subsubsection*.96}%
-\contentsline {section}{\numberline {A.2}Python scripts}{118}{section.A.2}%
-\contentsline {subsection}{\numberline {A.2.1}Counterexample.py class}{118}{subsection.A.2.1}%
-\contentsline {section}{\numberline {A.3}ROS2 nodes}{121}{section.A.3}%
-\contentsline {subsection}{\numberline {A.3.1}RobotController class}{121}{subsection.A.3.1}%
-\contentsline {subsection}{\numberline {A.3.2}PartController class}{125}{subsection.A.3.2}%
-\contentsline {section}{\numberline {A.4}Gazebo sdf,urdf and xacro code}{127}{section.A.4}%
-\contentsline {subsection}{\numberline {A.4.1}base.sdf}{127}{subsection.A.4.1}%
-\contentsline {subsection}{\numberline {A.4.2}robot.xacro}{127}{subsection.A.4.2}%
-\contentsline {subsection}{\numberline {A.4.3}part.xacro}{133}{subsection.A.4.3}%
+\contentsline {section}{\numberline {7.4}Threats to validity}{108}{section.7.4}%
+\contentsline {subsection}{\numberline {7.4.1}Limited generalization of the developed system}{108}{subsection.7.4.1}%
+\contentsline {subsection}{\numberline {7.4.2}Discretization errors}{109}{subsection.7.4.2}%
+\contentsline {subsection}{\numberline {7.4.3}Inconsistencies between NuSMV model, simulation, and reality}{109}{subsection.7.4.3}%
+\contentsline {subsection}{\numberline {7.4.4}Summary}{110}{subsection.7.4.4}%
+\contentsline {chapter}{\numberline {8}Conclusion}{111}{chapter.8}%
+\contentsline {chapter}{\nonumberline Bibliography}{114}{chapter*.86}%
+\contentsline {chapter}{\numberline {A}Appendix}{118}{appendix.A}%
+\contentsline {section}{\numberline {A.1}NuSMV models}{118}{section.A.1}%
+\contentsline {subsection}{\numberline {A.1.1}robot\_structure.smv}{118}{subsection.A.1.1}%
+\contentsline {subsubsection}{\nonumberline Trigonometric modules}{118}{subsubsection*.88}%
+\contentsline {subsubsection}{\nonumberline block\_base module}{118}{subsubsection*.90}%
+\contentsline {subsubsection}{\nonumberline block\_yaw module}{119}{subsubsection*.92}%
+\contentsline {subsubsection}{\nonumberline block\_pitch module}{119}{subsubsection*.94}%
+\contentsline {subsubsection}{\nonumberline main module}{120}{subsubsection*.96}%
+\contentsline {section}{\numberline {A.2}Python scripts}{122}{section.A.2}%
+\contentsline {subsection}{\numberline {A.2.1}Counterexample.py class}{122}{subsection.A.2.1}%
+\contentsline {section}{\numberline {A.3}ROS2 nodes}{125}{section.A.3}%
+\contentsline {subsection}{\numberline {A.3.1}RobotController class}{125}{subsection.A.3.1}%
+\contentsline {subsection}{\numberline {A.3.2}PartController class}{129}{subsection.A.3.2}%
+\contentsline {section}{\numberline {A.4}Gazebo sdf,urdf and xacro code}{131}{section.A.4}%
+\contentsline {subsection}{\numberline {A.4.1}base.sdf}{131}{subsection.A.4.1}%
+\contentsline {subsection}{\numberline {A.4.2}robot.xacro}{131}{subsection.A.4.2}%
+\contentsline {subsection}{\numberline {A.4.3}part.xacro}{137}{subsection.A.4.3}%
 \providecommand \tocbasic@end@toc@file {}\tocbasic@end@toc@file 

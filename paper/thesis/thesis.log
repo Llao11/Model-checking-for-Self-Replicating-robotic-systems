@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023/Debian) (preloaded format=pdflatex 2025.5.5)  15 OCT 2025 01:02
+This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023/Debian) (preloaded format=pdflatex 2025.5.5)  15 OCT 2025 19:13
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -1408,8 +1408,10 @@ Package pdftex.def Info: img/logo_uni.jpg  used on input line 1.
 {/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}{/usr/share/texlive/texmf-dist/fonts/enc/dvips/libertine/lbtn_76gpa5.enc}{/usr/share/texlive/texmf-dist/fonts/enc/dvips/libertine/lbtn_nh77jq.enc} <./img/logo_se.png> <./img/logo_uni.jpg>]
 LaTeX Font Info:    Font shape `T1/LinuxLibertineT-TLF/b/n' will be
 (Font)              scaled to size 12.0pt on input line 1.
+LaTeX Font Info:    Font shape `T1/LinuxLibertineT-TLF/b/n' will be
+(Font)              scaled to size 17.28pt on input line 1.
 LaTeX Font Info:    Font shape `T1/LinuxLibertineT-TLF/m/n' will be
-(Font)              scaled to size 14.4pt on input line 1.
+(Font)              scaled to size 10.95pt on input line 1.
  [2
 
 
@@ -1528,8 +1530,6 @@ Overfull \hbox (48.98302pt too wide) in paragraph at lines 237--253
 [][] 
  []
 
-LaTeX Font Info:    Font shape `T1/LinuxLibertineT-TLF/m/n' will be
-(Font)              scaled to size 10.95pt on input line 253.
 LaTeX Font Info:    Font shape `T1/LinuxLibertineT-TLF/b/n' will be
 (Font)              scaled to size 10.95pt on input line 253.
 
@@ -1539,7 +1539,7 @@ Package cleveref Info: loaded `english' language definitions on input line 270.
 [8]
 Package cleveref Info: loaded `english' language definitions on input line 289.
  [9]
-<./img/CTL.png, id=261, 542.025pt x 257.96375pt>
+<./img/CTL.png, id=271, 542.025pt x 257.96375pt>
 File: ./img/CTL.png Graphic file (type png)
 <use ./img/CTL.png>
 Package pdftex.def Info: ./img/CTL.png  used on input line 304.
@@ -1562,7 +1562,7 @@ Package cleveref Info: loaded `english' language definitions on input line 58.
  [15]
 Package cleveref Info: loaded `english' language definitions on input line 96.
  [16]
-<./img/ClassificationCentralized.png, id=334, 908.39375pt x 711.65875pt>
+<./img/ClassificationCentralized.png, id=344, 908.39375pt x 711.65875pt>
 File: ./img/ClassificationCentralized.png Graphic file (type png)
 <use ./img/ClassificationCentralized.png>
 Package pdftex.def Info: ./img/ClassificationCentralized.png  used on input line 99.
@@ -1571,7 +1571,7 @@ LaTeX Font Info:    Font shape `T1/LinuxLibertineT-TLF/m/n' will be
 (Font)              scaled to size 10.0pt on input line 99.
 LaTeX Font Info:    Font shape `T1/LinuxLibertineT-TLF/b/n' will be
 (Font)              scaled to size 10.0pt on input line 99.
-<./img/ClassificationDecentralized.png, id=335, 786.94pt x 729.72626pt>
+<./img/ClassificationDecentralized.png, id=345, 786.94pt x 729.72626pt>
 File: ./img/ClassificationDecentralized.png Graphic file (type png)
 <use ./img/ClassificationDecentralized.png>
 Package pdftex.def Info: ./img/ClassificationDecentralized.png  used on input line 100.
@@ -1581,7 +1581,7 @@ Overfull \hbox (14.5376pt too wide) in paragraph at lines 99--100
  [][][] 
  []
 
-<./img/ClassificationHierarchical.png, id=339, 926.46124pt x 866.23625pt>
+<./img/ClassificationHierarchical.png, id=349, 926.46124pt x 866.23625pt>
 File: ./img/ClassificationHierarchical.png Graphic file (type png)
 <use ./img/ClassificationHierarchical.png>
 Package pdftex.def Info: ./img/ClassificationHierarchical.png  used on input line 123.
@@ -1597,7 +1597,7 @@ Overfull \hbox (4.44176pt too wide) in paragraph at lines 142--149
 
 Package cleveref Info: loaded `english' language definitions on input line 156.
 [18 <./img/ClassificationHierarchical.png>]
-<./img/ClassificationDirect.png, id=361, 961.5925pt x 603.25375pt>
+<./img/ClassificationDirect.png, id=371, 961.5925pt x 603.25375pt>
 File: ./img/ClassificationDirect.png Graphic file (type png)
 <use ./img/ClassificationDirect.png>
 Package pdftex.def Info: ./img/ClassificationDirect.png  used on input line 202.
@@ -1632,7 +1632,7 @@ Package cleveref Info: loaded `english' language definitions on input line 366.
 
 LaTeX Warning: Reference `eq:1' on page 24 undefined on input line 375.
 
-<./img/ExampleSRRS-2D.png, id=406, 1231.60126pt x 919.435pt>
+<./img/ExampleSRRS-2D.png, id=416, 1231.60126pt x 919.435pt>
 File: ./img/ExampleSRRS-2D.png Graphic file (type png)
 <use ./img/ExampleSRRS-2D.png>
 Package pdftex.def Info: ./img/ExampleSRRS-2D.png  used on input line 407.
@@ -1642,7 +1642,7 @@ LaTeX Warning: `h' float specifier changed to `ht'.
 
 Package cleveref Info: loaded `english' language definitions on input line 419.
 [24]
-<./img/ExampleSRRS-2D-2.png, id=416, 792.9625pt x 939.51pt>
+<./img/ExampleSRRS-2D-2.png, id=426, 792.9625pt x 939.51pt>
 File: ./img/ExampleSRRS-2D-2.png Graphic file (type png)
 <use ./img/ExampleSRRS-2D-2.png>
 Package pdftex.def Info: ./img/ExampleSRRS-2D-2.png  used on input line 429.
@@ -1653,7 +1653,7 @@ LaTeX Warning: `h' float specifier changed to `ht'.
 
 Package cleveref Info: loaded `english' language definitions on input line 456.
 [25 <./img/ExampleSRRS-2D.png>]
-<./img/Example2D-diagram2.png, id=427, 796.9775pt x 642.4pt>
+<./img/Example2D-diagram2.png, id=437, 796.9775pt x 642.4pt>
 File: ./img/Example2D-diagram2.png Graphic file (type png)
 <use ./img/Example2D-diagram2.png>
 Package pdftex.def Info: ./img/Example2D-diagram2.png  used on input line 460.
@@ -1670,7 +1670,7 @@ LaTeX Warning: Reference `eq:2' on page 26 undefined on input line 467.
 
 Package cleveref Info: loaded `english' language definitions on input line 470.
 [26 <./img/ExampleSRRS-2D-2.png>]
-<./img/ExampleLipson.png, id=436, 931.48pt x 699.61375pt>
+<./img/ExampleLipson.png, id=446, 931.48pt x 699.61375pt>
 File: ./img/ExampleLipson.png Graphic file (type png)
 <use ./img/ExampleLipson.png>
 Package pdftex.def Info: ./img/ExampleLipson.png  used on input line 503.
@@ -1683,12 +1683,12 @@ Package cleveref Info: loaded `english' language definitions on input line 517.
 [27 <./img/Example2D-diagram2.png>]
 Package cleveref Info: loaded `english' language definitions on input line 533.
  [28 <./img/ExampleLipson.png>]
-<./img/Material-robot_cell.png, id=459, 461.725pt x 472.76625pt>
+<./img/Material-robot_cell.png, id=469, 461.725pt x 472.76625pt>
 File: ./img/Material-robot_cell.png Graphic file (type png)
 <use ./img/Material-robot_cell.png>
 Package pdftex.def Info: ./img/Material-robot_cell.png  used on input line 563.
 (pdftex.def)             Requested size: 170.71652pt x 174.79813pt.
-<./img/Material-robot_robot.png, id=460, 1019.81pt x 658.46pt>
+<./img/Material-robot_robot.png, id=470, 1019.81pt x 658.46pt>
 File: ./img/Material-robot_robot.png Graphic file (type png)
 <use ./img/Material-robot_robot.png>
 Package pdftex.def Info: ./img/Material-robot_robot.png  used on input line 564.
@@ -1700,7 +1700,7 @@ Overfull \hbox (42.99036pt too wide) in paragraph at lines 563--564
 
 Package cleveref Info: loaded `english' language definitions on input line 575.
 [29 <./img/Material-Robot_cell.png> <./img/Material-robot_robot.png>]
-<./img/Material-robot-assembly.png, id=474, 1117.17375pt x 951.555pt>
+<./img/Material-robot-assembly.png, id=485, 1117.17375pt x 951.555pt>
 File: ./img/Material-robot-assembly.png Graphic file (type png)
 <use ./img/Material-robot-assembly.png>
 Package pdftex.def Info: ./img/Material-robot-assembly.png  used on input line 580.
@@ -1916,7 +1916,7 @@ Overfull \hbox (14.03203pt too wide) in paragraph at lines 152--199
 
 LaTeX Warning: `!h' float specifier changed to `!ht'.
 
-<./img/Gazebo.png, id=506, 1013.7875pt x 887.315pt>
+<./img/Gazebo.png, id=516, 1013.7875pt x 887.315pt>
 File: ./img/Gazebo.png Graphic file (type png)
 <use ./img/Gazebo.png>
 Package pdftex.def Info: ./img/Gazebo.png  used on input line 209.
@@ -1940,7 +1940,7 @@ Package cleveref Info: loaded `english' language definitions on input line 53.
  [38]
 chapter 5.
 (./text/analysis.tex
-<./img/Voxel.png, id=532, 282.05376pt x 279.0425pt>
+<./img/Voxel.png, id=542, 282.05376pt x 279.0425pt>
 File: ./img/Voxel.png Graphic file (type png)
 <use ./img/Voxel.png>
 Package pdftex.def Info: ./img/Voxel.png  used on input line 20.
@@ -1948,7 +1948,7 @@ Package pdftex.def Info: ./img/Voxel.png  used on input line 20.
  [39
 
  <./img/Voxel.png>]
-<./img/RobotStructureGazebo.png, id=540, 568.1225pt x 716.6775pt>
+<./img/RobotStructureGazebo.png, id=550, 568.1225pt x 716.6775pt>
 File: ./img/RobotStructureGazebo.png Graphic file (type png)
 <use ./img/RobotStructureGazebo.png>
 Package pdftex.def Info: ./img/RobotStructureGazebo.png  used on input line 35.
@@ -1959,7 +1959,7 @@ Package cleveref Info: loaded `english' language definitions on input line 99.
  [41]
 Package cleveref Info: loaded `english' language definitions on input line 144.
  [42]
-<./img/LocalAssembly.png, id=563, 780.9175pt x 890.32625pt>
+<./img/LocalAssembly.png, id=573, 780.9175pt x 890.32625pt>
 File: ./img/LocalAssembly.png Graphic file (type png)
 <use ./img/LocalAssembly.png>
 Package pdftex.def Info: ./img/LocalAssembly.png  used on input line 154.
@@ -1968,14 +1968,14 @@ Package cleveref Info: loaded `english' language definitions on input line 163.
  [43 <./img/LocalAssembly.png>]) (./text/localReachability.tex
 Package cleveref Info: loaded `english' language definitions on input line 19.
  [44]
-<./img/LocalAssemblyWithRMCandCE.png, id=579, 854.19125pt x 907.39pt>
+<./img/LocalAssemblyWithRMCandCE.png, id=589, 854.19125pt x 907.39pt>
 File: ./img/LocalAssemblyWithRMCandCE.png Graphic file (type png)
 <use ./img/LocalAssemblyWithRMCandCE.png>
 Package pdftex.def Info: ./img/LocalAssemblyWithRMCandCE.png  used on input line 22.
 (pdftex.def)             Requested size: 401.76973pt x 426.79134pt.
 Package cleveref Info: loaded `english' language definitions on input line 29.
  [45 <./img/LocalAssemblyWithRMCandCE.png>]
-<./img/Robot NuSMV model.png, id=588, 957.5775pt x 685.56125pt>
+<./img/Robot NuSMV model.png, id=598, 957.5775pt x 685.56125pt>
 File: ./img/Robot NuSMV model.png Graphic file (type png)
 <use ./img/Robot NuSMV model.png>
 Package pdftex.def Info: ./img/Robot NuSMV model.png  used on input line 55.
@@ -1990,7 +1990,7 @@ LaTeX Warning: `!h' float specifier changed to `!ht'.
 
 Package cleveref Info: loaded `english' language definitions on input line 93.
 [46]
-<./img/Block transition system.png, id=597, 788.9475pt x 382.42876pt>
+<./img/Block transition system.png, id=608, 788.9475pt x 382.42876pt>
 File: ./img/Block transition system.png Graphic file (type png)
 <use ./img/Block transition system.png>
 Package pdftex.def Info: ./img/Block transition system.png  used on input line 111.
@@ -2061,7 +2061,7 @@ Package cleveref Info: loaded `english' language definitions on input line 330.
 [53]
 Package cleveref Info: loaded `english' language definitions on input line 394.
  [54]
-<./img/3dCounterexampleTrace.png, id=735, 714.67pt x 753.81625pt>
+<./img/3dCounterexampleTrace.png, id=745, 714.67pt x 753.81625pt>
 File: ./img/3dCounterexampleTrace.png Graphic file (type png)
 <use ./img/3dCounterexampleTrace.png>
 Package pdftex.def Info: ./img/3dCounterexampleTrace.png  used on input line 413.
@@ -2079,13 +2079,17 @@ Package cleveref Info: loaded `english' language definitions on input line 444.
 [55]
 Package cleveref Info: loaded `english' language definitions on input line 477.
  [56 <./img/3dCounterexampleTrace.png>]) (./text/globalReachability.tex
+
+LaTeX Warning: Reference `ModelChackingLocal' on page 57 undefined on input line 8.
+
+
 Overfull \hbox (10.90628pt too wide) in paragraph at lines 29--32
 \T1/LinuxLibertineT-TLF/m/n/12 To make the global reach-a-bil-ity check-ing tractable, we model a sim-pli-fied Self-Replicating
  []
 
 Package cleveref Info: loaded `english' language definitions on input line 56.
 [57]
-<./img/GlobalReachabilityStatechart.png, id=757, 1270.7475pt x 876.27374pt>
+<./img/GlobalReachabilityStatechart.png, id=766, 1270.7475pt x 876.27374pt>
 File: ./img/GlobalReachabilityStatechart.png Graphic file (type png)
 <use ./img/GlobalReachabilityStatechart.png>
 Package pdftex.def Info: ./img/GlobalReachabilityStatechart.png  used on input line 101.
@@ -2114,7 +2118,7 @@ Overfull \hbox (36.46191pt too wide) in paragraph at lines 189--193
 
 Package cleveref Info: loaded `english' language definitions on input line 240.
 [61]
-<./img/GlobalReachabilityTransitionSystem.png, id=793, 813.0375pt x 752.8125pt>
+<./img/GlobalReachabilityTransitionSystem.png, id=802, 813.0375pt x 752.8125pt>
 File: ./img/GlobalReachabilityTransitionSystem.png Graphic file (type png)
 <use ./img/GlobalReachabilityTransitionSystem.png>
 Package pdftex.def Info: ./img/GlobalReachabilityTransitionSystem.png  used on input line 251.
@@ -2149,12 +2153,12 @@ Overfull \hbox (58.04123pt too wide) in paragraph at lines 577--583
 
 Package cleveref Info: loaded `english' language definitions on input line 588.
 [68]
-<./img/globalGUI1.png, id=922, 499.8675pt x 762.85pt>
+<./img/globalGUI1.png, id=931, 499.8675pt x 762.85pt>
 File: ./img/globalGUI1.png Graphic file (type png)
 <use ./img/globalGUI1.png>
 Package pdftex.def Info: ./img/globalGUI1.png  used on input line 591.
 (pdftex.def)             Requested size: 256.0748pt x 390.80602pt.
-<./img/globalGUI2.png, id=924, 1076.02pt x 762.85pt>
+<./img/globalGUI2.png, id=933, 1076.02pt x 762.85pt>
 File: ./img/globalGUI2.png Graphic file (type png)
 <use ./img/globalGUI2.png>
 Package pdftex.def Info: ./img/globalGUI2.png  used on input line 608.
@@ -2177,7 +2181,7 @@ Package cleveref Info: loaded `english' language definitions on input line 642.
 [70 <./img/globalGUI2.png>]) (./text/configuration.tex
 Package cleveref Info: loaded `english' language definitions on input line 17.
  [71]
-<./img/SearchingRelevantConfigurations.png, id=943, 523.9575pt x 806.01125pt>
+<./img/SearchingRelevantConfigurations.png, id=952, 523.9575pt x 806.01125pt>
 File: ./img/SearchingRelevantConfigurations.png Graphic file (type png)
 <use ./img/SearchingRelevantConfigurations.png>
 Package pdftex.def Info: ./img/SearchingRelevantConfigurations.png  used on input line 39.
@@ -2190,7 +2194,7 @@ Package cleveref Info: loaded `english' language definitions on input line 83.
 [72]
 Package cleveref Info: loaded `english' language definitions on input line 95.
  [73 <./img/SearchingRelevantConfigurations.png>]
-<./img/RobotConfigCheckingClassDiagram.png, id=957, 1122.1925pt x 920.43875pt>
+<./img/RobotConfigCheckingClassDiagram.png, id=966, 1122.1925pt x 920.43875pt>
 File: ./img/RobotConfigCheckingClassDiagram.png Graphic file (type png)
 <use ./img/RobotConfigCheckingClassDiagram.png>
 Package pdftex.def Info: ./img/RobotConfigCheckingClassDiagram.png  used on input line 98.
@@ -2208,12 +2212,12 @@ Overfull \hbox (1.36589pt too wide) in paragraph at lines 153--158
 
 Package cleveref Info: loaded `english' language definitions on input line 158.
 [75]
-<./img/base_yaw_pitch_pitch_.png, id=971, 462.528pt x 346.896pt>
+<./img/base_yaw_pitch_pitch_.png, id=980, 462.528pt x 346.896pt>
 File: ./img/base_yaw_pitch_pitch_.png Graphic file (type png)
 <use ./img/base_yaw_pitch_pitch_.png>
 Package pdftex.def Info: ./img/base_yaw_pitch_pitch_.png  used on input line 210.
 (pdftex.def)             Requested size: 189.6871pt x 142.26378pt.
-<./img/base_yaw_pitch_pitch_pitch_.png, id=972, 462.528pt x 346.896pt>
+<./img/base_yaw_pitch_pitch_pitch_.png, id=981, 462.528pt x 346.896pt>
 File: ./img/base_yaw_pitch_pitch_pitch_.png Graphic file (type png)
 <use ./img/base_yaw_pitch_pitch_pitch_.png>
 Package pdftex.def Info: ./img/base_yaw_pitch_pitch_pitch_.png  used on input line 211.
@@ -2235,7 +2239,7 @@ Package cleveref Info: loaded `english' language definitions on input line 62.
  [78]
 chapter 6.
 (./text/simulation.tex
-<./img/SimulationClassDiagram.png, id=1067, 1110.1475pt x 855.195pt>
+<./img/SimulationClassDiagram.png, id=1076, 1110.1475pt x 855.195pt>
 File: ./img/SimulationClassDiagram.png Graphic file (type png)
 <use ./img/SimulationClassDiagram.png>
 Package pdftex.def Info: ./img/SimulationClassDiagram.png  used on input line 43.
@@ -2267,7 +2271,7 @@ Overfull \hbox (3.19016pt too wide) in paragraph at lines 125--132
 []\T1/LinuxLibertineT-TLF/m/n/12 Collectively, this ar-chi-tec-ture en-ables the robot in sim-u-la-tion to per-form com-plex move-
  []
 
-<./img/Base.png, id=1087, 949.5475pt x 666.49pt>
+<./img/Base.png, id=1096, 949.5475pt x 666.49pt>
 File: ./img/Base.png Graphic file (type png)
 <use ./img/Base.png>
 Package pdftex.def Info: ./img/Base.png  used on input line 142.
@@ -2313,7 +2317,7 @@ Overfull \hbox (15.84383pt too wide) in paragraph at lines 564--569
 []\T1/LinuxLibertineT-TLF/m/n/12 Execute the au-to-matic as-sem-bly pro-cess via start_assemble(). The robot_controller_gui.py
  []
 
-<./img/simGUI.png, id=1269, 532.99126pt x 389.455pt>
+<./img/simGUI.png, id=1279, 532.99126pt x 389.455pt>
 File: ./img/simGUI.png Graphic file (type png)
 <use ./img/simGUI.png>
 Package pdftex.def Info: ./img/simGUI.png  used on input line 572.
@@ -2353,7 +2357,7 @@ Package cleveref Info: loaded `english' language definitions on input line 65.
  [97]
 chapter 7.
 (./text/evaluation.tex
-<./img/validCounterexamplePlot.png, id=1308, 719.68875pt x 634.37pt>
+<./img/validCounterexamplePlot.png, id=1317, 719.68875pt x 634.37pt>
 File: ./img/validCounterexamplePlot.png Graphic file (type png)
 <use ./img/validCounterexamplePlot.png>
 Package pdftex.def Info: ./img/validCounterexamplePlot.png  used on input line 44.
@@ -2367,47 +2371,47 @@ Overfull \hbox (70.32352pt too wide) in paragraph at lines 61--67
 
 Package cleveref Info: loaded `english' language definitions on input line 67.
 [99 <./img/validCounterexamplePlot.png>]
-<./img/counterSimulation/1.png, id=1333, 575.14874pt x 603.25375pt>
+<./img/counterSimulation/1.png, id=1342, 575.14874pt x 603.25375pt>
 File: ./img/counterSimulation/1.png Graphic file (type png)
 <use ./img/counterSimulation/1.png>
 Package pdftex.def Info: ./img/counterSimulation/1.png  used on input line 71.
 (pdftex.def)             Requested size: 122.0661pt x 128.0374pt.
-<./img/counterSimulation/2.png, id=1334, 575.14874pt x 603.25375pt>
+<./img/counterSimulation/2.png, id=1343, 575.14874pt x 603.25375pt>
 File: ./img/counterSimulation/2.png Graphic file (type png)
 <use ./img/counterSimulation/2.png>
 Package pdftex.def Info: ./img/counterSimulation/2.png  used on input line 72.
 (pdftex.def)             Requested size: 122.0661pt x 128.0374pt.
-<./img/counterSimulation/3.png, id=1335, 575.14874pt x 603.25375pt>
+<./img/counterSimulation/3.png, id=1344, 575.14874pt x 603.25375pt>
 File: ./img/counterSimulation/3.png Graphic file (type png)
 <use ./img/counterSimulation/3.png>
 Package pdftex.def Info: ./img/counterSimulation/3.png  used on input line 73.
 (pdftex.def)             Requested size: 122.0661pt x 128.0374pt.
-<./img/counterSimulation/4.png, id=1336, 575.14874pt x 603.25375pt>
+<./img/counterSimulation/4.png, id=1345, 575.14874pt x 603.25375pt>
 File: ./img/counterSimulation/4.png Graphic file (type png)
 <use ./img/counterSimulation/4.png>
 Package pdftex.def Info: ./img/counterSimulation/4.png  used on input line 74.
 (pdftex.def)             Requested size: 122.0661pt x 128.0374pt.
-<./img/counterSimulation/5.png, id=1337, 575.14874pt x 603.25375pt>
+<./img/counterSimulation/5.png, id=1346, 575.14874pt x 603.25375pt>
 File: ./img/counterSimulation/5.png Graphic file (type png)
 <use ./img/counterSimulation/5.png>
 Package pdftex.def Info: ./img/counterSimulation/5.png  used on input line 75.
 (pdftex.def)             Requested size: 122.0661pt x 128.0374pt.
-<./img/counterSimulation/6.png, id=1338, 575.14874pt x 603.25375pt>
+<./img/counterSimulation/6.png, id=1347, 575.14874pt x 603.25375pt>
 File: ./img/counterSimulation/6.png Graphic file (type png)
 <use ./img/counterSimulation/6.png>
 Package pdftex.def Info: ./img/counterSimulation/6.png  used on input line 76.
 (pdftex.def)             Requested size: 122.0661pt x 128.0374pt.
-<./img/counterSimulation/7.png, id=1339, 575.14874pt x 603.25375pt>
+<./img/counterSimulation/7.png, id=1348, 575.14874pt x 603.25375pt>
 File: ./img/counterSimulation/7.png Graphic file (type png)
 <use ./img/counterSimulation/7.png>
 Package pdftex.def Info: ./img/counterSimulation/7.png  used on input line 77.
 (pdftex.def)             Requested size: 122.0661pt x 128.0374pt.
-<./img/counterSimulation/8.png, id=1340, 575.14874pt x 603.25375pt>
+<./img/counterSimulation/8.png, id=1349, 575.14874pt x 603.25375pt>
 File: ./img/counterSimulation/8.png Graphic file (type png)
 <use ./img/counterSimulation/8.png>
 Package pdftex.def Info: ./img/counterSimulation/8.png  used on input line 78.
 (pdftex.def)             Requested size: 122.0661pt x 128.0374pt.
-<./img/counterSimulation/9.png, id=1341, 575.14874pt x 603.25375pt>
+<./img/counterSimulation/9.png, id=1350, 575.14874pt x 603.25375pt>
 File: ./img/counterSimulation/9.png Graphic file (type png)
 <use ./img/counterSimulation/9.png>
 Package pdftex.def Info: ./img/counterSimulation/9.png  used on input line 79.
@@ -2433,7 +2437,7 @@ Package cleveref Info: loaded `english' language definitions on input line 329.
 
 LaTeX Warning: `!h' float specifier changed to `!ht'.
 
-<./img/Time_size_plot_point.png, id=1379, 578.16pt x 433.62pt>
+<./img/Time_size_plot_point.png, id=1388, 578.16pt x 433.62pt>
 File: ./img/Time_size_plot_point.png Graphic file (type png)
 <use ./img/Time_size_plot_point.png>
 Package pdftex.def Info: ./img/Time_size_plot_point.png  used on input line 347.
@@ -2451,25 +2455,23 @@ Package cleveref Info: loaded `english' language definitions on input line 379.
 LaTeX Warning: Reference `' on page 106 undefined on input line 440.
 
 Package cleveref Info: loaded `english' language definitions on input line 469.
-[106])
-Package cleveref Info: loaded `english' language definitions on input line 67.
+[106]
+Package cleveref Info: loaded `english' language definitions on input line 531.
  [107]
+Package cleveref Info: loaded `english' language definitions on input line 572.
+ [108]
+Package cleveref Info: loaded `english' language definitions on input line 622.
+ [109])
+Package cleveref Info: loaded `english' language definitions on input line 67.
+ [110]
 chapter 8.
-(./text/conclusion.tex
-Overfull \hbox (0.92264pt too wide) in paragraph at lines 25--29
-\T1/LinuxLibertineT-TLF/m/n/12 er-ties men-tioned above for cho-sen type of SRRS. We demon-strated a val-i-da-tion method-
- []
+(./text/conclusion.tex [111
 
-
-Underfull \hbox (badness 10000) in paragraph at lines 31--34
-
- []
-
-[108
-
-])
+]
+Package cleveref Info: loaded `english' language definitions on input line 190.
+ [112])
 Package cleveref Info: loaded `english' language definitions on input line 71.
- [109]
+ [113]
 chapter without number
 LaTeX Font Info:    Font shape `T1/LinuxLibertineT-TLF/m/sc' will be
 (Font)              scaled to size 12.0pt on input line 71.
@@ -2478,7 +2480,7 @@ Overfull \hbox (5.67776pt too wide) in paragraph at lines 71--71
 \T1/LinuxLibertineT-TLF/m/it/12 Ver-i-fi-ca-tion (CAV '02)\T1/LinuxLibertineT-TLF/m/n/12 . Vol. 2404. Lec-ture Notes in Com-puter Sci-ence. Copen-
  []
 
-[110
+[114
 
 {/usr/share/texlive/texmf-dist/fonts/enc/dvips/libertine/lbtn_ncsllp.enc}]
 Overfull \hbox (4.0224pt too wide) in paragraph at lines 71--71
@@ -2506,7 +2508,7 @@ Overfull \hbox (7.09537pt too wide) in paragraph at lines 71--71
  []
 
 Package cleveref Info: loaded `english' language definitions on input line 71.
-[111]
+[115]
 Overfull \hbox (2.02498pt too wide) in paragraph at lines 71--71
 \T1/LinuxLibertineT-TLF/m/n/12 Wood. ^^P  A Frame-work for Tax-on-omy and Eval-u-a-tion of Self-Reconfigurable
  []
@@ -2542,57 +2544,57 @@ Overfull \hbox (12.29323pt too wide) in paragraph at lines 71--71
  []
 
 Package cleveref Info: loaded `english' language definitions on input line 71.
-[112]
+[116]
 Package cleveref Info: loaded `english' language definitions on input line 74.
- [113]
+ [117]
 chapter A.
-(./text/appendixA.tex (./code/robot_structure.smv) (./code/robot_structure.smv [114
+(./text/appendixA.tex (./code/robot_structure.smv) (./code/robot_structure.smv [118
 
 ]) (./code/robot_structure.smv) (./code/robot_structure.smv
 Package cleveref Info: loaded `english' language definitions on input line 99.
- [115]) (./code/robot_structure.smv
+ [119]) (./code/robot_structure.smv
 Package cleveref Info: loaded `english' language definitions on input line 158.
- [116])
+ [120])
 Package cleveref Info: loaded `english' language definitions on input line 14.
- [117] (./code/counterexample.py
+ [121] (./code/counterexample.py
 Package cleveref Info: loaded `english' language definitions on input line 56.
- [118]
-Package cleveref Info: loaded `english' language definitions on input line 117.
- [119])
-Package cleveref Info: loaded `english' language definitions on input line 20.
- [120] (./code/robotController.py
-Package cleveref Info: loaded `english' language definitions on input line 57.
- [121]
-Package cleveref Info: loaded `english' language definitions on input line 118.
  [122]
-Package cleveref Info: loaded `english' language definitions on input line 180.
+Package cleveref Info: loaded `english' language definitions on input line 117.
  [123])
+Package cleveref Info: loaded `english' language definitions on input line 20.
+ [124] (./code/robotController.py
+Package cleveref Info: loaded `english' language definitions on input line 57.
+ [125]
+Package cleveref Info: loaded `english' language definitions on input line 118.
+ [126]
+Package cleveref Info: loaded `english' language definitions on input line 180.
+ [127])
 Package cleveref Info: loaded `english' language definitions on input line 29.
- [124] (./code/partController.py
+ [128] (./code/partController.py
 Package cleveref Info: loaded `english' language definitions on input line 61.
- [125])
+ [129])
 Package cleveref Info: loaded `english' language definitions on input line 34.
- [126] (/usr/share/texlive/texmf-dist/tex/latex/listings/lstlang1.sty
+ [130] (/usr/share/texlive/texmf-dist/tex/latex/listings/lstlang1.sty
 File: lstlang1.sty 2023/02/27 1.9 listings language file
 ) (/usr/share/texlive/texmf-dist/tex/latex/listings/lstmisc.sty
 File: lstmisc.sty 2023/02/27 1.9 (Carsten Heinz)
 ) (./code/base.sdf) (./code/robot.xacro
 Package cleveref Info: loaded `english' language definitions on input line 19.
- [127]
-Package cleveref Info: loaded `english' language definitions on input line 77.
- [128]
-Package cleveref Info: loaded `english' language definitions on input line 127.
- [129]
-Package cleveref Info: loaded `english' language definitions on input line 187.
- [130]
-Package cleveref Info: loaded `english' language definitions on input line 245.
  [131]
+Package cleveref Info: loaded `english' language definitions on input line 77.
+ [132]
+Package cleveref Info: loaded `english' language definitions on input line 127.
+ [133]
+Package cleveref Info: loaded `english' language definitions on input line 187.
+ [134]
+Package cleveref Info: loaded `english' language definitions on input line 245.
+ [135]
 Package cleveref Info: loaded `english' language definitions on input line 305.
- [132]) (./code/part.xacro
+ [136]) (./code/part.xacro
 Package cleveref Info: loaded `english' language definitions on input line 51.
- [133])))
+ [137])))
 Package cleveref Info: loaded `english' language definitions on input line 190.
- [134] (./thesis.aux
+ [138] (./thesis.aux
 Package cleveref Info: loaded `english' language definitions on input line 10.
 )
  ***********
@@ -2613,18 +2615,18 @@ Package logreq Info: Writing requests to 'thesis.run.xml'.
 
  ) 
 Here is how much of TeX's memory you used:
- 49934 strings out of 474222
- 1024565 string characters out of 5748734
- 2368708 words of memory out of 5000000
- 69635 multiletter control sequences out of 15000+600000
- 686630 words of font info for 118 fonts, out of 8000000 for 9000
+ 49948 strings out of 474222
+ 1024748 string characters out of 5748734
+ 2371050 words of memory out of 5000000
+ 69643 multiletter control sequences out of 15000+600000
+ 686622 words of font info for 118 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  125i,20n,131p,10933b,3326s stack positions out of 10000i,1000n,20000p,200000b,200000s
 </usr/share/texlive/texmf-dist/fonts/type1/public/libertinust1math/LibertinusT1Math.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/libertine/LinBiolinumT.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/libertine/LinBiolinumTB.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/libertine/LinLibertineMT.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/libertine/LinLibertineT.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/libertine/LinLibertineTB.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/libertine/LinLibertineTI.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/stix/stix-mathcal.pfb>
-Output written on thesis.pdf (140 pages, 9012718 bytes).
+Output written on thesis.pdf (144 pages, 9025040 bytes).
 PDF statistics:
- 3408 PDF objects out of 3580 (max. 8388607)
- 3116 compressed objects within 32 object streams
- 1858 named destinations out of 2073 (max. 500000)
- 809 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 3457 PDF objects out of 3580 (max. 8388607)
+ 3161 compressed objects within 32 object streams
+ 1864 named destinations out of 2073 (max. 500000)
+ 849 words of extra memory for PDF output out of 10000 (max. 10000000)
 
