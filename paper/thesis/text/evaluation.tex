@@ -13,7 +13,7 @@ model-checking-based methods for modular self-replicating robots.
 
 
 \section{Validation of the counterexample based robot control}
-\label{ch:validation}
+\label{ch:validationCounterexample}
 
 To validate the counterexample based approach, introduced in 
 chapter \ref{ch:Counterexample} we will integrate the counterexample generation 
@@ -540,7 +540,7 @@ Inconsistencies between NuSMV models, simulation environments, and real-world
 -- abstractions and simplifications lead to mismatches between modeled 
 and physical behaviors.
 
-\subsection{ Limited generalization of the developed system }
+\subsubsection{ Limited generalization of the developed system }
 
 The approaches and implementations presented in Chapter \ref{ch:implementation} and \ref{ch:simulation}
 were specifically designed and validated on modular, self-replicating robotic 
@@ -569,7 +569,7 @@ Therefore, the findings of this work should be interpreted as representative
 of a specific class of SRRS rather than as a universal model checking methodology 
 for all self-replicating robots.
 
-\subsection{ Discretization errors}
+\subsubsection{ Discretization errors}
 
 The second threat to validity arises from the discretization parameter 
 employed during model generation. In formal verification of  
@@ -602,7 +602,7 @@ Future research should therefore formalize the relationship between discretizati
 verification precision, and computational time for SRRS,
 to develop flexible model parameterization.
 
-\subsection{Inconsistencies between NuSMV model, simulation, and reality}
+\subsubsection{Inconsistencies between NuSMV model, simulation, and reality}
 
 Another threat to validity stems from inconsistencies between the 
 used NuSMV model, the ROS2–Gazebo simulation, and the real-world physical implementation 
@@ -637,7 +637,7 @@ replaying verified sequences in the simulation environment.
 % . Consequently, verification results should be interpreted with an 
 % awareness that they reflect idealized structural conditions.
 
-\subsection{Summary}
+\subsubsection{Summary}
 
 The three identified sources of validity threats represent the main 
 factors that may constrain the implementation to other sysems and interpretation of 
