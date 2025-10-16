@@ -283,9 +283,10 @@ def generate_launch_description():
         "black": "0 0 0 1",
     }
     step = 0.134
-    part_coordinates_int = [[5, 5, 1]]
-    part_colors = [colors["yellow"]]
+    # part_coordinates_int = [[5, 5, 1]]
+    part_colors = [colors["red"], colors["green"], colors["grey"]]
     # part_coordinates_int = [[5, 6, 1], [3, 6, 1], [4, 7, 1]]
+    part_coordinates_int = [[1, 2, 1], [-1, 2, 1], [0, 3, 1]]
     part_coordinates = [[elem * step for elem in row] for row in part_coordinates_int]
     bridge_topics = []
     # parent_model = "base"
@@ -294,8 +295,8 @@ def generate_launch_description():
         [FindPackageShare("srrs_sim"), "urdf", "part.xacro"]
     )
     for i, (x, y, z) in enumerate(part_coordinates):
-        x = x + (robot_init_X - 2) * step
-        y = y + (robot_init_Y - 3) * step
+        x = x + robot_init_X * step
+        y = y + robot_init_Y * step
         part_name = f"part{i + 1}"
         processed_urdf_path = f"temp_part{i + 1}.urdf"
         generate_part_urdf = ExecuteProcess(

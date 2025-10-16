@@ -27,8 +27,8 @@
   <gazebo reference="part">
     <visual>
       <material>
-        <ambient>0 0 0.8 1</ambient>
-        <diffuse>0 0 0.8 1</diffuse>
+        <ambient>1 1 0 1</ambient>
+        <diffuse>1 1 0 1</diffuse>
       </material>
     </visual>
   </gazebo>

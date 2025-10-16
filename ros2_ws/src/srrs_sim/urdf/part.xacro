@@ -36,8 +36,8 @@
     <gazebo reference="part">
         <visual>
             <material>
-                <ambient>${blue}</ambient>
-                <diffuse>${blue}</diffuse>
+                <ambient>${xacro.arg('color')}</ambient>
+                <diffuse>${xacro.arg('color')}</diffuse>
             </material>
         </visual>
 
