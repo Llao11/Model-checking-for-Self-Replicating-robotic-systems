@@ -328,12 +328,17 @@
       \endverb
     \endentry
     \entry{HuthR1}{book}{}
-      \name{author}{1}{}{%
-        {{hash=93a4c7477e242aa1b7d4c837e310ff3d}{%
-           family={Michael\bibnamedelima Huth},
-           familyi={M\bibinitperiod\bibinitdelim H\bibinitperiod},
-           given={Mark\bibnamedelima Ryan},
-           giveni={M\bibinitperiod\bibinitdelim R\bibinitperiod}}}%
+      \name{author}{2}{}{%
+        {{hash=7ad042fb880cc734fb7b1ddec00d8e20}{%
+           family={Huth},
+           familyi={H\bibinitperiod},
+           given={Michael},
+           giveni={M\bibinitperiod}}}%
+        {{hash=e28c26ad0e11fbb105ad60e981c90c91}{%
+           family={Ryan},
+           familyi={R\bibinitperiod},
+           given={Mark},
+           giveni={M\bibinitperiod}}}%
       }
       \list{location}{1}{%
         {Cambridge, New York, Melbourne, Madrid, Cape Town, Singapore, São Paulo}%
@@ -341,13 +346,13 @@
       \list{publisher}{1}{%
         {Cambridge University Press}%
       }
-      \strng{namehash}{93a4c7477e242aa1b7d4c837e310ff3d}
-      \strng{fullhash}{93a4c7477e242aa1b7d4c837e310ff3d}
-      \strng{bibnamehash}{93a4c7477e242aa1b7d4c837e310ff3d}
-      \strng{authorbibnamehash}{93a4c7477e242aa1b7d4c837e310ff3d}
-      \strng{authornamehash}{93a4c7477e242aa1b7d4c837e310ff3d}
-      \strng{authorfullhash}{93a4c7477e242aa1b7d4c837e310ff3d}
-      \field{labelalpha}{Mic04}
+      \strng{namehash}{6ebd7fc21e939ffc1432d167b6cc6110}
+      \strng{fullhash}{6ebd7fc21e939ffc1432d167b6cc6110}
+      \strng{bibnamehash}{6ebd7fc21e939ffc1432d167b6cc6110}
+      \strng{authorbibnamehash}{6ebd7fc21e939ffc1432d167b6cc6110}
+      \strng{authornamehash}{6ebd7fc21e939ffc1432d167b6cc6110}
+      \strng{authorfullhash}{6ebd7fc21e939ffc1432d167b6cc6110}
+      \field{labelalpha}{HR04}
       \field{sortinit}{2}
       \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
       \field{labelnamesource}{author}
@@ -627,6 +632,46 @@
       \verb https://easychair.org/publications/paper/tq7
       \endverb
     \endentry
+    \entry{DGL1}{book}{}
+      \name{author}{3}{}{%
+        {{hash=db7da8ea77b4cfd60d5354ab604a3674}{%
+           family={Demri},
+           familyi={D\bibinitperiod},
+           given={Stéphane},
+           giveni={S\bibinitperiod}}}%
+        {{hash=01e793acaa4831173e061eaeba0b7283}{%
+           family={Goranko},
+           familyi={G\bibinitperiod},
+           given={Valentin},
+           giveni={V\bibinitperiod}}}%
+        {{hash=026bcaf26338cd485672c7b4e32c9ff7}{%
+           family={Lange},
+           familyi={L\bibinitperiod},
+           given={Martin},
+           giveni={M\bibinitperiod}}}%
+      }
+      \list{location}{1}{%
+        {University Printing House, Cambridge CB2 8BS, United Kingdom}%
+      }
+      \list{publisher}{1}{%
+        {Cambridge University Press}%
+      }
+      \strng{namehash}{bff5280432ec977fb301028ba69a3c86}
+      \strng{fullhash}{bff5280432ec977fb301028ba69a3c86}
+      \strng{bibnamehash}{bff5280432ec977fb301028ba69a3c86}
+      \strng{authorbibnamehash}{bff5280432ec977fb301028ba69a3c86}
+      \strng{authornamehash}{bff5280432ec977fb301028ba69a3c86}
+      \strng{authorfullhash}{bff5280432ec977fb301028ba69a3c86}
+      \field{labelalpha}{DGL16}
+      \field{sortinit}{2}
+      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{edition}{2nd}
+      \field{isbn}{978-1-107-02836-4}
+      \field{title}{Temporal Logics in Computer Science Finite-State Systems}
+      \field{year}{2016}
+    \endentry
     \entry{Legay2016PlasmaLab}{inproceedings}{}
       \name{author}{3}{}{%
         {{hash=0fabf3660126ac9e07707dbfb289fd2e}{%
@@ -684,41 +729,6 @@
       \verb{doi}
       \verb 10.1007/978-3-319-47166-2_6
       \endverb
-    \endentry
-    \entry{DGL1}{book}{}
-      \name{author}{2}{}{%
-        {{hash=21028e87c3302e0f0cc6af3e888ecb41}{%
-           family={Stéphane\bibnamedelima Demri},
-           familyi={S\bibinitperiod\bibinitdelim D\bibinitperiod},
-           given={Valentin\bibnamedelima Goranko},
-           giveni={V\bibinitperiod\bibinitdelim G\bibinitperiod}}}%
-        {{hash=026bcaf26338cd485672c7b4e32c9ff7}{%
-           family={Lange},
-           familyi={L\bibinitperiod},
-           given={Martin},
-           giveni={M\bibinitperiod}}}%
-      }
-      \list{location}{1}{%
-        {University Printing House, Cambridge CB2 8BS, United Kingdom}%
-      }
-      \list{publisher}{1}{%
-        {Cambridge University Press}%
-      }
-      \strng{namehash}{fbccac78aaea3180da18b93cd7562d88}
-      \strng{fullhash}{fbccac78aaea3180da18b93cd7562d88}
-      \strng{bibnamehash}{fbccac78aaea3180da18b93cd7562d88}
-      \strng{authorbibnamehash}{fbccac78aaea3180da18b93cd7562d88}
-      \strng{authornamehash}{fbccac78aaea3180da18b93cd7562d88}
-      \strng{authorfullhash}{fbccac78aaea3180da18b93cd7562d88}
-      \field{labelalpha}{SL16}
-      \field{sortinit}{2}
-      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
-      \field{labelnamesource}{author}
-      \field{labeltitlesource}{title}
-      \field{edition}{2nd}
-      \field{isbn}{978-1-107-02836-4}
-      \field{title}{Temporal Logics in Computer Science Finite-State Systems}
-      \field{year}{2016}
     \endentry
     \entry{Dehnert2017Storm}{inproceedings}{}
       \name{author}{4}{}{%

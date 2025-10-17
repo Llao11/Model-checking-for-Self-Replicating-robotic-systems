@@ -5,7 +5,7 @@
 % \section{Evaluation}
 
 In this section we will analyze  another form of reachability that was described in 
-Chapter \ref{ModelChackingLocal}. 
+Chapter \ref{ch:ModelCheckingLocal}. 
 We will explore the reachability of various points on the field, assuming 
 that the robot moves in steps, fixing the end effectors on the field one 
 at a time.  
@@ -28,12 +28,11 @@ we can extract sequences of actions leading to success or failure.
 
 To make the global reachability checking tractable, we model a simplified 
 Self-Replicating Robotic System with several key assumptions and abstractions. 
-These assumptions define the environment and the robot’s capabilities in our NuSMV model:
+These assumptions define the environment and the robot's capabilities in our NuSMV model:
 
 \begin{enumerate}
     
-    \item Discrete 2D Grid and robot end fixed in one cell at each time: 
-        The robot operates on a two-dimensional grid of cells (a finite field).
+    \item The robot operates on a two-dimensional grid of cells --a finite field.
         We consider only a single end-effector that occupies one cell on this grid at any time, 
     representing the robot's current position (with coordinates x 
     and y). The rest of the robot's body is not explicitly modeled on the 
@@ -42,10 +41,18 @@ These assumptions define the environment and the robot’s capabilities in our N
     is initially anchored at an assembly site, taken to be the origin cell 
     (0,0) for convenience. All other objects (parts or obstacles) occupy discrete 
     cell positions on the grid. An example of a grid configuration is shown 
-    on the diagram in Figure  , different part types are scattered on a field and the 
+    on the diagram in Figure \ref{fig:AssembleDiagram}, 
+    different part types are scattered on a field and the 
     robot must collect them.
 
-\item Movement Constraints: The robot can move one cell at a time to a 
+    \begin{figure}[h!]
+        \centering
+        \includegraphics[width=12cm]{AssembleDiagram.png} 
+        \caption{Simplified representation of a grid, robot and material parts.}
+        \label{fig:AssembleDiagram}
+    \end{figure}
+
+\item The robot can move one cell at a time to a 
     neighboring cell (up, down, left, or right), and only into cells that 
     are unoccupied (have a type "None"). In other words, the robot's end-effector cannot 
     move into a cell that already contains a part or an obstacle. This models 
@@ -54,15 +61,14 @@ These assumptions define the environment and the robot’s capabilities in our N
     constrained to the four orthogonal directions on the grid (no diagonal moves). 
     Each move is treated as a discrete time step in the model.
 
-\item Local Part Search: 
-    At any given position, the robot can "sense" or 
+\item  At any given position, the robot can "sense" or 
     inspect only its immediate neighbors for parts. The reach range for 
     checking is limited to the four adjacent cells. If a neighboring cell 
     contains a part, the robot can decide to check that part’s type. 
     This locality assumption simplifies sensing—there is no global visibility 
     of all parts at once, only local perception of adjacent cells.
 
-\item Abstracted Assembly Action: When the robot finds a required part needed 
+\item When the robot finds a required part needed 
     for replication, it will pick up that part and carry it back to the 
     assembly location (the origin) to attach it to the new robot under construction.
     We abstract this entire retrieval and assembly process as a single action 
@@ -80,7 +86,7 @@ These assumptions define the environment and the robot’s capabilities in our N
     part does not change the grid configuration in the model (the part is 
     not removed from the grid representation when taken, since the assembly 
     action is outside the modeled steps). 
-\item Modeling simplification; in a real scenario, the part would be removed from the environment once 
+\item In a real scenario, the part would be removed from the environment once 
     collected. However, by not altering the grid, we avoid introducing additional 
     transitions; we rely on the assembly index to track progress rather than 
     the physical absence of the part.
@@ -148,14 +154,14 @@ This state logic forms the basis of our NuSMV model.
 We constructed a formal model in NuSMV to capture the 
 described behavior. The model is centered around the robot's 
 position and state, the grid environment, and the assembly progress. 
-Here we describe the main components of the model:
+In following sections we describe the main components of the model.
 
 \subsubsection{State variables and initial conditions}
 The NuSMV model defines discrete state variables corresponding to the 
-robot and environment. Key variables include:
+robot and environment. Key variables include: grid, x and y coordinates,
+robot\_state,sequence and checked\_cells.
 
-\begin{itemize}
-    \item grid: or field is a 2D array representing the environment, 
+     Grid or field is a 2D array representing the environment, 
         indexed from 0 to field\_max\_index in 
         both dimensions. Each cell in the grid can hold either “NONE” (if the 
         cell is empty) or a part type or obstacle type. We define a set of 
@@ -186,16 +192,17 @@ label={lst:globalReachGrid}]
     The robot's starting position is (0,0), which in this example is also the 
     assembly site and is empty. 
     
-    \item x and y: the robot's current grid coordinates, integers ranging from 
+    2D coordinates x and y represent the robot's current position, integers ranging from 
     0 to field\_max\_index, where field\_max\_index = N-1 if the grid is N x N. 
     These coordinates represent the cell where the robot’s end-effector is 
     located.
 
-    \item robot\_state: the mode of operation of the robot, which can take values
+    Robot state represented by robot\_state variable -- the mode of 
+    operation of the robot, which can take values
     MOVING, CHECKING, ASSEMBLING, FINISHED, FAILED. This enumerated type 
     encodes the state machine described earlier.
 
-    \item assembly\_index: an integer index tracking how many parts of the target 
+    An integer variable assembly\_index tracking how many parts of the target 
     assembly sequence have been completed, or equivalently, the index of 
     the next required part in the sequence. 
     Initially, assembly\_index = 0 meaning no parts have 
@@ -203,7 +210,7 @@ label={lst:globalReachGrid}]
     the assembly is complete. In practice, reaching the last part triggers 
     the FINISHED state as described below.
 
-    \item sequence: an array that holds the required part type for each index of 
+    An array sequence,  holds the required part type for each index of 
     the robot's assembly sequence. This array is of length (robot\_size + 1). 
     For example, if the robot must assemble parts of types TYPE1, TYPE2,
     TYPE2, TYPE3 in that order, then robot\_size = 3 and sequence[0]=
@@ -213,20 +220,18 @@ label={lst:globalReachGrid}]
     a parameter to the model, different robot designs can be specified by 
     changing these initial values.
 
-    \item checked\_cells: an auxiliary 2D array (same dimensions as grid) used 
-        to record which cells have been visited during the search. Each element 
-        of checked\_cells can be either UNKNOWN or VISITED. Initially, all cells 
-        are UNKNOWN. The intention is to mark cells as VISITED once 
-        the robot has explored them, to prevent the robot from infinitely revisiting 
-        the same empty cells in a loop. In the model, we will constrain movements 
-        such that the robot does not move into a cell that is already marked VISITED.
-        This prevents trivial cycles and helps the model checker focus on 
-        new areas. The checked\_cells array is updated when the robot moves: when 
-        transitioning to a new position, that position can be marked as visited.
-        In our NuSMV model, this is encoded implicitly through transition constraints 
-        rather than an explicit assignment.
-
-\end{itemize}
+     An auxiliary 2D array  checked\_cells (has the same dimensions as grid) used 
+    to record which cells have been visited during the search. Each element 
+    of checked\_cells can be either UNKNOWN or VISITED. Initially, all cells 
+    are UNKNOWN. The intention is to mark cells as VISITED once 
+    the robot has explored them, to prevent the robot from infinitely revisiting 
+    the same empty cells in a loop. In the model, we will constrain movements 
+    such that the robot does not move into a cell that is already marked VISITED.
+    This prevents trivial cycles and helps the model checker focus on 
+    new areas. The checked\_cells array is updated when the robot moves: when 
+    transitioning to a new position, that position can be marked as visited.
+    In our NuSMV model, this is encoded implicitly through transition constraints 
+    rather than an explicit assignment.
 
 At the beginning, we initialize the model variables as 
 follows. The robot starts in state MOVING, with x = 0 and y = 0 (
@@ -556,7 +561,8 @@ on the grid) or could fail (if we design a scenario where a part is
 absent or unreachable). 
 
 We leverage these traces as a source of information for 
-analyzing and interpreting the robot behavior, as described in the Chapter \ref{ch:validation}.
+analyzing and interpreting the robot behavior.
+% , as described in the Chapter \ref{ch:validation}.
 
 
 \subsection{Model generation and verification}
@@ -575,7 +581,8 @@ described in section \ref{ch:globalNusmvStruct}.
 with placeholders for scenario-specific parameters. 
 
 The template, stored in a file Assemble\_initial\_template.smv,
-presented in Appendix \ref{ch:globalTemplate}, it includes formatting placeholders such 
+presented in Appendix \ref{ch:globalTemplate}, 
+it includes formatting placeholders such 
 as {field\_max\_index}, {object\_types}, {init\_robot\_sequence}, {
 initial\_grid}, etc. in place of concrete values.
 This template captures the structure of the model (variables, state transition 

@@ -97,9 +97,11 @@ by the SRRSController.
 The SensorNode component provides perception capabilities. It functions as 
 a ROS2 node with several subscribers to Gazebo topics relayed through the 
 ros\_gz\_bridge. These topics provide information about joint angles, 
-contact states, and detected objects in the simulation. We implemented methods 
-such as get\_joint\_angle(), \ get\_contact1\_state(), get\_contact2\_state(), 
-and get\_contact\_object() to access structured sensory information. 
+contact states, and detected objects in the simulation. 
+
+We implemented methods such as \texttt{get\_joint\_angle()},
+\texttt{get\_contact1\_state()}, \texttt{get\_contact2\_state()}, 
+and \texttt{get\_contact\_object()} to access structured sensory information. 
 By maintaining real-time synchronization between the Gazebo simulation and 
 the ROS2 communication layer, the SensorNode allows the control system 
 to react dynamically to physical interactions occurring during assembly—
@@ -107,7 +109,7 @@ such as contact detection when two parts align.
 
 The MaterialController manages the set of parts available for 
 assembly. It gives a possibility to create and manipulate parts in the Gazebo world, 
-using functions create\_parts() and get\_parts(). These parts are represented 
+using functions \texttt{create\_parts()} and \texttt{get\_parts()}. These parts are represented 
 as Gazebo models that can be spawned, attached, or detached through dedicated 
 ROS2 launch file. The MaterialController establishes a one-to-many association 
 with the PartController, reflecting that a single material manager may 
@@ -118,7 +120,7 @@ The PartController provides fine-grained control over individual parts
 in the simulation. It includes methods for creating ROS2 publishers and 
 service clients, as well as specialized attachment and detachment procedures 
 for various connection points, with corresponding detachment methods. 
-The create\_bridge() function establishes the communication link with Gazebo 
+The \texttt{create\_bridge()} function establishes the communication link with Gazebo 
 through ros\_gz\_bridge, ensuring that changes to part states in Gazebo 
 (such as attachment or detachment) are mirrored within the ROS 2 ecosystem. 
 
@@ -713,4 +715,4 @@ The self-replication process would then move from simulation to reality,
 enabling experimental validation of robotic “growth” behaviors.
 
 
-\textcolor{red}{TODO: reference in text simulation to a previous NuSMV part}
+% \textcolor{red}{TODO: reference in text simulation to a previous NuSMV part}
