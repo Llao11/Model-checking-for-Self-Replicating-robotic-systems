@@ -1,10 +1,9 @@
 import statistics
-import matplotlib.pyplot as plt
 from configurations_checking import Configuration_checking
 
 
 # POINT REACHABILITY CHECKING
-target = ["5", "5", "10"]
+target = ["20", "20", "20"]
 print(f"Checking reachability of point: {target}:")
 block_types = {"yaw", "pitch"}
 sum_times = []
@@ -12,7 +11,7 @@ robot_size = []
 config_names = []
 results = []
 list_of_times = []
-length_max = 7
+length_max = 6
 for length in range(2, length_max):
     robot_size.append(length)
     config_checking = Configuration_checking(length, block_types, target)

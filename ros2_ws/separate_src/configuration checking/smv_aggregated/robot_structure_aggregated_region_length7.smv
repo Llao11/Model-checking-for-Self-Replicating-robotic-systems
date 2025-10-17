@@ -306,9 +306,9 @@ DEFINE
     base_zhx := 0;      base_zhy := 0;      base_zhz := 100;
 
 
-    endX := block3.px2;  
-    endY := block3.py2;  
-    endZ := block3.pz2;
+    endX := block6.px2;  
+    endY := block6.py2;  
+    endZ := block6.pz2;
 
     error := 1; -- +-1 (error=2) endX and endY coordinates error while checking reachability
     endX_inside_limits := (endX <= (checkX + error) & endX >= (checkX - error));
@@ -326,5 +326,5 @@ DEFINE
 --     G !(endX_inside_limits & endY_inside_limits & endZ_inside_limits)
 
 CTLSPEC 
-      AG !( endX_inside_limits & endY_inside_limits & endZ_inside_limits ) -- & blocks_above_serface)
+      EF ( endX_inside_limits & endY_inside_limits & endZ_inside_limits ) -- & blocks_above_serface)
 

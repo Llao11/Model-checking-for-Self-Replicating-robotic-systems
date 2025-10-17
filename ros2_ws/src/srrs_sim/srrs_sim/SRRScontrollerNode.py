@@ -8,10 +8,10 @@ from .robotController import RobotController
 
 
 class SRRSController(Node):
-    def __init__(self, sensorNode):
+    def __init__(self, sensorNode, robot_joint_names):
         super().__init__("simulation_controller")
         self.sensorNode = sensorNode
-        self.robotController = RobotController(self.sensorNode)
+        self.robotController = RobotController(self.sensorNode, robot_joint_names)
         self.materialController = MaterialController(parts_num=3)
         self.parts = self.materialController.get_parts()
 

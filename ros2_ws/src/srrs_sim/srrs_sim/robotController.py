@@ -10,9 +10,14 @@ import math
 
 
 class RobotController(Node):
-    def __init__(self, sensorNode):
+    def __init__(
+        self,
+        sensorNode,
+        joint_names=["rev0_1", "rev2_3", "rev5_6", "rev8_9", "rev9_10"],
+    ):
         super().__init__("robot_controller")
         self.sensorNode = sensorNode
+        self.joint_names = joint_names
         self.create_publishers()
         self.create_subscribers()
         self.fixed_end = 1
@@ -231,8 +236,12 @@ class RobotController(Node):
 
     def joint_state_changed(self, msg):
         joint_angles_current_dict = dict(zip(msg.name, msg.position))
-        sorted_names = ["rev0_1", "rev2_3", "rev5_6", "rev8_9", "rev9_10"]
-        self.joint_angles_current = [joint_angles_current_dict[i] for i in sorted_names]
+        # sorted_names = ["rev0_1", "rev2_3", "rev5_6", "rev8_9", "rev9_10"]
+        # Change for configuration pitch_yaw_pitch_yaw to:
+        # sorted_names = ["rev0_1", "rev2_3", "rev3_4", "rev6_7"]
+        self.joint_angles_current = [
+            joint_angles_current_dict[i] for i in self.joint_names
+        ]
         # self.get_logger().info(f"sorted: {sorted_names}")
 
     def get_joint_angle(self, joint_num):

@@ -201,11 +201,6 @@ esac;
 --========================================
 MODULE main
         
-             FROZENVAR
-                 checkX : {-10,10};
-                 checkY : {-10,10};
-                 checkZ : {0,10};
-            
         VAR
         	block0: block_base(base_px, base_py, base_pz,
                                 	base_xhx, base_xhy, base_xhz,
@@ -257,6 +252,10 @@ endZ := block4.pz2;
 
             error := 1; -- +-1 (error=2) endX and endY coordinates error while checking reachability
             
+            checkX := 20;
+            checkY := 20;
+            checkZ := 20;
+            
             endX_inside_limits := (endX <= (checkX + error) & endX >= (checkX - error));
             endY_inside_limits := (endY <= (checkY + error) & endY >= (checkY - error));
             endZ_inside_limits := (endZ <= (checkZ + error) & endZ >= (checkZ - error));
@@ -264,7 +263,7 @@ endZ := block4.pz2;
 
             
 CTLSPEC
-	 EF (endX_inside_limits & endY_inside_limits & endZ_inside_limits )
+	 AG !(endX_inside_limits & endY_inside_limits & endZ_inside_limits )
             --main end
 -- ---------- Reachability specification------------------------------------------
 -- LTLSPEC 

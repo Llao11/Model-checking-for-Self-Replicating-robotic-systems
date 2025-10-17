@@ -24,12 +24,7 @@ for length in range(2, 6):
     list_of_times.append(times)
     means.append(statistics.mean(times))
     std_dev = statistics.stdev(times)
-
 # postprocessing
-with open("time_size_res.txt", "a") as file:
-    file.write(str(config_names))
-    file.write(str(means))
-    file.write(str(results))
 plt.figure(figsize=(8, 6))
 plt.plot(robot_size, means, marker="o", linestyle="-", color="b")
 plt.xlabel("Robot Size")

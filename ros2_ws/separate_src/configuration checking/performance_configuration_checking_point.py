@@ -16,19 +16,15 @@ block_types = {"yaw", "pitch"}
 # Point target model checking
 for length in range(2, 7):
     robot_size.append(length)
-    config_checking = Configuration_checking(length, block_types)
-    config_checking.set_target_point(5, 5, 10)
-    config_names, times, res = config_checking.start_checking_combinations()
-    results.append(res)
-    list_of_times.append(times)
-    means.append(statistics.mean(times))
-    std_dev = statistics.stdev(times)
-
+    # config_checking = Configuration_checking(length, block_types)
+    # config_checking.set_target_point(5, 5, 10)
+    # config_names, times, res = config_checking.start_checking_combinations()
+    # results.append(res)
+    # list_of_times.append(times)
+    # means.append(statistics.mean(times))
+    # std_dev = statistics.stdev(times)
+means = []
 # postprocessing
-with open("time_size_res.txt", "a") as file:
-    file.write(str(config_names))
-    file.write(str(means))
-    file.write(str(results))
 plt.figure(figsize=(8, 6))
 plt.plot(robot_size, means, marker="o", linestyle="-", color="b")
 plt.xlabel("Robot Size")

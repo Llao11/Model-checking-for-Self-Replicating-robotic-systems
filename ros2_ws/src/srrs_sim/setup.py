@@ -33,6 +33,7 @@ setup(
         "console_scripts": [
             "joints_controller = srrs_sim.joints_controller:main",
             "robot_controller_gui = srrs_sim.robot_controller_gui:main",
+            "robot_controller_gui_config_validation = srrs_sim.robot_controller_gui_config_validation:main",
             "SRRSController = srrs_sim.SRRSController:main",
             "PartSpawner = srrs_sim.PartSpawner:main",
             "robotController = srrs_sim.robotController:main",

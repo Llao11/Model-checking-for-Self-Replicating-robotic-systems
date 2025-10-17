@@ -37,7 +37,7 @@ class GUI:
         self._running = True
 
         self.root = tk.Tk()
-        self.root.title("Robot Controller")
+        self.root.title("Robot Controller with validation")
         self.root.protocol("WM_DELETE_WINDOW", self.on_close)
 
         self.ui_setup()
@@ -139,6 +139,11 @@ class GUI:
             text="Counterexample movement",
             command=lambda: self.start_counterexample_movement(),
         )
+        self.btn_config_validation = tk.Button(
+            self.root,
+            text="Config validation",
+            command=lambda: self.start_configuration_validation(),
+        )
 
         # Position fix/free buttons
         self.btn_fix2_base.grid(row=5, column=0)
@@ -152,6 +157,7 @@ class GUI:
         # Assembly
         self.btn_start_assemble.grid(row=9, column=0)
         self.btn_counterexample.grid(row=9, column=1)
+        self.btn_config_validation.grid(row=9, column=2)
 
         # Individual joint control
 
@@ -159,12 +165,12 @@ class GUI:
         joint2_angle = tk.Text(self.root, height=1, width=6)
         joint3_angle = tk.Text(self.root, height=1, width=6)
         joint4_angle = tk.Text(self.root, height=1, width=6)
-        joint5_angle = tk.Text(self.root, height=1, width=6)
+        # joint5_angle = tk.Text(self.root, height=1, width=6)
         joint1_angle.insert(tk.END, "0")
         joint2_angle.insert(tk.END, "0")
         joint3_angle.insert(tk.END, "0")
         joint4_angle.insert(tk.END, "0")
-        joint5_angle.insert(tk.END, "0")
+        # joint5_angle.insert(tk.END, "0")
 
         btn_joint1 = tk.Button(
             self.root,
@@ -194,13 +200,13 @@ class GUI:
                 3, joint4_angle.get("1.0", tk.END)
             ),
         )
-        btn_joint5 = tk.Button(
-            self.root,
-            text="Set Joint 5",
-            command=lambda: self.controller_node.robotController.rotate_joint(
-                4, joint5_angle.get("1.0", tk.END)
-            ),
-        )
+        # btn_joint5 = tk.Button(
+        #     self.root,
+        #     text="Set Joint 5",
+        #     command=lambda: self.controller_node.robotController.rotate_joint(
+        #         4, joint5_angle.get("1.0", tk.END)
+        #     ),
+        # )
         btn_joints = tk.Button(
             self.root,
             text="Set all",
@@ -210,7 +216,7 @@ class GUI:
                     joint2_angle.get("1.0", tk.END),
                     joint3_angle.get("1.0", tk.END),
                     joint4_angle.get("1.0", tk.END),
-                    joint5_angle.get("1.0", tk.END),
+                    # joint5_angle.get("1.0", tk.END),
                 ]
             ),
         )
@@ -219,13 +225,13 @@ class GUI:
         joint2_angle.grid(row=2, column=5)
         joint3_angle.grid(row=3, column=5)
         joint4_angle.grid(row=4, column=5)
-        joint5_angle.grid(row=5, column=5)
+        # joint5_angle.grid(row=5, column=5)
 
         btn_joint1.grid(row=1, column=4)
         btn_joint2.grid(row=2, column=4)
         btn_joint3.grid(row=3, column=4)
         btn_joint4.grid(row=4, column=4)
-        btn_joint5.grid(row=5, column=4)
+        # btn_joint5.grid(row=5, column=4)
         btn_joints.grid(row=6, column=4)
 
         # Lables fix blocks:
@@ -250,12 +256,12 @@ class GUI:
         self.label_joint2_angle = tk.Label(self.root, text=0)
         self.label_joint3_angle = tk.Label(self.root, text=0)
         self.label_joint4_angle = tk.Label(self.root, text=0)
-        self.label_joint5_angle = tk.Label(self.root, text=0)
+        # self.label_joint5_angle = tk.Label(self.root, text=0)
         self.label_joint1_angle.grid(row=1, column=6)
         self.label_joint2_angle.grid(row=2, column=6)
         self.label_joint3_angle.grid(row=3, column=6)
         self.label_joint4_angle.grid(row=4, column=6)
-        self.label_joint5_angle.grid(row=5, column=6)
+        # self.label_joint5_angle.grid(row=5, column=6)
 
         # Lables contacts:
         label_contact1 = tk.Label(self.root, text="Contact1:")
@@ -305,12 +311,12 @@ class GUI:
         joint2 = tk.StringVar(value=str(int(self.sensor_node.get_joint_angle(1))))
         joint3 = tk.StringVar(value=str(int(self.sensor_node.get_joint_angle(2))))
         joint4 = tk.StringVar(value=str(int(self.sensor_node.get_joint_angle(3))))
-        joint5 = tk.StringVar(value=str(int(self.sensor_node.get_joint_angle(4))))
+        # joint5 = tk.StringVar(value=str(int(self.sensor_node.get_joint_angle(4))))
         self.label_joint1_angle.config(textvariable=joint1)
         self.label_joint2_angle.config(textvariable=joint2)
         self.label_joint3_angle.config(textvariable=joint3)
         self.label_joint4_angle.config(textvariable=joint4)
-        self.label_joint5_angle.config(textvariable=joint5)
+        # self.label_joint5_angle.config(textvariable=joint5)
         # schedule next update every 30 ms
         self.root.after(30, self.update_angles)
 
@@ -426,12 +432,31 @@ class GUI:
         # self.assemble_coordinates["z"] = 3
         # self.move_part(num=4, x=1, y=-3)
 
+    def start_configuration_validation(self):
+        """Configuration validation movement"""
+        self.controller_node.get_logger().info("Start configuration validation")
+        self.controller_node.fix_end1_base(gui=self)
+        self.controller_node.free_ends_all_parts(gui=self)
+        steps = [
+            [10, -10, -10, -10],
+            [10, -20, -20, -20],
+            [10, -30, -30, -30],
+            [10, -40, -40, -40],
+            [10, -50, -50, -50],
+            [10, -60, -60, -60],
+            [10, -70, -70, -70],
+            [10, -70, -80, -70],
+        ]
+        # yaw1 correction - adjust coordinate systems
+        for step in steps:
+            self.controller_node.robotController.rotate_joints(step)
+
     def start_counterexample_movement(self):
         """Counterexample based movement"""
         # share = Path(get_package_share_directory("srrs_sim"))
         # nusmv_path = share / "nusmv" / "nusmv_model_generator.yaml"
         print(os.path.abspath(__file__))
-        self.controller_node.get_logger().info("Start assemble")
+        self.controller_node.get_logger().info("Start counterexample movement")
         self.controller_node.fix_end1_base(gui=self)
         self.controller_node.free_ends_all_parts(gui=self)
         steps = [
@@ -471,8 +496,9 @@ def main():
     camera2_topic = "/camera2/image"
 
     # create Nodes
-    sensors_node = SRRSsensorsNode.SRRSsensorsNode()
-    robot_joint_names = (["rev0_1", "rev2_3", "rev5_6", "rev8_9", "rev9_10"],)
+
+    robot_joint_names = ["rev0_1", "rev2_3", "rev3_4", "rev6_7"]
+    sensors_node = SRRSsensorsNode.SRRSsensorsNode(robot_joint_names)
     controller_node = SRRScontrollerNode.SRRSController(sensors_node, robot_joint_names)
     camera1_sub_node = camera_subscriber_node.Camera_process_node_gui(
         queue1_frames, camera1_topic
