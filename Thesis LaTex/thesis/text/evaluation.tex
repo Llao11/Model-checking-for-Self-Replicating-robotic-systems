@@ -1,0 +1,963 @@
+In this chapter we will verify approaches described in Chapter \ref{ch:implementation}
+and perform evaluation of their computation time.
+
+To verify approaches and validate the results of reachability and configuration checking 
+ and to demonstrate the feasibility of 
+the counterexample-guided control approach, we complement the formal analysis 
+with the simulation. 
+We will use the simulation platform described in Chapter \ref{ch:simulation}.
+By comparing the outcomes of formal verification with simulation 
+results, we aim to assess both the soundness and the practical utility of 
+model-checking-based methods for modular self-replicating robots.
+
+
+
+\section{Validation of the counterexample based robot control}
+\label{ch:validationCounterexample}
+
+To validate the counterexample based approach, introduced in 
+chapter \ref{ch:Counterexample} we will integrate the counterexample generation 
+pipeline into ROS2-Gazebo simulation environment.
+We choose robot blocks configuration described in Chapter \ref{ch:robotSimulation}, 
+robot initial position and target point with coordinates $[50,50,10]$. 
+These initial parameters reflected in the lines 1-3 of the
+ Listing \ref{lst:validCounterInit} lines.
+
+\begin{lstlisting}[language=PythonMyStyle, caption={Counterexample class application example}, 
+    label={lst:validCounterInit}]
+angle_vars = ["block1.yaw", "block2.pitch", "block3.pitch", "block4.pitch", "block5.yaw"]
+sequence = ["base", "yaw", "pitch", "pitch", "pitch", "yaw"]
+lengths = [10, 20, 30, 30, 10, 20]
+robot = Robot(sequence, lengths)
+generator = RobotNusmvGenerator(robot, output_smv_path="./smv/")
+generator.set_target_point(50, 50, 10)
+generator.generate_from_template("project_robot")
+result = Counterexample.run_nusmv_file("./smv/robot.smv")
+counterexample = Counterexample(result, len(sequence))
+angles = counterexample.get_angles(angle_vars)
+counterexample.plot_trace(-1, show_plot=True)
+\end{lstlisting}
+Trace derived from the counterexample consist out of 9 steps and 
+shown in Figure \ref{fig:validCounterexamplePlot}
+\begin{figure}[h!]
+    \centering
+    \includegraphics[height=10cm]{validCounterexamplePlot.png} 
+    \caption{Trace derived from counterexample of reachability of point.}
+    \label{fig:validCounterexamplePlot}
+\end{figure}
+
+Resulting joint angles derived from the trace presented as a list steps,
+where each step is a list of control angles for each joint:
+\[ [0, -10, -10, -10, -10] \]
+\[ [0, -20, -20, -20, -20] \]
+\[ [0, -30, -30, -30, -30] \]
+\[ [0, -30, -40, -40, -40] \]
+\[ [0, -30, -50, -50, -50] \]
+\[ [0, -30, -60, -50, -60] \]
+\[ [0, -30, -70, -50, -60] \]
+\[ [0, -30, -80, -50, -60] \]
+
+These angles were published as a sequence of control messages 
+for the robot's joints using the rotate\_joints() function implemented in 
+the RobotController class, which is described in Section \ref{ch:robotSimulation}.
+This function ensures that each joint of the simulated robot receives a  
+command corresponding to the angles obtained from the verification results,
+thereby reproducing in simulation the trajectory.
+
+The result of this is shown in 
+Figure \ref{fig:validCounterSimulation}, which illustrates the robot successfully performing the 
+movement sequence derived from the counterexample.
+
+\begin{figure}[h!]
+    \centering
+    % \includegraphics[height=4cm]{counterSimulation/0.png} 
+    \includegraphics[height=4.5cm]{counterSimulation/1.png} 
+    \includegraphics[height=4.5cm]{counterSimulation/2.png} 
+    \includegraphics[height=4.5cm]{counterSimulation/3.png} 
+    \includegraphics[height=4.5cm]{counterSimulation/4.png} 
+    \includegraphics[height=4.5cm]{counterSimulation/5.png} 
+    \includegraphics[height=4.5cm]{counterSimulation/6.png} 
+    \includegraphics[height=4.5cm]{counterSimulation/7.png} 
+    \includegraphics[height=4.5cm]{counterSimulation/8.png} 
+    \includegraphics[height=4.5cm]{counterSimulation/9.png} 
+    \caption{Simulation steps to achieve target point from counterexample}
+    \label{fig:validCounterSimulation}
+\end{figure}
+
+Before launching the simulation in Gazebo, it was necessary to align the 
+coordinate systems between the counterexample data and the simulation environment.
+The coordinate system orientation used in the NuSMV model differs from that of 
+Gazebo. Therefore, a preliminary transformation 
+step was applied to adjust the  rotation of the robot and 
+the target. This alignment 
+was critical for correctly mapping the counterexample trajectory to 
+the simulated robot's physical motion. Once this transformation was 
+established, the robot was able to execute the motion plan as described by 
+the verified specification. 
+
+For the target point considered in this experiment, the resulting distance 
+between the robot's end effector and the target position after motion completion 
+was approximately 0.16 simulation units. This residual distance represents 
+the cumulative error introduced by several factors. 
+% The total discrepancy between 
+% the target and the actual position of the end effector is primarily composed 
+% of  the discretization error in the angular representation within NuSMV 
+% and the geometric offsets present in the Gazebo simulation model, 
+% particularly related to the simplifications made in the mechanical description 
+% of the robot's modular blocks. Across a series of ten experiments with 
+% different reachable target points, the maximum observed positional deviation 
+% was about 27\% of one voxel unit (the basic unit of spatial resolution in 
+% the simulation). Despite this discrepancy, the results consistently confirmed 
+% that the trajectories derived from counterexamples could be translated into 
+% feasible robot motions.
+%
+
+Total discrepancy between the target point and the center of the 
+end effector consists of the angle discretization error in NuSMV and 
+the geometric offset of the blocks in the simulation model. 
+Maximal discrepancy during simulation of ten different reachable points 
+was 27\% of length unit in the simulation (size of the voxel).
+
+The simulation process also revealed several challenges and 
+limitations in the current implementation of the counterexample-
+based control mechanism. 
+The main observed issues are summarized below:
+
+\begin{enumerate}
+    \item \textbf{Non-orthogonality of the end effector during mechanical attachment.}\\
+    During attachment actions, the end effector did not remain 
+    orthogonal to the side surfaces of the parts being assembled. 
+    This misalignment  reduce the effectiveness of physical attachment or 
+    cause mechanical stress on the joints.
+    
+    \item \textbf{Potential self-intersection of robot segments during movement.}\\
+    While following the motion trace generated in NuSMV, the robot occasionally 
+    approached poses that would lead to self-intersection in 
+    the physical model. 
+    This issue arises because our model used in NuSMV lacks explicit 
+    spatial collision constraints.
+    
+    \item \textbf{Positional error due to angle discretization.}\\
+    The angular variables in the NuSMV model were represented with a 
+    discrete resolution (e.g., in 10$^\circ$ or smaller increments). 
+    This quantization introduces rounding errors, which accumulate along 
+    multi-joint kinematic chains and lead to noticeable deviations in end-effector positioning.
+    
+    \item \textbf{Geometric inaccuracy due to simplified structural modeling.}\\
+    The NuSMV model employs a simplified geometric abstraction of the robot
+    structure, which does not fully capture the precise spatial offsets 
+    between certain block types.
+    Particularly, in our model blocks with a rotational axis, offset along the longitudinal direction. 
+\end{enumerate}
+
+To overcome these limitations and improve the accuracy of counterexample-
+based control, several refinements and future system enhancements
+are proposed:
+
+\begin{enumerate}
+    \item The NuSMV model can be extended with additional constraints that 
+    enforce orthogonal alignment of the terminal blocks of the robot relative 
+    to the surfaces of the parts being attached. 
+    This adjustment will ensure that the resulting trajectories maintain proper 
+    contact geometry during assembly.
+    
+    \item By incorporating geometric consistency checks or collision-avoidance predicates 
+        into the model generation process, 
+    it is possible to prevent self-intersecting configurations from being 
+    produced during verification. 
+    Such constraints could be encoded as temporal logic formulas that prohibit 
+    conflicting joint combinations.
+    
+    \item The angular discretization can be progressively refined in an iterative process. 
+    The model-checking trace from a coarse discretization can be used as a 
+    baseline, followed by repeated verification steps with smaller angle 
+    increments. 
+    This refinement strategy will balance computational complexity and accuracy.
+    
+    \item 
+    The robot physical structure in the NuSMV representation should be further refined 
+    to reflect the exact spatial arrangement of the blocks, 
+    including any offsets or rotations in the mechanical joints. 
+    This would reduce systematic discrepancies between the verified and simulated trajectories.
+\end{enumerate}
+
+In summary, the integration of counterexample-based motion generation with 
+Gazebo simulation demonstrates the feasibility of using formal verification outputs 
+to control physical or simulated self-replicating robots. 
+Although the current implementation still exhibits measurable deviations due 
+to model simplifications and discretization, 
+the results confirm that verified behaviors can be meaningfully reproduced 
+in a physical simulation environment. 
+Continued refinement of the model fidelity and constraint formulation will 
+further improve the correspondence between the symbolic verification domain 
+and the physical reality of robotic assembly.
+
+
+
+% The simulation also revealed the following challenges in the current implementation 
+% of counterexample-based control:
+%
+% \begin{enumerate}
+%     \item non-orthogonality of the end effector to the sides of the part during mechanical attachment.
+%     \item potential self-intersection of the robot during movement along the path
+%     of the robot in NSMV for orthogonal connection to parts.
+%     \item position error due to angle discretization.
+%     \item error due to simplified representation of the robot structure in NYSMV.
+% \end{enumerate}
+%
+% These issues can be resolved in the following system improvements by:
+%
+% \begin{enumerate}
+% \item introducing additional constraints on the blocks close to the end 
+%     of the robot in NYSMV for orthogonal connection to the parts.
+% \item introducing constraints on self-intersections of robot blocks during movement.
+% \item iterative reduction of the discretization angle with the introduction of 
+%     restrictions as the trace is refined.
+% \item refinement of the robot's geometry in the model.
+% \end{enumerate}
+
+
+\section{Validation of the robot configuration checking}
+\label{ch:validationConfiguration}
+
+In order to prove consistence of configurations checking workflow described 
+in Chapter \ref{ch:configurationChecking} we will first compare model checking results for 
+both sequential checking with python and aggregated checking with NuSMV. 
+And then  we will simulate one of reachable configurations in Gazebo, using simulation 
+platform described in Chapter \ref{ch:simulation}  to  validate 
+the results and prove that the target point is reachable for chosen configuration.
+
+
+\subsection{Comparison of individual and aggregated model checking}
+
+We will perform sequential configuration model checking for robots which consists of 
+block of types: "yaw", "pitch", 
+for target point $[20,20,20]$ and target region:
+
+$x=\{-10,10\}, y=\{-10,10\}, z=\{0,10\}$
+
+We will use \texttt{configuration\_checking} class, described in Chapter \ref{ch:configurationCheckingPy}.
+and the working script which is located in \texttt{configuration\_checking/}
+\texttt{validation\_individual\_configurations.py} script.
+
+For robot consisting of  3 blocks using individual checking 
+we  have no reachable configuration, 
+the list of all possible configurations are given in Table \ref{tab:conf3individ}.
+
+% Checking reachability of point: ['20', '20', '20']:
+% 1/4:base_pitch_pitch_:  not reachable   [0.027696 sec]
+% 2/4:base_pitch_yaw_:    not reachable   [0.011898 sec]
+% 3/4:base_yaw_pitch_:    not reachable   [0.016229 sec]
+% 4/4:base_yaw_yaw_:      not reachable   [0.010167 sec]
+
+\begin{table}[h!]
+\begin{tabular}{|l|l|l|l|l|l|}
+\hline
+N  & Configration                           & Point  & Time,sec   & Region  & Time,sec    \\ \hline
+1 & base\_pitch\_pitch &  not reachable   & 0.0276    & not reachable  & 0.0117 \\ \hline
+2 & base\_pitch\_yaw   &  not reachable   & 0.0118    & not reachable  & 0.0144 \\ \hline
+3 & base\_yaw\_pitch   &  not reachable   & 0.0162    & not reachable  & 0.0232 \\ \hline
+4 & base\_yaw\_yaw     &  not reachable   & 0.0101    & not reachable  & 0.0131 \\ \hline
+\end{tabular}
+\caption{Configurations reachability checking for robot size 3 for target point and target region.}
+\label{tab:conf3individ}
+\end{table}
+
+For the aggregated model checking with NuSMV model adjusted for robot length 3 we  
+also had no reachable configurations, and the computation time was 0.047455 sec.
+This result corresponds to individual checking outcome.
+
+For robot consisting of 4 blocks, using individual checking 
+we get five reachable configuration,
+the list of all possible configurations are given in Table \ref{tab:conf4individ}.
+
+% 1/8:base_pitch_pitch_pitch_:     reachable      [0.126555 sec]
+% 2/8:base_pitch_pitch_yaw_:       reachable      [0.035818 sec]
+% 3/8:base_pitch_yaw_pitch_:       reachable      [0.187626 sec]
+% 4/8:base_pitch_yaw_yaw_:        not reachable   [0.0123 sec]
+% 5/8:base_yaw_pitch_pitch_:       reachable      [0.107405 sec]
+% 6/8:base_yaw_pitch_yaw_:         reachable      [0.024083 sec]
+% 7/8:base_yaw_yaw_pitch_:        not reachable   [0.062486 sec]
+% 8/8:base_yaw_yaw_yaw_:  not reachable   [0.01128 sec]
+
+\begin{table}[h!]
+\begin{tabular}{|l|l|l|l|l|l|}
+\hline
+N  & Configration                           & Point  & Time,sec   & Region  & Time,sec    \\ \hline
+1 & base\_pitch\_pitch\_pitch & reachable      & 0.1265   &  not reachable   & 0.3181  \\ \hline
+2 & base\_pitch\_pitch\_yaw   & reachable      & 0.0358   &  not reachable   & 0.0402  \\ \hline
+3 & base\_pitch\_yaw\_pitch   & reachable      & 0.1876   &  not reachable   & 0.2137  \\ \hline
+4 & base\_pitch\_yaw\_yaw     & not reachable  & 0.0123   &  not reachable   & 0.0164  \\ \hline
+5 & base\_yaw\_pitch\_pitch   & reachable      & 0.1074   &  not reachable   & 0.1253  \\ \hline
+6 & base\_yaw\_pitch\_yaw     & reachable      & 0.0240   &  not reachable   & 0.0235  \\ \hline
+7 & base\_yaw\_yaw\_pitch     & not reachable  & 0.0624   &  not reachable   & 0.0654  \\ \hline
+8 & base\_yaw\_yaw\_yaw       & not reachable  & 0.0112   &  not reachable   & 0.0171  \\ \hline
+\end{tabular}
+\caption{Configurations reachability checking for robot size 4 for target point and target region.}
+\label{tab:conf4individ}
+\end{table}
+
+And for the aggregated model checking with NuSMV model adjusted for robot length=4 we will 
+have a following result for the reachability of point $[20,20,20]$ :
+
+['base', 'pitch', 'pitch', 'yaw']
+Time: 0.699504 sec
+
+This result corresponds to the robot configuration number 2 in Table \ref{tab:conf4individ}
+for individual checking.
+
+
+% self.length=5
+% 1/16:base_pitch_pitch_pitch_pitch_:      reachable      [1.637597 sec]
+% 2/16:base_pitch_pitch_pitch_yaw_:        reachable      [0.274722 sec]
+% 3/16:base_pitch_pitch_yaw_pitch_:        reachable      [2.074039 sec]
+% 4/16:base_pitch_pitch_yaw_yaw_:  reachable      [0.044345 sec]
+% 5/16:base_pitch_yaw_pitch_pitch_:        reachable      [2.124321 sec]
+% 6/16:base_pitch_yaw_pitch_yaw_: not reachable   [0.209023 sec]
+% 7/16:base_pitch_yaw_yaw_pitch_:  reachable      [1.063883 sec]
+% 8/16:base_pitch_yaw_yaw_yaw_:   not reachable   [0.012656 sec]
+% 9/16:base_yaw_pitch_pitch_pitch_:        reachable      [0.987572 sec]
+% 10/16:base_yaw_pitch_pitch_yaw_:         reachable      [0.224217 sec]
+% 11/16:base_yaw_pitch_yaw_pitch_:         reachable      [2.172816 sec]
+% 12/16:base_yaw_pitch_yaw_yaw_:  not reachable   [0.022455 sec]
+% 13/16:base_yaw_yaw_pitch_pitch_:        not reachable   [0.455085 sec]
+% 14/16:base_yaw_yaw_pitch_yaw_:  not reachable   [0.065636 sec]
+% 15/16:base_yaw_yaw_yaw_pitch_:  not reachable   [0.122896 sec]
+% 16/16:base_yaw_yaw_yaw_yaw_:    not reachable   [0.01179 sec]
+%
+
+Results for model checking of robots consisting of 5 blocks,  
+shown in Table \ref{tab:conf5individ}.
+
+\begin{table}[h!]
+\begin{tabular}{|l|l|l|l|l|l|}
+\hline
+N  & Configration                           & Point  & Time,sec   & Region  & Time,sec    \\ \hline
+1  & base\_pitch\_pitch\_pitch\_pitch  & reachable        & 1.6375   & not reachable    & 7.0634  \\ \hline
+2  &  base\_pitch\_pitch\_pitch\_yaw   & reachable        & 0.2747   & not reachable    & 0.3352  \\ \hline
+3  &  base\_pitch\_pitch\_yaw\_pitch   & reachable        & 2.0740   & not reachable    & 3.4262  \\ \hline
+4  &  base\_pitch\_pitch\_yaw\_yaw     & reachable        & 0.0443   & not reachable    & 0.0442  \\ \hline
+5  &  base\_pitch\_yaw\_pitch\_pitch   & reachable        & 2.1243   & reachable        & 8.6275  \\ \hline
+6  &  base\_pitch\_yaw\_pitch\_yaw     & not reachable    & 0.2090   & not reachable    & 0.2357  \\ \hline
+7  &  base\_pitch\_yaw\_yaw\_pitch     & reachable        & 1.0638   & not reachable    & 1.1828  \\ \hline
+8  &  base\_pitch\_yaw\_yaw\_yaw       & not reachable    & 0.0126   & not reachable    & 0.0183  \\ \hline
+9  &  base\_yaw\_pitch\_pitch\_pitch   & reachable        & 0.9875   & reachable        & 1.3594  \\ \hline
+10 &  base\_yaw\_pitch\_pitch\_yaw     & reachable        & 0.2242   & reachable        & 0.2629  \\ \hline
+11 &  \cellcolor{green!20}base\_yaw\_pitch\_yaw\_pitch     & reachable        & 2.1728   & reachable        & 4.3590  \\ \hline
+12 &  base\_yaw\_pitch\_yaw\_yaw       & not reachable    & 0.0224   & not reachable    & 0.0462  \\ \hline
+13 &  base\_yaw\_yaw\_pitch\_pitch     & not reachable    & 0.4550   &  not reachable   & 0.5033  \\ \hline
+14 &  base\_yaw\_yaw\_pitch\_yaw       & not reachable    & 0.0656   & not reachable    & 0.0753  \\ \hline
+15 &  base\_yaw\_yaw\_yaw\_pitch       & not reachable    & 0.1228   & not reachable    & 0.1382  \\ \hline
+16 &  base\_yaw\_yaw\_yaw\_yaw         & not reachable    & 0.0117   & not reachable    & 0.0177  \\ \hline
+\end{tabular}
+\caption{Configurations reachability checking for robot size 5 for target point and target region.}
+\label{tab:conf5individ}
+\end{table}
+
+
+For the aggregated model checking with NuSMV model adjusted for robot length 5 we will 
+have a following result for the reachability of target point:
+
+['base', 'pitch', 'yaw', 'pitch', 'pitch']
+
+Calculation time was 22.020454 sec
+
+All aggregated model checking results corresponds to the individual checking, 
+that proves the consistency of the developed approach.
+% Rerion {-10,10} {-10,10} {0,10}
+
+% \begin{table}[h!]
+% \begin{tabular}{|l|l|l|l|l|l|}
+% \hline
+% N  & Configration                           & Point  & Time,sec   & Region  & Time,sec    \\ \hline
+% 1 & base\_pitch\_pitch\_pitch\_pitch\_pitch &  reachable     & 169.71c & not reachable     & 1007.4  \\ \hline
+% 2 & base\_pitch\_pitch\_pitch\_pitch\_yaw &   reachable      & 1.8283  & not reachable     & 7.3235  \\ \hline
+% 3 & base\_pitch\_pitch\_pitch\_yaw\_pitch &   reachable      & 70.105  & reachable      & 466.35  \\ \hline
+% 4 & base\_pitch\_pitch\_pitch\_yaw\_yaw &    not reachable     & 0.2860  & not reachable      & 0.3562  \\ \hline
+% 5 & base\_pitch\_pitch\_yaw\_pitch\_pitch &   reachable      & 50.922  & reachable      & 226.78  \\ \hline
+% 6 & base\_pitch\_pitch\_yaw\_pitch\_yaw &     reachable      & 2.4502  & reachable      & 10.687  \\ \hline
+% 7 & base\_pitch\_pitch\_yaw\_yaw\_pitch &     reachable      & 17.172  & not reachable     & 38.146  \\ \hline
+% 8 & base\_pitch\_pitch\_yaw\_yaw\_yaw &      not reachable     & 0.0463  & not reachable      & 0.0862  \\ \hline
+% 9 & base\_pitch\_yaw\_pitch\_pitch\_pitch &   reachable      & 55.968  & reachable      & 207.57  \\ \hline
+% 10 & base\_pitch\_yaw\_pitch\_pitch\_yaw &    reachable      & 6.5920  & reachable      & 10.631  \\ \hline
+% 11 & base\_pitch\_yaw\_pitch\_yaw\_pitch &    reachable      & 147.78  & reachable      & 889.28  \\ \hline
+% 12 & base\_pitch\_yaw\_pitch\_yaw\_yaw &      reachable      & 0.2445  & not reachable     & 0.2833  \\ \hline
+% 13 & base\_pitch\_yaw\_yaw\_pitch\_pitch &    reachable      & 18.397  & not reachable     & 29.298  \\ \hline
+% 14 & base\_pitch\_yaw\_yaw\_pitch\_yaw &      reachable      & 1.1950  & not reachable     & 1.6801  \\ \hline
+% 15 & base\_pitch\_yaw\_yaw\_yaw\_pitch &     not reachable     & 2.7777  & not reachable      & 3.8429  \\ \hline
+% 16 & base\_pitch\_yaw\_yaw\_yaw\_yaw &       not reachable     & 0.0128  & not reachable      & 0.0335  \\ \hline
+% 17 & base\_yaw\_pitch\_pitch\_pitch\_pitch &  reachable      & 25.389  & reachable      & 38.161  \\ \hline
+% 18 & base\_yaw\_pitch\_pitch\_pitch\_yaw &    reachable      & 2.2987  & reachable      & 3.1978  \\ \hline
+% 19 & base\_yaw\_pitch\_pitch\_yaw\_pitch &    reachable      & 46.454  & reachable      & 238.72  \\ \hline
+% 20 & base\_yaw\_pitch\_pitch\_yaw\_yaw &     not reachable     & 0.2329  & not reachable      & 0.2708  \\ \hline
+% 21 & base\_yaw\_pitch\_yaw\_pitch\_pitch &    reachable      & 45.252  & reachable      & 150.38  \\ \hline
+% 22 & base\_yaw\_pitch\_yaw\_pitch\_yaw &      reachable      & 5.0098  & reachable      & 7.8665  \\ \hline
+% 23 & base\_yaw\_pitch\_yaw\_yaw\_pitch &     not reachable     & 17.253  & reachable       & 27.916  \\ \hline
+% 24 & base\_yaw\_pitch\_yaw\_yaw\_yaw &       not reachable     & 0.0482  & not reachable      & 0.0510  \\ \hline
+% 25 & base\_yaw\_yaw\_pitch\_pitch\_pitch &    reachable      & 2.8130  & not reachable     & 4.0847  \\ \hline
+% 26 & base\_yaw\_yaw\_pitch\_pitch\_yaw &      reachable      & 0.5298  & not reachable     & 0.5949  \\ \hline
+% 27 & base\_yaw\_yaw\_pitch\_yaw\_pitch &      reachable      & 7.4332  & not reachable     & 27.393  \\ \hline
+% 28 & base\_yaw\_yaw\_pitch\_yaw\_yaw &       not reachable     & 0.0784  & not reachable      & 0.0887  \\ \hline
+% 29 & base\_yaw\_yaw\_yaw\_pitch\_pitch &     not reachable     & 1.1831  & not reachable      & 1.3677  \\ \hline
+% 30 & base\_yaw\_yaw\_yaw\_pitch\_yaw &       not reachable     & 0.1470  & not reachable      & 0.3001  \\ \hline
+% 31 & base\_yaw\_yaw\_yaw\_yaw\_pitch &       not reachable     & 0.6042  & not reachable      & 0.6404  \\ \hline
+% 32 & base\_yaw\_yaw\_yaw\_yaw\_yaw &         not reachable     & 0.0119  & not reachable      & 0.0188  \\ \hline
+% \end{tabular}
+% \caption{Configurations reachability checking for robot size 6.}
+% \label{tab:conf5individ}
+% \end{table}
+% Time: 1057.268079 sec
+
+The important observation is that in configurations where the first 
+block after base is pitch block, the configuration
+is equivalent to a base-yaw-pitch..., as if we would have an additional yaw block after base,
+this property defined by base block structure,
+and reflects the arbitrary initial rotation of a robot.
+
+
+\subsection{Simulation of eligible configurations}
+
+% We create a new list of reachable configurations for robots of length 5 and target point 
+% with coordinates[20,20,20]. Table \ref{tab:con5target20}
+
+
+% 6  &  base\_pitch\_yaw\_pitch\_yaw   & \cellcolor{green!20}reachable        & \cellcolor{green!20}0.2200     \\ \hline
+% \begin{table}[h!]
+%     \begin{center}
+%         
+% \begin{tabular}{|l|l|l|l|}
+% \hline
+% N  & Configration                           & Point  & Time,sec   \\ \hline
+% 1  & base\_pitch\_pitch\_pitch\_pitch  & reachable        & 1.9822         \\ \hline
+% 2  &  base\_pitch\_pitch\_pitch\_yaw   & reachable        & 0.2775         \\ \hline
+% 3  &  base\_pitch\_pitch\_yaw\_pitch   & reachable        & 2.2516         \\ \hline
+% 4  &  base\_pitch\_pitch\_yaw\_yaw     & not reachable    & 0.0418         \\ \hline
+% 5  &  base\_pitch\_yaw\_pitch\_pitch   & reachable        & 2.4341         \\ \hline
+% 6  &  base\_pitch\_yaw\_pitch\_yaw     & reachable        & 0.2340          \\ \hline
+% 7  &  base\_pitch\_yaw\_yaw\_pitch     & not reachable    & 1.0739         \\ \hline
+% 8  &  base\_pitch\_yaw\_yaw\_yaw       & not reachable    & 0.0161         \\ \hline
+% 9  &  base\_yaw\_pitch\_pitch\_pitch   & reachable        & 1.2558         \\ \hline
+% 10 &  base\_yaw\_pitch\_pitch\_yaw     & reachable        & 0.2558         \\ \hline
+% 11 &  \cellcolor{green!20}base\_yaw\_pitch\_yaw\_pitch     & reachable        & 2.7031         \\ \hline
+% 12 &  base\_yaw\_pitch\_yaw\_yaw       & not reachable    & 0.0246         \\ \hline
+% 13 &  base\_yaw\_yaw\_pitch\_pitch     & not reachable    & 0.4640         \\ \hline
+% 14 &  base\_yaw\_yaw\_pitch\_yaw       & not reachable    & 0.0673         \\ \hline
+% 15 &  base\_yaw\_yaw\_yaw\_pitch       & not reachable    & 0.1293         \\ \hline
+% 16 &  base\_yaw\_yaw\_yaw\_yaw         & not reachable    & 0.0133         \\ \hline
+% \end{tabular}
+% \end{center}
+% \caption{Configurations reachability checking for robot size 5.}
+% \label{tab:con5target20}
+% \end{table}
+
+
+From the list of reachable configurations presented in Table~\ref{tab:conf5individ}, 
+one configuration was selected for validation using the simulation platform. 
+The chosen configuration, highlighted in green in the table, corresponds to 
+the following sequence of blocks:
+\texttt{[base, yaw, pitch, yaw, pitch]}. 
+A robot with this structure is capable of reaching the specified target 
+point according to the model-checking results.
+
+To implement this configuration in the simulation, a dedicated 
+xacro file was created, and located in 
+\texttt{/urdf/robot\_yaw\_pitch\_yaw\_pitch.xacro}, in \cite{GitHub}. 
+The primary modification in this file concerns the block sequence of the robot, 
+as shown in Listing~\ref{lst:configCheckingValidationRobot}. 
+This modification ensures that the simulated robot matches
+the verified structural configuration used in NuSMV.
+
+\begin{lstlisting}[language=NuSMV, caption={Structure of reachable configuration of a robot}, 
+    label={lst:configCheckingValidationRobot}]
+<xacro:voxel name="block0" origin="0 0 0" color="${red}"/>
+<xacro:block_ver block_num="1" par_num="0"  x="0" y="0" z="0" />
+<xacro:block_fix block_num="2" par_num="1"  x="0" y="0" z="1" />
+<xacro:block_hor block_num="3" par_num="2"  x="0" y="1" z="1" />
+<xacro:block_ver block_num="4" par_num="3"  x="0" y="0" z="-0.5" />
+<xacro:block_fix block_num="6" par_num="4"  x="0" y="0" z="1" />
+<xacro:block_hor block_num="7" par_num="6"  x="0" y="-1" z="1" />
+<xacro:block_fix block_num="8" par_num="7"  x="0" y="0" z="0.5" />
+<xacro:block_end block_num="11" par_num="8" x="0" y="0" z="0.5" />
+\end{lstlisting}
+
+A counterexample trace for this configuration and the corresponding target points 
+was obtained using the script \texttt{counterexample\_yaw\_pitch\_yaw\_pitch\_robot.py} 
+available in~\cite{GitHub}. 
+The resulting joint angles extracted from the counterexample are:
+\texttt{[10, -70, -80, -70]}. 
+These values represent the rotation commands for each joint in degrees and were later applied in the simulation to reproduce the verified trajectory.
+
+For the purpose of simulation and validation, a dedicated ROS~2 launch file named 
+\texttt{robot\_config\_validation.launch.py} was developed. 
+This file initializes the Gazebo environment, loads the robot description, 
+and executes the counterexample-based control sequence to move the robot toward the target point.
+
+The results of the simulation are presented in Figure~\ref{fig:configCheckingValidationRobot}. 
+The figure illustrates the initial configuration of the robot and its final pose after performing 
+the movement sequence derived from the counterexample trace. 
+As can be observed, the robot successfully reached the target point, 
+confirming the feasibility of the configuration identified through model checking.
+
+
+% From a list of reachable configurations in Table \ref{tab:conf5individ}
+% we will choose one to validate the result using simulation platform. 
+% The chosen configuration highlighted in green.
+% As an example we will choose following configuration of blocks:
+% [base, yaw, pitch, yaw, pitch]. 
+% Robot with such configuration can reach a target point.
+%
+%  First of all we will create a xacro file for robot configuration, this file presented 
+%  in /urdf/robot\_yaw\_pitch\_yaw\_pitch.xacro in \cite{GitHub}. The main changes are in 
+%  block sequence, shown in Listing \ref{lst:configCheckingValidationRobot}.
+%
+
+% We recieved a counterexample for this configuration and target points
+% using script counterexample\_yaw\_pitch\_yaw\_pitch\_robot.py in \cite{GitHub}.
+% The resulting angles for joints are: [10, -70, -80, -70].
+%
+% In order to check this configuration of a robot we created a separate ROS2 launch file:
+% robot\_config\_validation.launch.py.
+%
+% The simulation result of the counterexample based movement to a target point 
+% configuration shown in Figure \ref{fig:configCheckingValidationRobot}
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[height=9cm]{config_validation1.png} 
+    \includegraphics[height=9cm]{config_validation2.png} 
+    \caption{Validation of reachable configuration of a robot, initial and target pose}
+    \label{fig:configCheckingValidationRobot}
+\end{figure}
+
+% Thus, in this section, we have shown that the results of individual and 
+% aggregated verification of NuSMV models for all possible robot configurations up 
+% to length 5 are consistent with each other. We also provided an example 
+% of a simulation of one of the obtained models, which confirmed the results. 
+%
+
+In summary, this section demonstrates that the outcomes of both individual 
+and aggregated verification 
+of NuSMV models for all robot configurations up to a length of five blocks 
+are consistent with each other. 
+Furthermore, the provided simulation example validates one of the verified 
+configurations, 
+confirming that the model-checking results accurately correspond to 
+physically realizable robot movements within the simulation environment.
+
+\subsection{Comparison of computational time for model checking}
+\label{ch:timeAnalysis}
+
+To analyze the computational complexity of configuration checking and to compare 
+the aggregated and sequential verification approaches, a series of 
+experiments were conducted. 
+In the first part of the experiment, a single target point with coordinates 
+$x = 20$, $y = 20$, $z = 20$ was used for reachability verification. 
+The results of these experiments were presented in Tables~\ref{tab:conf3individ}--\ref{tab:conf5individ}.
+
+In the second part, the total model-checking time was evaluated for 
+a target region defined by the coordinate ranges 
+$x \in \{-10, 10\}$, $y \in \{-10, 10\}$, and $z \in \{0, 10\}$. 
+The variation of the total verification time for point reachability with respect to 
+the number of blocks in the robot 
+is shown in Figure~\ref{fig:ConfigCheckingPointTimeSize}. 
+% In order to analyze the complexity of the configuration checking and compare 
+% aggregated checking approach with sequential we will perform a number of experiments.
+%
+% At first part used a  point with coordinates: x=20, y=20, z=20 as a target.
+%
+% Results are presented in Tables \ref{tab:conf3individ}-\ref{tab:conf5individ}. 
+%
+% The changing of total time required for model checking with  number of blocks in 
+% robot shown in the Figure \ref{fig:ConfigCheckingPointTimeSize}
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[height=9cm]{Time_size_plot_point.png} 
+    \caption{Total time of model checking with number of blocks in robot for target point.}
+    \label{fig:ConfigCheckingPointTimeSize}
+\end{figure}
+
+Similarly, the dependence of the total verification time for region reachability 
+on the robot size is illustrated in Figure~\ref{fig:ConfigCheckingRegionTimeSize}.
+% The second part used a total time of model checking of a region:
+% $x=\{-10,10\}, y=\{-10,10\}, z=\{0,10\}]$
+% The changing of total time required for model checking with  number of blocks in 
+% robot shown in the Figure \ref{fig:ConfigCheckingPointTimeSize}
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[height=9cm]{Time_size_plot_region.png} 
+    \caption{Total time of model checking with number of blocks in robot for  target region.}
+    \label{fig:ConfigCheckingRegionTimeSize}
+\end{figure}
+
+
+% Sequential checking of the configuration has the following features:
+% \begin{enumerate}
+%     \item It gives a full list of all reachable configurations
+%     \item It allows to further analyze the generated configuration
+%     \item It is slower in general than aggregated approach
+%  \end{enumerate}
+%
+% Aggregated configurations checking from the other hand:
+% \begin{enumerate}
+%     \item Is faster than sequential checking for common case
+%     \item Gives only the first encountered reachable configuration, 
+%         can find others only after negating the found one.
+%     \item Allows constraint specific blocks by number in sequence 
+%         with type defining variable in NuSMV
+%  \end{enumerate}
+In both graphs, the model checking time grows exponentially with robot 
+size. This is a typical behavior for model checking problems, as the 
+state space explosion becomes dominant when system complexity increases. 
+For smaller robot sizes (3–4 modules), the total checking time is nearly 
+negligible in both point and region cases. 
+However, as the robot size reaches 5 and especially 6 modules, the computation 
+time rises  in the point-target case up to approximately 700
+ seconds, and in the region-target case exceeding around 2 hours for the largest configuration. 
+
+The experiments reveal that the sequential and aggregated approaches 
+to configuration checking in NuSMV exhibit distinct advantages
+that determine their suitability for different verification tasks.
+
+The sequential checking method systematically explores each configuration.
+Its  advantage lies in its completeness: it provides 
+a comprehensive list of all reachable configurations, ensuring that no 
+valid state is omitted. This  nature makes 
+the sequential approach particularly valuable for analysis, where 
+the generated configurations can be further examined using simulation 
+to assess structural properties, other criteria. 
+However, this completeness comes at a computational cost. 
+Since each configuration is verified independently, 
+the overall process tends to be  slower than the aggregated approach,
+especially as the number of configurations increases.
+
+In contrast, the aggregated configuration strategy check multiple 
+configurations in single verification model. This integrated formulation 
+enables NuSMV to handle the problem more efficiently, resulting in 
+faster verification times in most cases. 
+However, the aggregated model typically returns only 
+the first reachable configuration that satisfies the given specification. 
+Discovering additional configurations requires iteratively negating previously 
+found solutions and re-running the verification process, adds procedural 
+complexity. 
+On the other hand, this approach supports fine-grained control 
+over the structure of configurations, as it allows the inclusion of 
+constraints on specific blocks within the sequence through type-defining 
+variables in NuSMV. This feature makes aggregated checking well-suited 
+for  analysis on design stage, where constraints  play a central role.
+
+The choice between these two methods should therefore depend on the verification objective: 
+whether the goal is to obtain a full configuration space for detailed analysis 
+or to achieve rapid validation of specific structural constraints within 
+a large and complex model.
+
+\section{Evaluation of 2D reachability checking computation time}
+
+We performed a number of verification experiments using the workflow described in 
+Chapter \ref{ch:global} to validate the model and to analyze 
+the robot's behavior in various conditions.
+
+% The experiments served two primary purposes: (1) Validation of the 
+% model's correctness against expected outcomes in known scenarios, 
+% and (2) Performance assessment to understand how the complexity scales 
+% with field size and robot length.
+%
+% Model Validation in Various Scenarios: We tested the model on grid sizes 
+% ranging from very small (3x3, 4x4) up to moderate sizes like 7x7. 
+% The robot’s assembly sequence length was also varied (we tried sequences of 
+% length 2 up to 6 or more parts). We placed parts and obstacles in different 
+% configurations, including edge cases:
+%
+% Scenarios where the robot can immediately find all parts (straightforward success).
+%
+% Scenarios where one of the required parts is present but located behind 
+% obstacles, forcing the robot to take a longer path.
+%
+% Scenarios where a required part is completely absent from the field (
+% which should inevitably lead to failure).
+%
+% Cases where the robot is boxed in or starts in a tight area, to see 
+% if the model correctly identifies the failure (no path) early.
+%
+% Random distributions of a variety of parts on the field, with the robot 
+% tasked to assemble one particular sequence out of the clutter.
+%
+% In each case, we checked that the counterexample path returned by nuXmv 
+% made sense and corresponded to a feasible execution of the intended rules
+% . The correctness of the NuSMV model’s logic was thus empirically confirmed 
+% by these tests: for instance, in scenarios where a part was unreachable, 
+% the model always eventually produced a FAILED trace (and the trace clearly 
+% showed the robot searching all around an obstacle until no options remained
+% ). In scenarios where multiple paths to a part existed, the model checker 
+% inherently found one path (not necessarily all) — typically it finds one 
+% of the shortest paths due to the way bounded search works in nuXmv, 
+% but we did not formally ensure minimality. We cross-validated the results 
+% using a manual simulation in a few cases and also with a custom visualization: 
+% the GUI’s drawn path allowed us to see if the robot took a reasonable route
+% . All these tests gave confidence that the model accurately implements the 
+% intended behavior of the SRRS under our assumptions, and that the automation 
+% correctly captures the traces.
+
+We ensured that the automatic generation itself was correct by 
+comparing an automatically generated model (for a simple scenario) 
+to the hand-written initial model. They matched in structure, and running 
+both yielded the same outcome. 
+% This was aided by using the Formal-Methods Playground tool created by \c
+% for quick iteration; we would generate a model with Python, then load it in the Playground or directly in nuXmv 
+% to verify it. The Formal-Methods Playground [2] provided a convenient environment 
+% to develop the initial model and even visualize state space for small 
+% cases, which complemented our Python automation approach.
+
+Using a simple Python script, we measured the 
+time required for model generation, model checking, and counterexample processing 
+under different scenario sizes. 
+We were particularly interested in how the computation grows with field size
+and with robot size.
+
+\subsubsection{ Field Size }
+We kept the robot’s sequence length fixed 
+and increased the grid size (4x4, 5x5, 6x6, and 7x7)
+to see how the state space explosion affects runtime. 
+The results, shown in Figure \ref{fig:2DtimeField}, 
+indicated that the verification time grows quickly with 
+the area of the grid. 
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[height=8cm]{2Dreachability/TimeFielsSize.png} 
+    \caption{Model checking time with field size}
+    \label{fig:2DtimeField}
+\end{figure}
+
+A larger field means more possible positions 
+and more possible paths for the robot, which dramatically increases the 
+state space that the model checker must explore. We found that going beyond 
+a 7x7 grid with a 4-part robot made NuSmv execution considerably slower 
+in our model. The relationship was not strictly exponential in 
+field size for our tested range, but it was steep—significantly higher 
+runtime for each increment in field dimension.
+
+\subsubsection{Robot Length }
+We then fixed a field size to 6 and varied the number of parts 
+in the robot's sequence length. The computation times for 
+model generation, verification, and trace processing as a function of 
+robot size are plotted in Figure \ref{fig:2DtimeRobot}. 
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[height=8cm]{2Dreachability/TimeRobotSize.png} 
+    \caption{Model checking time with robot size}
+    \label{fig:2DtimeRobot}
+\end{figure}
+
+As expected, longer sequences also 
+increase the state space, because the assembly\_index has a larger range 
+and more parts need to be found in order. 
+This tends to increase the 
+length of counterexample traces.
+With a 6x6 field, going from a robot requiring 
+3 parts to one requiring 5 parts made the verification slower, but the 
+impact was much less pronounced than during increasing the field size. 
+This suggests that spatial complexity (field area) was the more limiting 
+factor in our model than the temporal length of the task.
+
+The performance data was collected on a standard laptop with Intel Core i7 
+2.4 GHz, running Ubuntu 24.04. We recorded the times for model generation,
+which were negligible for these sizes, on the order of fractions of 
+a second up to a couple of seconds for the largest cases, model checking,
+which dominated the time, ranging from under a second for very small 
+cases to many seconds or minutes for the larger ones, and counterexample processing,
+also very fast, since parsing a text trace is trivial compared to 
+the model checking. 
+
+One qualitative observation from all our experiments is that the counterexample 
+produced by NuSmv was often the shortest possible path to reach the 
+goal or failure. That is, the model checker tends to find an optimal or 
+near-optimal solution in terms of number of steps.
+% , likely because any 
+% unnecessary wandering would constitute a longer counterexample and model 
+% checking algorithms often find counterexamples by BFS or iterative deepening 
+% (thus finding shorter traces first). 
+For example, if there was a more 
+direct route for the robot to gather parts, the first counterexample usually 
+reflected that direct route rather than a circuitous one. In our tests,
+for all evaluated configurations up to length-4 robots in 5x5 grids 
+(and many in 6x6), the first counterexample found corresponded to a 
+strategy where the robot made efficient moves, not visiting irrelevant areas.
+This suggests that, at least for these sizes, our approach could be 
+leveraging the model checker as not just a verifier but also a planner that 
+yields shortest paths.
+However, we did not formally guarantee optimality, 
+and it is possible for a model checker to output a non-shortest counterexample 
+in some cases.
+% (especially if heuristics or BDD search orders favor a 
+% particular exploration). 
+% We simply noted this behavior; 
+A more rigorous analysis 
+could be done to confirm path optimality or lack thereof. 
+% Regardless, 
+% having a concrete execution trace (shortest or not) is extremely valuable 
+% for interpreting the system’s behavior.
+
+In summary, the verification experiments confirmed that the NuSMV model 
+correctly captures the reachability of both success and failure conditions 
+in a self-replicating robot scenario. The automated workflow significantly reduced 
+the effort to test different scenarios, and the results provided  
+confidence in the model 
+% and insight into performance 
+% bottlenecks (through timing measurements). 
+Figures \ref{fig:2DtimeField} and \ref{fig:2DtimeRobot} provide a 
+high-level view of how scaling the problem size impacts the computational cost,
+which is important when considering more complex or larger-scale applications 
+of this verification approach.
+
+
+\section{Threats to validity}
+
+In our work, the integration of formal verification through 
+NuSMV, simulation in ROS2 and Gazebo, and the conceptual modeling of 
+self-replicating robotic system introduces several sources of 
+uncertainty and possible threats to validity.
+The purpose of this section is to critically evaluate these threats and 
+to define their implications.
+% in terms of internal validity -- whether the 
+% results accurately represent the studied system, external validity --
+% the generalizability of findings, construct validity  -- whether the models 
+% represent the intended concepts, and conclusion validity --the reliability of 
+% analytical results.
+Understanding these potential weaknesses is essential not only for interpreting 
+the results  but also for guiding future work aimed at reducing their 
+impact. \\
+
+Three main sources of validity threats were identified 
+in the developed system:
+\begin{enumerate}
+    \item Limited generalization of the developed system — the applicability of 
+    the proposed verification methods is confined to a specific class of 
+    SRRS systems.
+    \item Discretization errors and computational trade-offs — the accuracy and 
+    performance of the model are constrained by the discretization parameter.
+    \item Inconsistencies between NuSMV models, simulation environments, and real-world 
+    -- abstractions and simplifications lead to mismatches between modeled 
+    and physical behaviors.
+\end{enumerate}
+
+\subsubsection{ Limited generalization of the developed system }
+
+The approaches and implementations presented in Chapter \ref{ch:implementation} and \ref{ch:simulation}
+were specifically designed and validated on modular, self-replicating robotic 
+systems with relative robot (robots using relative motion between their parts 
+and their environment to move and build structures). 
+These systems are characterized by discrete structural blocks,
+that can be mechanically connected, detached, and rearranged to form new robots.
+The model checking framework assumes a 
+relative coordinate representation, where all positional and kinematic relations 
+are expressed relative to the robot's local reference frame.
+
+While this abstraction enabled a compact and computationally tractable formal 
+model, it  limits external validity. 
+In particular, the proposed verification methods may not directly generalize to
+non-modular SRRS architectures, such as continuous-body or deformable robots,
+self-replicating swarm systems, where replication emerges from collective behavior or
+ hybrid robotic systems, where the replication process 
+involves chemical or additive-manufacturing operations.
+
+For such systems, the assumptions about structure, connectivity, and 
+discrete transitions used in this work would not necessarily hold. 
+Additionally, the temporal logic specifications we used depend on the ability to 
+enumerate discrete states.  SRRS with other type of structure 
+ would therefore require reformulation of the model semantics. 
+
+Therefore, the findings of this work should be interpreted as representative 
+of a specific class of SRRS rather than as a universal model checking methodology 
+for all self-replicating robots.
+
+\subsubsection{ Discretization errors}
+
+The second threat to validity arises from the discretization parameter 
+employed during model generation. In formal verification of  
+motion-related properties, the continuous workspace of the robot must 
+be discretized into a finite set of states to make model checking computationally 
+feasible. 
+In our system, each step of discretization defines a quantization 
+of angular  and  linear space,  determining how finely 
+the robot's configuration space is represented.
+
+This choice introduces the  accuracy–efficiency contradiction:     
+
+A coarse discretization with a large step size reduces the number of 
+states, leading to faster model checking, but at the expense of precision. 
+A fine discretization with a small step size increases model 
+fidelity but causes exponential growth in the number of states, leading 
+to  extremely long verification times. 
+
+These discretization-related errors directly threaten the validity,
+as the model's discrete representation might fail to capture the intended 
+continuous behaviors. 
+
+This problem can be mitigated by performing  multi-resolution analysis, 
+where verification is performed at multiple levels of discretization and 
+results are compared for consistency.
+Using abstraction refinement techniques, in which coarse verification results 
+guide selective refinement of critical regions in the state space.
+
+Future research should therefore formalize the relationship between discretization,
+verification precision, and computational time for SRRS,
+to develop flexible model parameterization.
+
+\subsubsection{Inconsistencies between NuSMV model, simulation, and reality}
+
+Another threat to validity stems from inconsistencies between the 
+used NuSMV model, the ROS2–Gazebo simulation, and the real-world physical implementation 
+of the robot. 
+While the verification model captures the logical and 
+structural relations among robot components, certain geometric and kinematic 
+simplifications were made to keep the model tractable.
+
+A concrete example arises in the representation of blocks of type block\_pitch, 
+where in the simulation and real robot design an axis of rotation  is 
+shifted along the rotation axis relative to the connected block. 
+This shift introduces a small translational displacement during rotation—
+an effect that is physically significant for precise assembly but was 
+omitted in the NuSMV model for simplicity. 
+As a result, the formal model assumes perfectly aligned rotational joints,
+whereas the physical robot exhibits a small offset.
+
+The potential consequence is that a configuration deemed 
+reachable in the formal model might not be physically realizable due 
+to geometric interference or misalignment.
+
+To mitigate this threat we used an alternating shift direction in the simulation, 
+and in future this and similar aspects can be incorporated into the NuSMV model.
+
+Performing cross-validation between model checking and simulation, 
+as partially implemented in this thesis in Chapters \ref{ch:validationCounterexample}
+\ref{ch:validationConfiguration},
+allows detecting inconsistencies by replaying verified sequences 
+in the simulation environment.
+
+% While these mitigations can reduce the gap, a complete alignment between 
+% symbolic and physical models is challenging, particularly in modular robotics 
+% where even minor geometric deviations can propagate through the assembly
+% . Consequently, verification results should be interpreted with an 
+% awareness that they reflect idealized structural conditions.
+
+\subsubsection{Summary}
+
+The three identified sources of validity threats represent the main 
+factors that may constrain the implementation to other sysems and interpretation of 
+the results presented in this thesis. 
+None of these threats invalidate the fundamental conclusions of 
+the research, but they define the operational boundaries within which 
+those conclusions remain valid.
+
+From a methodological perspective, these threats highlight the necessity of 
+maintaining a multi-layered validation pipeline, where formal verification, 
+simulation-based testing, and physical experimentation complement one 
+another. 
+Model checking provides exhaustive logical guarantees within its 
+abstract domain, while simulation validates these results under physical 
+dynamics, and real-world testing confirms them under environmental uncertainty.
+By addressing these aspects, subsequent studies can move toward fully 
+validated, scalable frameworks for self-replicating robotic systems.

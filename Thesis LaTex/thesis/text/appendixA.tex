@@ -1,0 +1,85 @@
+\section{NuSMV models}
+\subsection{robot\_structure.smv}
+\subsubsection{Trigonometric modules}
+\label{ch:appendixNusmvTrig}
+\lstinputlisting[language=NuSMV, basicstyle=\ttfamily\scriptsize, 
+caption={NuSMV modules sin and cos to calculate trigonometric functions for integer angles. },
+numbers=left, firstline=1, lastline=34]{code/robot_structure.smv}
+
+\subsubsection{block\_base module}
+\label{ch:appendixNusmvBase}
+\lstinputlisting[language=NuSMV, basicstyle=\ttfamily\scriptsize, 
+caption={NuSMV  module  block\_base  describes initial block of a robot sequence 
+and located a ground plane.},
+numbers=left, firstline=38, lastline=54]{code/robot_structure.smv}
+
+% \caption{ block\_yaw module describes rotation around the parent Z axis (along the block) and changing the yaw angle}
+% \subsubsection{block\_yaw module}
+% \lstinputlisting[language=NuSMV, basicstyle=\ttfamily\scriptsize, numbers=left, firstline=57, lastline=90]{code/robot_structure.smv}
+% \label{ch:appendixNusmvYaw}
+
+\subsubsection{block\_pitch module}
+\label{ch:appendixNusmvPitch}
+\lstinputlisting[language=NuSMV, basicstyle=\ttfamily\scriptsize, 
+caption={NuSMV  module block\_pitch describes rotation around the  Y 
+axis  of the parent block and changing the pitch angles.},
+numbers=left, firstline=95, lastline=126]{code/robot_structure.smv}
+
+\subsubsection{main module}
+\label{ch:appendixNusmvMain}
+\lstinputlisting[language=NuSMV, basicstyle=\ttfamily\scriptsize, numbers=left, 
+caption={Main NuSMV module, describes a robot structure as a sequence of block types. },
+firstline=129, lastline=195]{code/robot_structure.smv}
+
+\subsection{Assemble\_initial\_template.smv}
+\label{ch:globalTemplate}
+\lstinputlisting[language=NuSMV, basicstyle=\ttfamily\scriptsize,
+caption={Template for NuSMV  model  generation for 2D reachability analysis.},
+numbers=left]{code/Assemble_initial_template.smv}
+
+\newpage
+\section{Python scripts}
+\subsection{Counterexample.py class}
+\label{ch:counterexamplePy}
+\lstinputlisting[language=PythonMyStyle, basicstyle=\ttfamily\scriptsize, 
+caption={Python class to retrieve counterexample information from NuSMV output.},
+numbers=left]{code/counterexample.py}
+
+\newpage
+\section{ROS2 nodes}
+% \lstinputlisting[language=Python, basicstyle=\ttfamily\scriptsize, numbers=left]{code/robot\_controller\_gui.py}
+% \subsection{SRRScontrolNode class}
+% \label{lst:SRRScontrolNode}
+% \lstinputlisting[language=Python, basicstyle=\ttfamily\scriptsize, numbers=left]{code/SRRScontrollerNode.py}
+\subsection{RobotController class}
+\label{lst:RobotController}
+\lstinputlisting[language=PythonMyStyle, basicstyle=\ttfamily\scriptsize,
+caption={Python class to implement low-level control of a Robot.},
+numbers=left]{code/robotController.py}
+
+\newpage
+\subsection{PartController class}
+\label{lst:PartController}
+\lstinputlisting[language=PythonMyStyle, basicstyle=\ttfamily\scriptsize, 
+caption={Python class to implement low-level control of a Part.},
+numbers=left]{code/partController.py}
+
+\newpage
+\section{Gazebo sdf,urdf and xacro code}
+\subsection{base.sdf}
+\label{lst:base}
+\lstinputlisting[language=NuSMV, basicstyle=\ttfamily\scriptsize, 
+caption={SDF file describing base model in Gazebo simulation.},
+numbers=left]{code/base.sdf}
+
+\subsection{robot.xacro}
+\label{lst:robotXacro}
+\lstinputlisting[language=NuSMV, basicstyle=\ttfamily\scriptsize, 
+caption={Xacro file describing Robot model in Gazebo simulation.},
+numbers=left]{code/robot.xacro}
+
+\subsection{part.xacro}
+\label{lst:partXacro}
+\lstinputlisting[language=NuSMV, basicstyle=\ttfamily\scriptsize, 
+caption={Xacro file describing Part model in Gazebo simulation.},
+numbers=left]{code/part.xacro}

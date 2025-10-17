@@ -1,0 +1,106 @@
+\babel@toc {english}{}\relax 
+\contentsline {chapter}{\numberline {1}Introduction}{1}{chapter.1}%
+\contentsline {chapter}{\numberline {2}Background}{2}{chapter.2}%
+\contentsline {section}{\numberline {2.1}Formal verification overview}{2}{section.2.1}%
+\contentsline {subsection}{\numberline {2.1.1}SAT solvers}{3}{subsection.2.1.1}%
+\contentsline {section}{\numberline {2.2}Model checking}{5}{section.2.2}%
+\contentsline {subsection}{\numberline {2.2.1}Classification of Model checking methods}{5}{subsection.2.2.1}%
+\contentsline {subsubsection}{\nonumberline Linear-time temporal logic}{6}{subsubsection*.3}%
+\contentsline {subsubsection}{\nonumberline Branching temporal logic (CTL)}{7}{subsubsection*.6}%
+\contentsline {subsubsection}{\nonumberline Temporal logic (CTL*)}{7}{subsubsection*.8}%
+\contentsline {subsubsection}{\nonumberline Statistical Model Checking (SMC)}{8}{subsubsection*.11}%
+\contentsline {subsubsection}{\nonumberline Runtime Verification and Monitoring}{10}{subsubsection*.13}%
+\contentsline {section}{\numberline {2.3}Self-replicating robotic systems}{12}{section.2.3}%
+\contentsline {subsection}{\numberline {2.3.1}Self-replication introduction}{12}{subsection.2.3.1}%
+\contentsline {subsection}{\numberline {2.3.2}Classification of Self-replication systems}{13}{subsection.2.3.2}%
+\contentsline {subsubsection}{\nonumberline Type-related replication}{13}{subsubsection*.15}%
+\contentsline {subsubsection}{\nonumberline Population Composition Classification}{15}{subsubsection*.19}%
+\contentsline {subsubsection}{\nonumberline Interaction with environment or external system}{16}{subsubsection*.21}%
+\contentsline {subsubsection}{\nonumberline Interaction with environment or external system, alternative classification}{16}{subsubsection*.23}%
+\contentsline {subsection}{\numberline {2.3.3}Self-replication models}{18}{subsection.2.3.3}%
+\contentsline {subsection}{\numberline {2.3.4}Degree of self-replication}{20}{subsection.2.3.4}%
+\contentsline {subsection}{\numberline {2.3.5}Implementations of kinematic self-replicating robotic systems}{21}{subsection.2.3.5}%
+\contentsline {subsubsection}{\nonumberline Low-complexity self-replication systems from specialized modules}{21}{subsubsection*.26}%
+\contentsline {subsubsection}{\nonumberline Kinematic self-replication from unified modules}{24}{subsubsection*.31}%
+\contentsline {subsubsection}{\nonumberline Material-robot systems}{26}{subsubsection*.34}%
+\contentsline {section}{\numberline {2.4}Application of model checking in robotic assembly}{28}{section.2.4}%
+\contentsline {chapter}{\numberline {3}Research questions}{31}{chapter.3}%
+\contentsline {section}{\numberline {3.1}Analysis of model checking approaches in self-replicating systems domain}{31}{section.3.1}%
+\contentsline {section}{\numberline {3.2}Experimental checking}{32}{section.3.2}%
+\contentsline {section}{\numberline {3.3}Limitations and challenges}{32}{section.3.3}%
+\contentsline {section}{\numberline {3.4}Research tools}{33}{section.3.4}%
+\contentsline {section}{\numberline {3.5}Proposed approach}{35}{section.3.5}%
+\contentsline {chapter}{\numberline {4}Implementation of model checking in SRRS}{37}{chapter.4}%
+\contentsline {section}{\numberline {4.1}Design of the self-replicating system being researched}{37}{section.4.1}%
+\contentsline {section}{\numberline {4.2}Analysis of the system}{40}{section.4.2}%
+\contentsline {section}{\numberline {4.3}Model checking based control in local space}{43}{section.4.3}%
+\contentsline {subsection}{\numberline {4.3.1}Overview}{43}{subsection.4.3.1}%
+\contentsline {subsection}{\numberline {4.3.2}Robot NuSMV model}{43}{subsection.4.3.2}%
+\contentsline {subsection}{\numberline {4.3.3}Reachability specifications}{49}{subsection.4.3.3}%
+\contentsline {subsubsection}{\nonumberline Point reachability checking specifications:}{49}{subsubsection*.46}%
+\contentsline {subsubsection}{\nonumberline Region reachability checking specifications:}{50}{subsubsection*.48}%
+\contentsline {subsection}{\numberline {4.3.4}Counterexample processing}{51}{subsection.4.3.4}%
+\contentsline {section}{\numberline {4.4}Reachability model checking in 2D space}{55}{section.4.4}%
+\contentsline {subsection}{\numberline {4.4.1}Model structure for 2D space reachability}{55}{subsection.4.4.1}%
+\contentsline {subsubsection}{\nonumberline Assumptions and simplifications}{55}{subsubsection*.51}%
+\contentsline {subsection}{\numberline {4.4.2}NuSMV Formal Model Structure}{58}{subsection.4.4.2}%
+\contentsline {subsubsection}{\nonumberline State variables and initial conditions}{59}{subsubsection*.55}%
+\contentsline {subsubsection}{\nonumberline State transition}{60}{subsubsection*.57}%
+\contentsline {subsubsection}{\nonumberline Specification for checking 2D reachability}{66}{subsubsection*.60}%
+\contentsline {subsection}{\numberline {4.4.3}Model generation and verification}{67}{subsection.4.4.3}%
+\contentsline {section}{\numberline {4.5}Robot configuration model checking}{70}{section.4.5}%
+\contentsline {subsection}{\numberline {4.5.1}Sequential checking of possible configations}{70}{subsection.4.5.1}%
+\contentsline {subsection}{\numberline {4.5.2}Automated template-based model generation}{72}{subsection.4.5.2}%
+\contentsline {section}{\numberline {4.6}Aggregated configuration checking in NuSMV}{75}{section.4.6}%
+\contentsline {chapter}{\numberline {5}Simulation of the SRRS}{78}{chapter.5}%
+\contentsline {section}{\numberline {5.1}System Architecture}{78}{section.5.1}%
+\contentsline {section}{\numberline {5.2}Gazebo simulation elements}{81}{section.5.2}%
+\contentsline {subsection}{\numberline {5.2.1}Base model}{81}{subsection.5.2.1}%
+\contentsline {subsection}{\numberline {5.2.2}Parts simulation and behavior}{82}{subsection.5.2.2}%
+\contentsline {section}{\numberline {5.3}Robot simulation and control}{84}{section.5.3}%
+\contentsline {subsection}{\numberline {5.3.1}Gazebo representation of a robot}{84}{subsection.5.3.1}%
+\contentsline {subsection}{\numberline {5.3.2}Low level motion control}{87}{subsection.5.3.2}%
+\contentsline {subsection}{\numberline {5.3.3}Base and Part Interaction}{90}{subsection.5.3.3}%
+\contentsline {subsection}{\numberline {5.3.4}Sensor Integration}{91}{subsection.5.3.4}%
+\contentsline {section}{\numberline {5.4}Supervisory Control and GUI Integration}{92}{section.5.4}%
+\contentsline {section}{\numberline {5.5}Assembly simulation workflow}{93}{section.5.5}%
+\contentsline {section}{\numberline {5.6}Implementation challenges and design considerations}{95}{section.5.6}%
+\contentsline {chapter}{\numberline {6}Evaluation and validation}{96}{chapter.6}%
+\contentsline {section}{\numberline {6.1}Validation of the counterexample based robot control}{96}{section.6.1}%
+\contentsline {section}{\numberline {6.2}Validation of the robot configuration checking}{100}{section.6.2}%
+\contentsline {subsection}{\numberline {6.2.1}Comparison of individual and aggregated model checking}{101}{subsection.6.2.1}%
+\contentsline {subsection}{\numberline {6.2.2}Simulation of eligible configurations}{103}{subsection.6.2.2}%
+\contentsline {subsection}{\numberline {6.2.3}Comparison of computational time for model checking}{104}{subsection.6.2.3}%
+\contentsline {section}{\numberline {6.3}Evaluation of 2D reachability checking computation time}{107}{section.6.3}%
+\contentsline {subsubsection}{\nonumberline Field Size}{107}{subsubsection*.81}%
+\contentsline {subsubsection}{\nonumberline Robot Length}{108}{subsubsection*.84}%
+\contentsline {section}{\numberline {6.4}Threats to validity}{109}{section.6.4}%
+\contentsline {subsubsection}{\nonumberline Limited generalization of the developed system}{110}{subsubsection*.87}%
+\contentsline {subsubsection}{\nonumberline Discretization errors}{111}{subsubsection*.89}%
+\contentsline {subsubsection}{\nonumberline Inconsistencies between NuSMV model, simulation, and reality}{111}{subsubsection*.91}%
+\contentsline {subsubsection}{\nonumberline Summary}{112}{subsubsection*.93}%
+\contentsline {chapter}{\numberline {7}Conclusion}{113}{chapter.7}%
+\contentsline {chapter}{\nonumberline Bibliography}{116}{chapter*.94}%
+\contentsline {chapter}{\numberline {A}Code Listings}{120}{appendix.A}%
+\contentsline {section}{\numberline {A.1}NuSMV models}{120}{section.A.1}%
+\contentsline {subsection}{\numberline {A.1.1}robot\_structure.smv}{120}{subsection.A.1.1}%
+\contentsline {subsubsection}{\nonumberline Trigonometric modules}{120}{subsubsection*.96}%
+\contentsline {subsubsection}{\nonumberline block\_base module}{121}{subsubsection*.98}%
+\contentsline {subsubsection}{\nonumberline block\_pitch module}{121}{subsubsection*.100}%
+\contentsline {subsubsection}{\nonumberline main module}{122}{subsubsection*.102}%
+\contentsline {subsection}{\numberline {A.1.2}Assemble\_initial\_template.smv}{123}{subsection.A.1.2}%
+\contentsline {section}{\numberline {A.2}Python scripts}{126}{section.A.2}%
+\contentsline {subsection}{\numberline {A.2.1}Counterexample.py class}{126}{subsection.A.2.1}%
+\contentsline {section}{\numberline {A.3}ROS2 nodes}{129}{section.A.3}%
+\contentsline {subsection}{\numberline {A.3.1}RobotController class}{129}{subsection.A.3.1}%
+\contentsline {subsection}{\numberline {A.3.2}PartController class}{133}{subsection.A.3.2}%
+\contentsline {section}{\numberline {A.4}Gazebo sdf,urdf and xacro code}{135}{section.A.4}%
+\contentsline {subsection}{\numberline {A.4.1}base.sdf}{135}{subsection.A.4.1}%
+\contentsline {subsection}{\numberline {A.4.2}robot.xacro}{135}{subsection.A.4.2}%
+\contentsline {subsection}{\numberline {A.4.3}part.xacro}{140}{subsection.A.4.3}%
+\contentsline {chapter}{\numberline {B}AI reference index}{142}{appendix.B}%
+\contentsline {section}{\numberline {B.1}Use of AI for publications search}{142}{section.B.1}%
+\contentsline {section}{\numberline {B.2}Use of AI for code debugging and improvement}{142}{section.B.2}%
+\contentsline {section}{\numberline {B.3}Use of AI for LaTeX support}{143}{section.B.3}%
+\contentsline {section}{\numberline {B.4}Use of AI for rephrasing, grammar correction and synonym search}{143}{section.B.4}%
+\providecommand \tocbasic@end@toc@file {}\tocbasic@end@toc@file 
