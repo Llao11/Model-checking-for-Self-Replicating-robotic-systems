@@ -21,8 +21,7 @@ class Assemble(Node):
     def __init__(self) -> None:
         super().__init__("Assemble")
         self.sensorNode = SRRSsensorsNode.SRRSsensorsNode()
-        self.controllerNode = SRRScontrollerNode.SRRSController(
-            self.sensorNode)
+        self.controllerNode = SRRScontrollerNode.SRRSController(self.sensorNode)
         self.create_publishers()
 
     def create_publishers(self):
@@ -36,14 +35,10 @@ class Assemble(Node):
         self.detach_publisher_voxel = self.create_publisher(
             Empty, "/detach_link_voxel", 10
         )
-        self.attach_publisher1 = self.create_publisher(
-            Empty, "/attach_link1", 10)
-        self.detach_publisher1 = self.create_publisher(
-            Empty, "/detach_link1", 10)
-        self.attach_publisher2 = self.create_publisher(
-            Empty, "/attach_link2", 10)
-        self.detach_publisher2 = self.create_publisher(
-            Empty, "/detach_link2", 10)
+        self.attach_publisher1 = self.create_publisher(Empty, "/attach_link1", 10)
+        self.detach_publisher1 = self.create_publisher(Empty, "/detach_link1", 10)
+        self.attach_publisher2 = self.create_publisher(Empty, "/attach_link2", 10)
+        self.detach_publisher2 = self.create_publisher(Empty, "/detach_link2", 10)
 
         self.attach1_publisher_obj1 = self.create_publisher(
             Empty, "/attach_link1_obj_1", 10
@@ -105,12 +100,12 @@ class Assemble(Node):
         #     # move end-effector to grasp point
         #     self.controllerNodel.goto_XYZ(x, y, z)
 
-        self.controllerNode.fix_1_to_base()
+        self.controllerNode.fix_end1_base()
         self.controllerNode.free_2_from_base()
         # self.sensorNode
 
-        self.controllerNode.free_block2_from_obj()
-        self.controllerNode.free_block2_from_obj()
+        self.controllerNode.free_block2_from_part()
+        self.controllerNode.free_block2_from_part()
 
         self.controllerNode.goto_XYZ(1, 3, 2)
 

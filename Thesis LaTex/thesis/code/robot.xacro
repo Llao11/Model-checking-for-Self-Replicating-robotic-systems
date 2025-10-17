@@ -1,0 +1,272 @@
+<?xml version="1.0" ?>
+<robot name="rel_robot" xmlns:xacro="http://www.ros.org/wiki/xacro">
+    <xacro:property name="green" value="0 0.8 0 1" />
+    <xacro:property name="red" value="0.8 0 0 1" />
+    <xacro:property name="blue" value="0 0 0.8 1" />
+    <xacro:property name="yellow" value="1 1 0 1" />
+    <xacro:property name="white" value="1 1 1 1" />
+    <xacro:property name="cell_step" value="0.134"/>
+    <xacro:property name="grey" value="0.2 0.2 0.2 1" />
+    <xacro:property name="black" value="0 0 0 1" />
+    <xacro:macro name="voxel" params="name origin color" >
+        <link name="${name}">
+            <visual>
+                <geometry>
+                    <mesh filename="/home/lao/Documents/Masterarbeit/git/SRRS_gazebo_sim/ros2_ws/src/srrs_sim/meshes/Voxel.stl" scale="0.001 0.001 0.001"/>
+                </geometry>
+                <origin xyz="${origin}"/>
+            </visual>
+            <collision name="${name}_collision">
+                <geometry>
+                    <mesh filename="/home/lao/Documents/Masterarbeit/git/SRRS_gazebo_sim/ros2_ws/src/srrs_sim/meshes/Voxel.stl" scale="0.001 0.001 0.001"/>
+                </geometry>
+            </collision>
+            <inertial>
+                <mass value="0.1"/>
+                <inertia ixx="1.0" ixy="0.0" ixz="0.0" iyy="1.0" iyz="0.0" izz="1.0"/>
+            </inertial>
+        </link>
+        <gazebo reference="${name}">
+            <visual>
+                <material>
+                    <ambient>${color}</ambient>
+                    <diffuse>${color}</diffuse>
+                </material>
+            </visual>
+        </gazebo>
+    </xacro:macro>
+
+    <xacro:macro name="joint_fix" params="name parent child" >
+        <joint name="${name}" type="fixed">
+            <origin xyz="0 0 0"/>
+            <parent link="${parent}"/>
+            <child link="${child}"/>
+        </joint>
+    </xacro:macro>
+
+    <xacro:macro name="joint_end" params="name parent child origin axis rpy" >
+        <joint name="${name}" type="revolute">
+            <axis xyz="${axis}"/> 
+            <origin xyz="${origin}"/>
+            <parent link="${parent}"/>
+            <child link="${child}"/>
+            <limit lower="0" upper="0" effort="1000" velocity="0.0"/>
+            <dynamics damping="0.1" friction="0.1"/>
+        </joint>
+    </xacro:macro>
+
+    <xacro:macro name="joint_revolution" params="name parent child origin axis rpy" >
+        <joint name="${name}" type="revolute">
+            <axis xyz="${axis}"/> 
+            <origin xyz="${origin}"/>
+            <parent link="${parent}"/>
+            <child link="${child}"/>
+            <limit effort="50.0" lower="-6.29" upper="6.29" velocity="1"/>
+            <dynamics damping="0.1" friction="0.1"/>
+        </joint>
+        <link name="${name}visual">
+            <visual>
+                <geometry>
+                    <cylinder radius="0.01" length="0.1"/>
+                </geometry>
+                <origin rpy="${rpy}" xyz="${origin}"/>
+            </visual>
+        </link>
+        <xacro:joint_fix name="${name}visualfixed" parent="${parent}" child="${name}visual"/>
+    </xacro:macro>
+
+    <xacro:macro name="block_end" params="block_number parent_number x y z " >
+        <xacro:voxel name="block${block_number}" origin="${x*cell_step} ${y*cell_step} ${z*cell_step}" color="${red}"/>
+        <xacro:joint_end name="base${parent_number}_${block_number}" parent="block${parent_number}" child="block${block_number}" axis="0 0 1" origin="${x*cell_step} ${y*cell_step} ${(z+1)*cell_step}" rpy="0 0 0"/>
+    </xacro:macro>
+
+    <xacro:macro name="block_fix" params="block_number parent_number x y z " >
+        <xacro:voxel name="block${block_number}" origin="${x*cell_step} ${y*cell_step} ${z*cell_step}" color="${grey}"/>
+        <xacro:joint_fix name="fixed${parent_number}_${block_number}" parent="block${parent_number}" child="block${block_number}"/> 
+    </xacro:macro>
+
+    <xacro:macro name="block_ver" params="block_number parent_number x y z " >
+        <xacro:voxel name="block${block_number}" origin="${0} ${0} ${0}" color="${green}"/>
+        <xacro:joint_revolution name="rev${parent_number}_${block_number}" parent="block${parent_number}" child="block${block_number}" axis="0 0 1" origin="${x*cell_step} ${y*cell_step} ${(z+1)*cell_step}" rpy="0 0 0"/>
+    </xacro:macro>
+
+    <xacro:macro name="block_hor" params="block_number parent_number x y z " >
+        <xacro:joint_revolution name="rev${parent_number}_${block_number}" parent="block${parent_number}" child="block${block_number}" axis="0 1 0" origin="${x*cell_step} ${y*cell_step} ${(z+0.5)*cell_step}" rpy="1.57 0 0"/>
+        <xacro:voxel name="block${block_number}" origin="${0} ${0} ${-0.5*cell_step}" color="${blue}"/>
+    </xacro:macro>
+
+    <xacro:macro name="contact_plate" params="name parent origin" >
+        <link name="${name}">
+            <visual>
+                <geometry>
+                    <cylinder radius="0.05" length="0.002"/>
+                </geometry>
+                <!-- <origin xyz="${origin}"/> -->
+            </visual>
+            <collision name="${name}_collision">
+                <geometry>
+                    <cylinder radius="0.05" length="0.002"/>
+                </geometry>
+            </collision>
+        </link>
+
+        <joint name="${name}_joint" type="fixed">
+            <origin xyz="${origin}"/>
+            <parent link="${parent}"/>
+            <child link="${name}"/>
+        </joint>
+
+        <gazebo reference="${name}">
+            <sensor name="${name}_sensor" type="contact">
+                <contact>
+                    <!-- If doesnt work - check contact collision name in SDF, transfer xacro to urdf to sdf -->
+                    <collision>${parent}_fixed_joint_lump__${name}_collision_collision_1</collision>
+                    <topic>/robot/${name}</topic>
+                </contact>
+                <always_on>true</always_on>
+                <update_rate>50</update_rate>
+            </sensor>
+        </gazebo>
+
+    </xacro:macro>
+
+    <xacro:macro name="camera_sensor" params="name parent origin_xyz origin_rpy" >
+        <link name="${name}">
+            <visual name="${name}_visual">
+                <geometry>
+                    <box size="0.01 0.01 0.01"/>  
+                </geometry>
+            </visual>
+        </link>
+
+        <joint name="${name}_joint" type="fixed">
+            <parent link="${parent}"/>  
+            <child link="${name}"/>
+            <origin xyz="${origin_xyz}" rpy="${origin_rpy}"/>
+        </joint>
+
+        <link name="${name}_optical"></link>
+
+        <joint name="${name}_optical_joint" type="fixed">
+            <parent link="${name}"/>  
+            <child link="${name}_optical"/>
+            <origin xyz="0 0 0" rpy="${-pi/2} 0 ${-pi/2}"/>
+        </joint>
+
+        <gazebo reference="${name}">
+            <sensor name="${name}_sensor" type="camera">
+                <visualize>true</visualize>
+                <camera>
+                    <horizontal_fov>1.3962634</horizontal_fov>
+                    <image>
+                        <width>640</width>
+                        <height>480</height>
+                        <format>R8G8B8</format>
+                    </image>
+                    <clip>
+                        <near>0.1</near>
+                        <far>15</far>
+                    </clip>
+                    <optical_frame_id>${name}_optical</optical_frame_id>
+                    <camera_info_topic>/${name}/camera_info</camera_info_topic>
+                </camera>
+                <always_on>1</always_on>
+                <update_rate>20</update_rate>
+                <visualize>true</visualize>
+                <topic>/${name}/image</topic>
+            </sensor>
+        </gazebo>
+    </xacro:macro>
+
+    <xacro:macro name="imu_sensor" params="name parent">
+        <gazebo reference="${parent}">
+            <sensor name="imu_sensor" type="imu">
+                <always_on>1</always_on>
+                <update_rate>50</update_rate>
+                <visualize>true</visualize>
+                <topic>/robot/${name}</topic>
+            </sensor>
+        </gazebo>
+    </xacro:macro>
+
+    <xacro:voxel name="block0" origin="0 0 0" color="${red}"/>
+    <xacro:block_ver block_number="1"  parent_number="0"    x="0"   y="0"    z="0" />
+    <xacro:block_fix block_number="2"  parent_number="1"    x="0"   y="0"    z="1" />
+    <xacro:block_hor block_number="3"  parent_number="2"    x="0"   y="1"    z="1" />
+    <xacro:block_fix block_number="4"  parent_number="3"    x="0"   y="0"    z="0.5" />
+    <xacro:block_fix block_number="5"  parent_number="4"    x="0"   y="0"    z="1.5" />
+    <xacro:block_hor block_number="6"  parent_number="5"    x="0"   y="-1"   z="1.5" />
+    <xacro:block_fix block_number="7"  parent_number="6"    x="0"   y="0"    z="0.5" />
+    <xacro:block_fix block_number="8"  parent_number="7"    x="0"   y="0"    z="1.5" />
+    <xacro:block_hor block_number="9"  parent_number="8"    x="0"   y="1"    z="1.5" />
+    <xacro:block_ver block_number="10" parent_number="9"    x="0"   y="0"    z="-0.5" />
+    <xacro:block_end block_number="11" parent_number="10"   x="0"   y="0"    z="0" />
+
+    <xacro:camera_sensor name="camera1" parent="block0" origin_xyz="0 0 0" origin_rpy="0 ${pi/2} 0"/>
+    <xacro:camera_sensor name="camera2" parent="block11" origin_xyz="0 0 ${1*cell_step}" origin_rpy="0 ${-pi/2} 0"/>
+    <xacro:contact_plate name="contact1" parent="block0" origin="0 0 0"/>
+    <xacro:contact_plate name="contact2" parent="block11" origin="0 0 ${1*cell_step}"/>
+
+    <xacro:imu_sensor name="imu1" parent="block0"/> 
+    <xacro:imu_sensor name="imu2" parent="block11"/> 
+
+    <ros2_control name="GazeboSimSystem" type="system">
+        <hardware>
+            <plugin>gz_ros2_control/GazeboSimSystem</plugin>
+        </hardware>
+        <joint name="rev0_1">
+            <command_interface name="position"/>
+            <state_interface name="position"/>
+        </joint>
+        <joint name="rev2_3">
+            <command_interface name="position"/>
+            <state_interface name="position"/>
+        </joint>
+        <joint name="rev5_6">
+            <command_interface name="position"/>
+            <state_interface name="position"/>
+        </joint>
+        <joint name="rev8_9">
+            <command_interface name="position"/>
+            <state_interface name="position"/>
+        </joint>
+        <joint name="rev9_10">
+            <command_interface name="position"/>
+            <state_interface name="position"/>
+        </joint>
+    </ros2_control>
+
+    <gazebo>
+        <plugin filename="gz_ros2_control-system" name="gz_ros2_control::GazeboSimROS2ControlPlugin">
+            <parameters>$(find srrs_sim)/config/robot_controller.yaml</parameters>
+        </plugin>
+
+        <plugin
+            filename="libgz-sim8-detachable-joint-system.so"
+            name="gz::sim::systems::DetachableJoint">
+            <parent_link>block0</parent_link>
+            <child_model>base</child_model>
+            <child_link>base_link</child_link>
+            <attach_topic>attach_end1</attach_topic>
+            <detach_topic>detach_end1</detach_topic>
+            <output_topic>detachable_link_state1</output_topic>
+        </plugin>
+
+        <plugin
+            filename="libgz-sim8-detachable-joint-system.so"
+            name="gz::sim::systems::DetachableJoint">
+            <parent_link>block11</parent_link>
+            <child_model>base</child_model>
+            <child_link>base_link</child_link>
+            <attach_topic>attach_end2</attach_topic>
+            <detach_topic>detach_end2</detach_topic>
+            <output_topic>detachable_link_state2</output_topic>
+        </plugin>
+
+        <plugin 
+            filename="gz-sim-contact-system" 
+            name="gz::sim::systems::Contact">
+        </plugin>
+    </gazebo>
+
+</robot>

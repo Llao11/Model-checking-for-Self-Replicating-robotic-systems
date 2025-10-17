@@ -1,24 +1,24 @@
 # ATTACH/DETACH to base
-- ros_topic_name: "/attach_link1"
-  gz_topic_name: "/attach_link1"
+- ros_topic_name: "/attach_end1"
+  gz_topic_name: "/attach_end1"
   ros_type_name: "std_msgs/msg/Empty"
   gz_type_name: "gz.msgs.Empty"
   direction: BIDIRECTIONAL
 
-- ros_topic_name: "/detach_link1"
-  gz_topic_name: "/detach_link1"
+- ros_topic_name: "/detach_end1"
+  gz_topic_name: "/detach_end1"
   ros_type_name: "std_msgs/msg/Empty"
   gz_type_name: "gz.msgs.Empty"
   direction: BIDIRECTIONAL
 
-- ros_topic_name: "/attach_link2"
-  gz_topic_name: "/attach_link2"
+- ros_topic_name: "/attach_end2"
+  gz_topic_name: "/attach_end2"
   ros_type_name: "std_msgs/msg/Empty"
   gz_type_name: "gz.msgs.Empty"
   direction: BIDIRECTIONAL
 
-- ros_topic_name: "/detach_link2"
-  gz_topic_name: "/detach_link2"
+- ros_topic_name: "/detach_end2"
+  gz_topic_name: "/detach_end2"
   ros_type_name: "std_msgs/msg/Empty"
   gz_type_name: "gz.msgs.Empty"
   direction: BIDIRECTIONAL

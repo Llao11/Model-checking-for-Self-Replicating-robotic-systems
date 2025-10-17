@@ -1,0 +1,305 @@
+% This section lists a number of 2-3 research questions that the thesis should address. 
+% The research questions should be put into the context of the idea, and you should explain 
+% what they mean and how you want to address each. We also suggest including an example scenario 
+% of a successful outcome of the thesis, i.e., what would your tool allow us to do once it exists?
+
+\chapter{Research questions} \label{research_questions}
+
+In this chapter, we will pose research questions, define research tools, and briefly outline the proposed approach.
+
+This paper will address the following research questions:
+\begin{enumerate}
+    \item How can automated model checking and other formal-verification 
+        techniques be used to verify different properties of 
+        self-replicating robotic systems, and what adaptations 
+        can be done for practical implementation?
+    \item What systematic methodology can translate the behaviors and 
+        structural constraints of self-replicating robots into expressive 
+        temporal-logic models and specifications?
+    \item What limitations -- computational, semantic, or 
+        modelling-related -- does model checking face in domain of SRRS,
+        and how might these limitations can be mitigated?\\
+
+    % \item How can automated model checking and other formal-verification 
+    %     techniques be used for verifying liveness (replication reliability),
+    %     safety and other properties in self-replicating robotic systems(SRRS), 
+    %     and what domain-specific adaptations are required for practical implementation?
+    % \item What systematic methodology can translate the behaviors and 
+    %     structural constraints of self-replicating robots into expressive 
+    %     temporal-logic models and specifications?
+    % \item What limitations—computational, semantic, or 
+    %     modelling-related -- does developed approach face, and how might these limitations be mitigated?\\
+    %     Compare the  finite state machine algorithm control with SMV counterexample-based control 
+    %     in simulation by time, flexibility
+
+\end{enumerate}
+
+
+\section{Analysis of model checking approaches in self-replicating systems domain}
+
+% The first question includes examination of the state-of-the-art 
+% of model checking approaches to determine whether they can be used to model and verify 
+% an SRR system.
+%
+% The experience and different practical approaches in the field of self-reproducing 
+% automata and robots should be studied, based on which the main 
+% properties that should be included in the specifications have to be identified.
+%
+% Initially can be considered basic properties like liveness (replication reliability) and safety.
+% With some adaptations it should be possible to express it using every model-checking
+% specification language.
+% During this analysis or further experimental checking, 
+% more complex properties can be discovered  and integrated.
+The first research question involves a comprehensive survey and critical 
+evaluation of current state-of-the-art model checking and formal verification 
+tools, such as SPIN, NuSMV, and PRISM, focusing on their applicability to modeling 
+and verifying the unique dynamics of self-replicating robotic systems (SRRS). 
+
+This investigation includes a review of relevant literature and existing systems 
+in self-replicating robotics and cellular automata to identify key operational 
+characteristics and formalizable behaviors. It also involves identifying 
+core properties relevant to SRRS, such as liveness (ensuring successful 
+replication within time or resource constraints), safety (avoiding 
+resource conflicts or hazardous outcomes), as well as broader system-level guarantees 
+like termination, deadlock-freedom, and fault-tolerance. 
+The study will further explore how these properties can be 
+expressed in various formal languages, including Linear 
+Temporal Logic (LTL), Computation Tree Logic (CTL), and probabilistic extensions. 
+This will require examining what adaptations or abstractions are needed to 
+make these languages suitable for SRRS modeling. 
+
+Iterative experimentation with selected tools will help assess the feasibility 
+of encoding and verifying these properties and may lead to the discovery 
+of more complex or emergent behaviors to integrate in later stages.
+
+\section{Experimental checking}
+
+
+
+The second research question aims to define a systematic formal modeling 
+and verification workflow tailored to SRRS. 
+This involves developing a formal representation of 
+self-replication processes, structural rules, environmental interactions, 
+and resource usage. 
+
+It also includes establishing a methodology to map real-world 
+or simulated robotic behaviors - such as perception, manipulation, and actuation- onto 
+abstract states and transitions that are amenable to formal analysis. 
+Based on this framework, appropriate model-checking tools and specification 
+languages will be selected and justified through experimental evaluation within 
+simulation environments. 
+
+A prototype or proof-of-concept implementation will be developed 
+using a simplified SRRS scenario, such modular robotic replication, 
+to demonstrate how this methodology captures essential properties and enables formal verification. 
+
+The ultimate goal is to bridge the gap between low-level robotic simulation and control 
+systems and high-level formal models, ensuring that the designed 
+behaviors are both physically feasible and logically justified.
+
+
+\section{Limitations and challenges}
+
+
+The third research question addresses the fundamental limitations that 
+current formal methods and model-checking tools face when applied to the 
+complex domain of self-replicating robotic systems.
+It includes analyzing computational constraints such as state-space explosion, 
+undecidability in dynamic conditions, and potential inefficiencies in scaling existing verification tools. 
+
+The study will also examine semantic mismatches between physical 
+or simulated robot behavior and abstract models, particularly in representing kinematic 
+and dynamic aspects, sensor errors, and asynchronous or partially 
+observable environments. 
+
+Additionally, the research will explore modeling limitations related 
+to the representation of dynamic structure generation and adaptive behaviors.
+
+To address these challenges, various mitigation strategies will be proposed,
+including modular verification, changes in system abstractions  
+and hybrid techniques that combine formal models with simulation-based validation. 
+
+The outcome of this part may include recommendations for extending the 
+selected verification toolsets, adapting implementation strategies, or designing 
+new experimental setups specifically for the analysis of SRRS.
+
+
+% This section lists a number of 2-3 research questions that the thesis should address. 
+% The research questions should be put into the context of the idea, and you should explain 
+% what they mean and how you want to address each. We also suggest including an example scenario 
+% of a successful outcome of the thesis, i.e., what would your tool allow us to do once it exists?
+
+% \chapter{Methodology}
+
+
+
+
+\section{Research tools}
+
+
+Self-replication research in robotics involves complex interactions between 
+assembly processes, modular design, environmental constraints, 
+and control systems. 
+Robotic simulation environments offer a valuable sandbox to 
+explore these dynamics before physical implementation. 
+The ideal simulation platform must support modularity, kinematics, 
+sensing, and interaction with discrete components.
+
+A set of tools for simulation and control of robotic systems including SRRS can be 
+seen in the Table \ref{tab:tools}
+
+\begin{table}[h!]
+    \centering
+    \begin{tabular}{|m{2cm}|m{1.5cm}|m{2cm}|m{2.5cm}|m{5cm}|}
+        \hline
+        \textbf{Simulator} & \textbf{Physics fidelity} & \textbf{Modularity support} &  \textbf{Custom control} & \textbf{Use case for SRRS} \\
+        \hline
+        Gazebo+ ROS &
+        High &
+        Strong via URDF/SDF &
+        ROS integration, plugins, Python/C++ nodes &
+        Physical replication with mobile robots and manipulators \\
+        \hline
+        CoppeliaSim (V-REP) &
+        High &
+        Native modular modeling &
+        Lua, Python /remote APIs &
+        Detailed control of part interaction and modular assembly \\
+        \hline
+        PyBullet &
+        Medium to High &
+        Good (via URDF /SDF) &
+        Python API (fast iteration) &
+        Cube/voxel-based systems and contact-rich interactions \\
+        \hline
+        Webots &
+        Medium &
+        Moderate &
+        C/C++ /Python controllers &
+        Lightweight simulation of small-scale replication setups \\
+        \hline
+        Unity+ \ \ ML-Agents &
+        Medium &
+        High (custom prefabs) &
+        C\#,Python with \ \ \ \ \ ML-agents &
+        Learning-based or perception-driven replication strategies \\
+        \hline
+        Isaac Sim (NVIDIA) &
+        High &
+        Strong (via Omniverse) &
+        Python scripting, ROS2 &
+        High-fidelity simulation of complex autonomous robots \\
+        \hline
+        Golly  \ \ \ NetLogo  CA tools &
+        None &
+        Tile-based, symbolic &
+        Rule-based/ scripting &
+        Theoretical studies (e.g. von Neumann or Langton automata) \\
+        \hline
+    \end{tabular}
+    \caption{Comparison of simulation environments for self-replicating robotic systems}
+    \label{tab:tools}
+\end{table}
+
+In order to simulate kinematic self-replicating systems and to be able to implement
+control functions that are also applicable to a physical system, the Gazebo simulator 
+with ROS infrastructure seems to be an optimal choice.
+
+% \begin{figure}[h]
+%     \centering
+%     \includegraphics[width=15cm]{Gazebo.png} 
+%     \caption{Gazebo Harmonic simulation interface}
+%     \label{fig:Gazebo}
+% \end{figure}
+Gazebo supports multiple physics engines, such as 
+ODE, Bullet, and DART, allowing to model the dynamics of contact,
+friction, collisions, and gravity with a high degree of accuracy. 
+
+Modular robot design  can be modeled through ROS’s URDF (Unified Robot 
+Description Format) and SDF (Simulation Description Format). These formats 
+help to define robotic structures as combinations of interconnected 
+parts and joints, closely mimicking the principles of modular self-replicating 
+systems. Components can be described independently and reused across different 
+robots or configurations. It support simulating a wide array of sensors, including
+cameras, LiDAR, depth sensors, IMUs, proximity sensors, and contact detectors. 
+
+Structured or unstructured environments for SRRS can be modeled in great detail,
+placing objects with specific physical properties, and simulating real-world 
+challenges like terrain irregularities or sensor noise.
+
+ROS provides a powerful middleware layer that manages communication between 
+different components of the robot and the environment. 
+Through ROS, we can implement and test high-level control algorithms, including perception 
+pipelines, decision-making logic, and task planning.
+It supports distributed systems, so that multi-robot scenarios 
+(such as cooperative replication) can be easily simulated. 
+ROS also provides tools for recording and analyzing 
+data, tuning controllers, and implementing feedback loops. 
+
+Gazebo and ROS are open-source and highly extensible. Developers can create 
+plugins for new sensors, actuators, or control strategies. This is particularly 
+useful in self-replication research, where novel components or interfaces 
+may need to be modeled. 
+Additionally, the close integration between simulation 
+and real-world systems means that code developed in Gazebo with ROS can 
+often be deployed directly to real hardware with minimal changes. 
+
+
+\section{Proposed approach}
+
+In the following sections we will consider particular SRRS design, based on aproach 
+proposed by \citeauthor{Jenett2019MaterialRobot}. We will 
+analyse and model robot, material and environment, translate self-replication process 
+in transition system and check following properties using model checking in NuSMV.
+We will try to extract and apply temporal logic specifications and use counterexamples
+in a constructing way to improve the functionality of a system.
+
+We will use simulated environment for validation of results from NuSMV.
+Gazebo in combination with ROS can be used to create an interface between
+simulated robot behavior with  NuSMV. 
+
+ROS-based systems will define robotic structure and dynamics using URDF (Unified 
+Robot Description Format) files and execute behavior through Python or C++ ROS 
+nodes. 
+These two sources—mechanical definitions and control logic—can be systematically 
+translated into finite-state abstractions suitable for model checking with tools 
+like NuSMV.
+By linking Gazebo/ROS to NuSMV, can be created a powerful toolchain to not 
+only test and observe behavior in simulation but also prove correctness and 
+robustness in all logical conditions—an essential feature for deploying self
+-replicating systems in safety-critical or remote environments.
+
+The planned process typically involves analyzing the state transitions implied by the 
+ROS node logic, especially within action sequences (e.g., part pickup, alignment,
+assembly), and discretizing them into states, inputs, and transitions. Each 
+robot behavior or controller mode (e.g., "move", "grasp", "assemble") is 
+represented as a finite state, while events and sensor conditions define transition 
+rules. The mechanical configuration from URDF can define static properties or 
+initial states in the system.
+
+From this, a transition system structure can be extracted, encoded 
+in NuSMV input language, and checked against temporal logic properties, described in 
+CTL or LTL formulas. 
+For instance, one could verify that a self-replicating 
+robot always eventually reaches the assembly state (liveness) or that it never 
+attempts to pick a module unless one is detected (safety).
+
+% Automating this translation—using Python scripts, that parse URDF and interpret ROS node 
+% behavior—is increasingly feasible, especially for systems designed with modular 
+% and rule-based architectures. Scripts or intermediate frameworks can analyze 
+% ROS bag files or logs to capture sequences of operations, and encode these as 
+% state transitions. 
+% Some researchers also define behavior trees or state machines 
+% in ROS using structured formats (e.g., SMACH, FlexBE), which can be directly 
+% mapped to NuSMV models with minimal transformation.
+
+This  enables hybrid verification workflows, where simulation is used 
+to test behavior under dynamic conditions, and formal verification is applied 
+to prove correctness across all possible system executions. In the context of 
+our self-replication system, this allows verification of critical properties 
+like  "robots do not collide while cooperating on part assembly".
+
+
+% \section{Analysis of results}
+
+

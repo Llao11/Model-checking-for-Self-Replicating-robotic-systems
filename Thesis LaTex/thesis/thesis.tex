@@ -1,0 +1,196 @@
+% \documentclass[german,bachelor]{vrsysthesis}
+\documentclass[english,master]{buwthesis}
+
+%
+% Values
+% ------
+\ThesisSetTitle{Model checking for Self-Replicating Robotic Systems}
+% \ThesisSetSubtitle{Initial Research} % optional
+\ThesisSetKeywords{These, Are, My keywords} % only for PDF meta attributes
+
+% list authors with name and matrikel number
+\ThesisSetAuthor{Dmitry Babaytsev (124065)}
+
+\ThesisSetProgramme{Digital Engineering}
+\ThesisSetSupervisors{Prof.\ Dr.\ Jan Oliver Ringert, PD\ Dr.\ Andreas Jakoby}
+
+\ThesisSetSubmissionDate{17}{10}{2025}
+
+\usepackage{libertine}
+\usepackage{libertinust1math}
+\usepackage{csquotes}
+\usepackage[
+  backend=biber,
+  bibencoding=utf8,
+  backref=true,
+  hyperref=true,
+  isbn=false,
+  maxcitenames=3,
+  maxbibnames=99,
+  style=alphabetic,
+  citestyle=alphabetic,
+  sorting=ynt,
+]{biblatex}
+\addbibresource{literature.bib}
+\usepackage{booktabs}
+\usepackage{subcaption}
+\usepackage{lipsum} % only used for blind text, can be removed in production
+
+\usepackage{listings}
+\lstdefinelanguage{NuSMV}{
+    morekeywords={@F\~,@O\~, A, ABF, ABG, abs,AF, AG, array,ASSIGN,at next, at last,AX, bool,
+            BU, case, Clock, clock, COMPASSION, COMPID, COMPUTE, COMPWFF, CONSTANTS, CONSTARRAY,CONSTRAINT, cos, count, CTLSPEC, CTLWFF, DEFINE, E, EBF, EBG, EF, EG, esac,
+   EX, exp, extend, F, FAIRNESS, floor, FROZENVAR, FUN, G, H, IN, INIT, init, Integer, INVAR, INVARSPEC, ISA, ITYPE, IVAR, JUSTICE, ln,LTLSPEC, LTLWFF,MAX, max, MDEFINE, MIN, min, MIRROR, MODULE, NAME, next, NEXTWFF, noncontinuous,  O, of, PRED, PREDICATES, pi,pow, PSLSPEC, PARSYNTH, READ, Real, resize, S, SAT, self, signed, SIMPWFF,sin, sizeof, SPEC, swconst, T, tan, time, time since, time until, toint, TRANS, typeof, U, union,unsigned, URGENT, uwconst, V, VALID, VAR, Word,word, word1, WRITE, X, X\~ Y, Y\~, Z, TRUE, FALSE}, % Add more keywords here
+    sensitive=false, % keywords are not case-sensitive
+    morecomment=[l]{--}, % Line comment
+    morestring=[b]", % String literals
+    basicstyle=\footnotesize, % Code font style
+    keywordstyle=\color{blue}, % Keyword style
+    commentstyle=\color{comcolor}, % Comment style
+    stringstyle=\color{red}, % String literal style
+    numbers=left, % Line numbers on the left
+    numberstyle=\color{gray}, % Line number style
+    stepnumber=1, % Each line will be numbered
+    numbersep=5pt, % Distance of line numbers from the code
+    %frame=single, % Adds a frame around the code
+    breaklines=true, % Wrap lines if they are too long
+    showstringspaces=false, % Don't show spaces in strings as special characters
+    backgroundcolor=\color{nusmvbgcolor},
+    captionpos=b % Sets the caption position to bottom
+}
+\lstdefinelanguage{PythonMyStyle}{
+    language=Python,
+    morekeywords={
+    def, class, if, else, elif, for, while, try, except, finally,
+    True, False, None, lambda, import, from, as, return, yield,
+    break, continue, pass, global, nonlocal, with, assert, del, async, await
+    },
+    sensitive=true,
+    comment=[l]\#,
+    morestring=[b]',
+    morestring=[b]",
+    morecomment=[l]\#,
+    morekeywords=[2]{print, input, range, len, open, list, dict, set, str, int, float, bool},
+    keywordstyle=\color{blue}\bfseries,
+    keywordstyle=[2]\color{orange},
+    commentstyle=\color{gray}\ttfamily,
+    stringstyle=\color{red},
+    basicstyle=\ttfamily\footnotesize,
+    breaklines=true,
+    showstringspaces=false,
+    tabsize=4,
+    backgroundcolor=\color{nusmvbgcolor},
+    captionpos=b % Sets the caption position to bottom
+}
+
+\usepackage{xcolor}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{deepblue}{rgb}{0,0,0.5}
+\definecolor{deepred}{rgb}{0.6,0,0}
+\definecolor{deepgreen}{rgb}{0,0.5,0}
+
+% Highlighting for tables
+\usepackage[table]{xcolor}
+
+\usepackage{amsmath}
+\lstset{
+    backgroundcolor=\color{backcolour},   % Light gray background color
+    basicstyle=\ttfamily\footnotesize,
+    numbers=left,
+    stepnumber=1,
+    numberstyle=\tiny\color{gray},
+    numbersep=5pt,
+    keywordstyle=\color{blue},
+    stringstyle=\color{red},
+    commentstyle=\color{green!70!black},
+    breaklines=true,
+    showstringspaces=false,
+    tabsize=2,
+    % language=xacro
+}
+
+\lstdefinelanguage{xacro}{
+  % language=XML,
+    morestring=[b]",
+    morecomment=[s]{<!--}{-->},
+    morekeywords={
+        xacro:macro,xacro:property,xacro:insert_block,xacro:include,
+        xacro:arg,xacro:if,xacro:unless,xacro:choose,xacro:when,xacro:otherwise,
+        xacro:element,xacro:attribute,
+        robot, link, visual, collision, origin, geometry, mesh, box, cylinder, sphere, material, color, inertial,
+        joint, parent, child, axis, limit, dynamics, transmission, actuator, sensor
+    }
+    basicstyle=\ttfamily\scriptsize,
+    keywordstyle=\color{blue}, % Keyword style
+    commentstyle=\color{comcolor}, % Comment style
+    stringstyle=\color{deepgreen}, % String literal style
+    numbers=left, % Line numbers on the left
+    numberstyle=\color{gray}, % Line number style
+    stepnumber=1, % Each line will be numbered
+    numbersep=5pt, % Distance of line numbers from the code
+    breaklines=true, % Wrap lines if they are too long
+    showstringspaces=false, % Don't show spaces in strings as special characters
+    backgroundcolor=\color{nusmvbgcolor},
+    captionpos=b % Sets the caption position to bottom
+}
+%
+% Suggested Packages
+% ------------------
+%\usepackage{tabularx}
+%\usepackage[ruled,algochapter]{algorithm2e}
+%\usepackage{amsmath}
+
+% Enumerated hypotheses
+\usepackage{amsthm}
+\newtheoremstyle{hypothesisstyle}
+  {\topsep}
+  {0}
+  {\normalfont}
+  {0pt}
+  {\bfseries}
+  {:}
+  {5pt plus 1pt minus 1pt}
+  {\thmname{#1}\textsubscript{\thmnumber{#2}}}
+\newtheoremstyle{shypothesisstyle}
+  {\topsep}
+  {0}
+  {\small}
+  {5pt}
+  {\itshape\bfseries}
+  {:}
+  {5pt plus 1pt minus 1pt}
+  {\thmname{#1}\textsubscript{\thmnumber{#2}}}
+\theoremstyle{hypothesisstyle}
+\newtheorem{hypothesis}{H}[]
+\theoremstyle{shypothesisstyle}
+\newtheorem{shypothesis}{H}[hypothesis]
+\renewcommand*{\theshypothesis}{\arabic{hypothesis}\alph{shypothesis}}
+% \usepackage{}
+\usepackage[
+  colorlinks=false,
+  pdfborder={0 0 0},
+  pdfauthor={\the\thesisauthor},
+  pdftitle={\the\thesistitle},
+  pdfkeywords={\the\thesiskeywords},
+  pdfdisplaydoctitle,
+  pdfpagemode={UseNone},
+  pdfstartview={Fit},
+]{hyperref}
+\urlstyle{same}
+
+\usepackage{cleveref} % must be loaded after hyperref
+\crefformat{hypothesis}{\textbf{H\textsubscript{#1}}}
+\crefformat{shypothesis}{\textbf{\textit{H\textsubscript{#1}}}}
+\graphicspath{{./img/}}
+% Define a custom style for NuSMV Language
+\definecolor{nusmvbgcolor}{RGB}{255,255,224} 
+\definecolor{comcolor}{RGB}{0,150,0}
+ 
+\renewcommand{\texttt}[1]{{\small\ttfamily #1}}
+
+
+\begin{document}
+\input{text/main.tex}
+\end{document}
+

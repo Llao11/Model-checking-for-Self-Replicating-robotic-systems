@@ -3,21 +3,21 @@ from rclpy.node import Node
 from std_msgs.msg import Float64MultiArray, Empty, String
 from sensor_msgs.msg import Imu, JointState
 from ros_gz_interfaces.msg import Contacts
-from ament_index_python.packages import get_package_share_directory
 import math
-import time
 from rclpy.duration import Duration
+from .robotController import RobotController
 
 # TODO: Change timer.sleep() in goto_XYZ() to checking with contact sensor
 # TODO: Write separate class to search for parts around with camera
 
 
 class SRRSsensorsNode(Node):
-    def __init__(self):
+    def __init__(self, joint_names):
         super().__init__("robot_sensor")
         self.create_publishers()
         self.create_subscribers()
         self.joint_angles_current = [0, 0, 0, 0, 0]
+        self.robotController = RobotController(self, joint_names)
 
     def create_publishers(self):
         # Publishers for sending colliding objects
@@ -58,9 +58,12 @@ class SRRSsensorsNode(Node):
     # JOINTS angles =========================================================================================================================
 
     def joint_state_changed(self, msg):
-        joint_angles_current_dict = dict(zip(msg.name, msg.position))
-        sorted_names = ["rev0_1", "rev2_3", "rev5_6", "rev8_9", "rev10_11"]
-        self.joint_angles_current = [joint_angles_current_dict[i] for i in sorted_names]
+        self.robotController.joint_state_changed(msg)
+        # joint_angles_current_dict = dict(zip(msg.name, msg.position))
+        # sorted_names = ["rev0_1", "rev2_3", "rev5_6", "rev8_9", "rev9_10"]
+        # Change for configuration pitch_yaw_pitch_yaw to:
+        # sorted_names = ["rev0_1", "rev2_3", "rev3_4", "rev6_7"]
+        # self.joint_angles_current = [joint_angles_current_dict[i] for i in sorted_names]
         # self.get_logger().info(f"joint_angles_current: {self.joint_angles_current}")
 
     def get_joint_angle(self, joint_num):
